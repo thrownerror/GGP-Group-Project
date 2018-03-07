@@ -35,37 +35,27 @@ void Camera::Update(float deltaTime)
 	float radianRotateX = (camRotateX * XM_PI) / 180;
 	float radianRotateY = (camRotateY * XM_PI) / 180;
 
-
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
-		curPos = XMVectorAdd(up * (speed*deltaTime), curPos);
-	}
-	if (GetAsyncKeyState('X') & 0x8000) {
-		curPos = XMVectorAdd(up * -(speed*deltaTime), curPos);
-	}
+	// Strafing up and down
 	if (GetAsyncKeyState('W') & 0x8000) {
-		curPos = XMVectorAdd(curDir * (speed *deltaTime), curPos);
-	//	camDirection.x, camDirection.y, camDirection.z *= speed * deltaTime;
-	//	camPosition.x += camDirection.x;
-	//	camPosition.y += camDirection.y;
-	//	camPosition.z += camDirection.z;
-		//camDirection.y *= speed;
-		//camDirection.z *= speed;
+		curPos = XMVectorAdd(up * (speed*deltaTime), curPos);
+		// Old code for moving forward
+		//curPos = XMVectorAdd(curDir * (speed *deltaTime), curPos);
 	}
 	if (GetAsyncKeyState('S') & 0x8000) {
-		curPos = XMVectorAdd(curDir * -(speed *deltaTime), curPos);
-		//camDirection
-		//XMVECTOR cross = XMVector3Cross(curDir, up);
-		//XMFLOAT3 = 
-		//camPosition.x += -camDirection.x;
-		//camPosition.y += -camDirection.y;
-		//camPosition.z += -camDirection.z;
+		curPos = XMVectorAdd(up * -(speed*deltaTime), curPos);
+		// Old code for moving backwards
+		//curPos = XMVectorAdd(curDir * -(speed *deltaTime), curPos);
 	}
+	// Rotating left and right
+	if (GetAsyncKeyState('Q') & 0x8000) {
+		camRotateY -= deltaTime;
+	}
+	if (GetAsyncKeyState('E') & 0x8000) {
+		camRotateY += deltaTime;
+	}
+	// Strafing left and right
 	if (GetAsyncKeyState('A') & 0x8000) {
 		curPos = XMVectorAdd(XMVector3Cross(curDir, up) * (speed*deltaTime), curPos);
-		//camDirection.x, camDirection.y, camDirection.z *= speed * deltaTime;
-		//camPosition.x += -camDirection.x;
-		//camPosition.y += -camDirection.y;
-		//camPosition.z += -camDirection.z;
 	}
 	if (GetAsyncKeyState('D') & 0x8000) {
 		curPos = XMVectorAdd(XMVector3Cross(curDir, up) * -(speed*deltaTime), curPos);
@@ -93,7 +83,7 @@ XMFLOAT4X4 Camera::GetCamMatrix()
 
 void Camera::MouseRotateX(float mouseDelta)
 {
-	camRotateY += mouseDelta * mouseSensitivity; //* 2;
+	//camRotateY += mouseDelta * mouseSensitivity; //* 2;
 	//printf("Rotate y: %f \n", camRotateY);
 }
 
