@@ -33,6 +33,21 @@ GameEntity::~GameEntity()
 {
 }
 
+float GameEntity::GetColliderXWidth()
+{
+	return colliderXWidth;
+}
+
+float GameEntity::GetColliderYHeight()
+{
+	return colliderYHeight;
+}
+
+float GameEntity::GetColliderZDepth()
+{
+	return colliderZDepth;
+}
+
 XMFLOAT4X4 GameEntity::GetWorldMatrix()
 {
 	return worldMatrix;

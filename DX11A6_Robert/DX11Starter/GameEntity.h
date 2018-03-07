@@ -50,6 +50,14 @@ public:
 	GameEntity(Mesh* mesh);
 	GameEntity(Mesh* mesh, Material* material);
 	~GameEntity();
+
+	float GetColliderXWidth();
+	//float getColliderXMin();
+	float GetColliderYHeight();
+	//float getColliderYMin();
+	float GetColliderZDepth();
+	//float getColliderZMin();
+
 private:
 
 	Material*	entityMaterial;
@@ -58,6 +66,14 @@ private:
 	XMFLOAT3	position;
 	XMFLOAT3	rotation;
 	XMFLOAT3	scale;
+
+	//collision stuff - treated as radii
+	float colliderXWidth;
+	float colliderYHeight;
+	float colliderZDepth;
+
+	//collision detection notes
+	//Bullet will be on radius, so it'll need a toggle mode
 
 	bool recalculateWorldMatrix;
 	void calcWorldMatrix();
