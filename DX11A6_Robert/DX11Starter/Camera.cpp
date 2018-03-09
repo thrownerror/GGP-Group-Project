@@ -37,12 +37,12 @@ void Camera::Update(float deltaTime)
 
 	// Strafing up and down
 	if (GetAsyncKeyState('W') & 0x8000) {
-		curPos = XMVectorAdd(up * (speed*deltaTime), curPos);
+		curPos = XMVectorAdd(up * (deltaTime), curPos);
 		// Old code for moving forward
 		//curPos = XMVectorAdd(curDir * (speed *deltaTime), curPos);
 	}
 	if (GetAsyncKeyState('S') & 0x8000) {
-		curPos = XMVectorAdd(up * -(speed*deltaTime), curPos);
+		curPos = XMVectorAdd(up * -(deltaTime), curPos);
 		// Old code for moving backwards
 		//curPos = XMVectorAdd(curDir * -(speed *deltaTime), curPos);
 	}
@@ -55,11 +55,22 @@ void Camera::Update(float deltaTime)
 	}
 	// Strafing left and right
 	if (GetAsyncKeyState('A') & 0x8000) {
-		curPos = XMVectorAdd(XMVector3Cross(curDir, up) * (speed*deltaTime), curPos);
+		curPos = XMVectorAdd(XMVector3Cross(curDir, up) * (deltaTime), curPos);
 	}
 	if (GetAsyncKeyState('D') & 0x8000) {
-		curPos = XMVectorAdd(XMVector3Cross(curDir, up) * -(speed*deltaTime), curPos);
+		curPos = XMVectorAdd(XMVector3Cross(curDir, up) * -(deltaTime), curPos);
 	}
+	if (GetAsyncKeyState(VK_LSHIFT) || GetAsyncKeyState(VK_RSHIFT) & 0x8000) {
+		speed += 0.001f;
+		if (speed > 3) speed = 3.0f;
+	}
+	if (GetAsyncKeyState(VK_LCONTROL) || GetAsyncKeyState(VK_RCONTROL) & 0x8000) {
+		speed -= 0.001f;
+		if (speed < 0) speed = 0;
+	}
+
+	// Move the camera forward -> movement speed values modified in 
+	curPos = XMVectorAdd(curDir * (speed *deltaTime), curPos);
 
 	XMVECTOR quaternionResult = XMQuaternionRotationRollPitchYaw(camRotateX, camRotateY, 0);
 
@@ -70,8 +81,6 @@ void Camera::Update(float deltaTime)
 	XMStoreFloat3(&camPosition, curPos);
 	XMStoreFloat3(&camDirection, resultantDirection);
 	XMStoreFloat4x4(&camMatrix, XMMatrixTranspose(resultant));
-
-
 
 
 }
