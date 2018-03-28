@@ -8,6 +8,6 @@ public:
 
 	
 
-	bool isColliding(GameEntity ge1, GameEntity ge2) 
+	bool isColliding(GameEntity ge1, GameEntity ge2);
 };
 

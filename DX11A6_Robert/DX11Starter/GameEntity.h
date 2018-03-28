@@ -24,7 +24,7 @@ public:
 	void SetRotation(XMFLOAT3 setRot);
 	void SetScale(XMFLOAT3 setSca);
 	
-	
+	void SetCollisionBox(float xDim, float yDim, float zDim);
 	//offset methods
 	void Move(XMFLOAT3 value); 
 	void MoveForward(XMFLOAT3 value);

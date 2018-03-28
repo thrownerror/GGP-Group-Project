@@ -88,6 +88,13 @@ void GameEntity::SetScale(XMFLOAT3 setSca)
 	scale = setSca;
 }
 
+void GameEntity::SetCollisionBox(float xDim, float yDim, float zDim)
+{
+	colliderXWidth = xDim;
+	colliderYHeight = yDim;
+	colliderZDepth = zDim;
+}
+
 void GameEntity::TransformTranslation(XMFLOAT3 value)
 {
 	XMVECTOR cur = XMLoadFloat3(&position);

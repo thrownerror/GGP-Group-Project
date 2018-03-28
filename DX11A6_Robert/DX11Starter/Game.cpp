@@ -62,6 +62,9 @@ Game::~Game()
 	delete ge3;
 	delete ge4;
 	delete ge5;
+	delete ge6;
+	delete ge7;
+	delete gePlayer;
 
 	delete[] entityArray;
 	delete[] meshArray;
@@ -204,16 +207,16 @@ void Game::CreateBasicGeometry()
 		{ XMFLOAT3(+3.6f, -1.5f, +0.0f), norm, XMFLOAT2(1.0f, 0.0f) },
 		{ XMFLOAT3(+0.6f, -1.5f, +0.0f), norm, XMFLOAT2(0.0f, 0.0f) },
 	};
-
+	
 	// Set up the indices, which tell us which vertices to use and in which order
 	// - This is somewhat redundant for just 3 vertices (it's a simple example)
 	// - Indices are technically not required if the vertices are in the buffer 
 	//    in the correct order and each one will be used exactly once
 	// - But just to see how it's done...
 	unsigned int indices[] = { 0, 1, 2 };
+	
 
-
-	mesh1 = new Mesh(vertices, 3, indices, 3, device);
+	//mesh1 = new Mesh(vertices, 3, indices, 3, device);
 
 
 	Vertex squareVertices[] = 
@@ -223,14 +226,14 @@ void Game::CreateBasicGeometry()
 		//{ XMFLOAT3(-1.0f, -1.0f, +0.0f), green },
 		//{ XMFLOAT3(-1.0f, +1.0f, +0.0f), red }
 
-		{ XMFLOAT3(+0.0f, +0.4f, +1.0f), norm, XMFLOAT2(1.0f, 0.0f) },
-		{ XMFLOAT3(+0.0f, -1.6f, +1.0f), norm, XMFLOAT2(1.0f, 1.0f) },
-		{ XMFLOAT3(-2.0f, -1.6f, +1.0f), norm, XMFLOAT2(0.0f, 1.0f) },
-		{ XMFLOAT3(-2.0f, +0.4f, +1.0f), norm, XMFLOAT2(0.0f, 0.0f) }
+		{ XMFLOAT3(-1.0f, -1.0f, +1.0f), norm, XMFLOAT2(1.0f, 0.0f) },
+		{ XMFLOAT3(-1.0f, 1.0f, +1.0f), norm, XMFLOAT2(1.0f, 1.0f) },
+		{ XMFLOAT3(1.0f, 1.0f, +1.0f), norm, XMFLOAT2(0.0f, 1.0f) },
+		{ XMFLOAT3(1.0f, -1.0f, +1.0f), norm, XMFLOAT2(0.0f, 0.0f) }
 	};
 	unsigned int squareIndices[]{ 0, 1, 2, 
 								  2, 3, 0 };
-	mesh2 = new Mesh(squareVertices, 4, squareIndices, 6, device);
+	//mesh2 = new Mesh(squareVertices, 4, squareIndices, 6, device);
 
 
 	Vertex trapezoidVertices[] = 
@@ -247,10 +250,15 @@ void Game::CreateBasicGeometry()
 									 5,1,2,
 									 2,3,4,
 									 4,5,2 };
-	mesh3 = new Mesh(trapezoidVertices, 6, trapezoidIndices, 12, device);
+	//mesh3 = new Mesh(trapezoidVertices, 6, trapezoidIndices, 12, device);
 
-	char* meshModel1File = "../../Assets/Models/cone.obj";//"Z:/IGMProfile/Desktop/GGP/DX11CopyCode/DX11WorkCode/Assets/Models/cone.obj";//"Z:\\IGMProfile\\Desktop\\GGP\\DX11CopyCode\\DX11A4\\Assets\\Models\\cone.obj";
-		
+	mesh1 = new Mesh(squareVertices, 4, squareIndices, 6, device);
+	mesh2 = new Mesh(squareVertices, 4, squareIndices, 6, device);
+	mesh3 = new Mesh(squareVertices, 4, squareIndices, 6, device);
+
+
+	char* meshModel1File = "../../Assets/Models/cone.obj";
+
 	meshModel1 = new Mesh(meshModel1File, device);
 	meshArraySize = 4;
 	meshArray = new Mesh*[meshArraySize+1];
@@ -260,13 +268,19 @@ void Game::CreateBasicGeometry()
 
 	ge1 = new GameEntity(meshArray[0], mat1);
 
-	ge2 = new GameEntity(meshArray[1], mat1);
+	ge2 = new GameEntity(meshArray[0], mat1);
 
-	ge3 = new GameEntity(meshArray[1], mat1);
+	ge3 = new GameEntity(meshArray[0], mat1);
 
-	ge4 = new GameEntity(meshArray[2], mat1);
+	ge4 = new GameEntity(meshArray[0], mat1);
 
-	ge5 = new GameEntity(meshModel1, mat1);
+	ge5 = new GameEntity(meshArray[0], mat1);
+
+	ge6 = new GameEntity(meshArray[0], mat1);
+
+	ge7 = new GameEntity(meshArray[0], mat1);
+
+	gePlayer = new GameEntity(meshArray[0], mat1);
 
 	entityArraySize = 5;
 
@@ -309,13 +323,13 @@ void Game::Update(float deltaTime, float totalTime)
 	XMFLOAT3 movementValue = XMFLOAT3(1.0f * deltaTime, 0.0f, 0.0f);
 	XMFLOAT3 rotationValue = XMFLOAT3(0.0f, 20.0f * deltaTime, 0.0f);
 	XMFLOAT3 scaleValue = XMFLOAT3(1.0f * deltaTime, 1.0f * deltaTime, 1.0f* deltaTime);
-	ge1->TransformRotation(rotationValue);
+	//ge1->TransformRotation(rotationValue);
 	//ge1->UpdateEntity();
-	ge2->TransformTranslation(movementValue);
+	//ge2->TransformTranslation(movementValue);
 	//ge2->UpdateEntity();
-	ge3->TransformScale(scaleValue);
+	//ge3->TransformScale(scaleValue);
 	//ge3->UpdateEntity();
-	ge4->TransformRotation(rotationValue);
+	//ge4->TransformRotation(rotationValue);
 	//ge5->TransformTranslation(movementValue);
 	//ge4->UpdateEntity();
 	for (int i = 0; i <= entityArraySize - 1; i++) {

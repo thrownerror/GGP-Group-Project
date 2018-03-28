@@ -69,11 +69,15 @@ private:
 	//GameEntity objects
 	GameEntity** entityArray;
 	int entityArraySize;
+
+	GameEntity* gePlayer;
 	GameEntity* ge1;
 	GameEntity* ge2;
 	GameEntity* ge3;
 	GameEntity* ge4;
 	GameEntity* ge5;
+	GameEntity* ge6;
+	GameEntity* ge7;
 
 	Camera* camera;
 
