@@ -100,9 +100,10 @@ void Game::Init()
 	samDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samDesc.MaxLOD = D3D11_FLOAT32_MAX;
 	HRESULT samplerTest = device->CreateSamplerState(&samDesc, &sampState);
-	HRESULT h = CreateWICTextureFromFile(device, context, L"../../Assets/Textures/Rock1.png", 0, &srv);
+	HRESULT h1 = CreateWICTextureFromFile(device, context, L"../../Assets/Textures/Rock1.png", 0, &srv);
+	HRESULT h2 = CreateWICTextureFromFile(device, context, L"../../Assets/Textures/RockNorm.png", 0, &nrm);
 
-	mat1 = new Material(vertexShader, pixelShader, srv, sampState);
+	mat1 = new Material(vertexShader, pixelShader, srv, nrm, sampState);
 
 	prevMousePos.x = 0; 
 	prevMousePos.y = 0;

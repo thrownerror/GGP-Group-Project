@@ -13,5 +13,5 @@ struct Vertex
 	//DirectX::XMFLOAT4 Color;        // The color of the vertex
 	DirectX::XMFLOAT3 Normal;
 	DirectX::XMFLOAT2 UV;
-
+	DirectX::XMFLOAT3 Tangent;		// The Tangent for normal mapping
 };

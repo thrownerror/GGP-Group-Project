@@ -139,6 +139,7 @@ void GameEntity::PrepareMaterial(XMFLOAT4X4 camView, XMFLOAT4X4 camProj)
 
 	entityMaterial->GetPixPointer()->SetSamplerState("basicSampler", entityMaterial->GetSamplerState());
 	entityMaterial->GetPixPointer()->SetShaderResourceView("textureSRV", entityMaterial->GetSRV());
+	entityMaterial->GetPixPointer()->SetShaderResourceView("textureNRM", entityMaterial->GetNormalRV());
 	entityMaterial->GetPixPointer()->CopyAllBufferData();
 
 	entityMaterial->GetVertPointer()->SetShader();

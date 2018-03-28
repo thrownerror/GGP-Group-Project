@@ -14,11 +14,12 @@ struct VertexToPixel
 	float4 position		: SV_POSITION;
 	float3 normal		: NORMAL;
 	float2 uv			: TEXCOORD;
-		//float4 color		: COLOR;
-	
+	float3 tangent		: TANGENT;
+	//float4 color		: COLOR;
+
 };
 
-struct DirectionalLight 
+struct DirectionalLight
 {
 	float4 AmbientColor;
 	float4 DiffuseColor;
@@ -32,7 +33,24 @@ cbuffer externalData : register(b0)
 };
 
 Texture2D	 textureSRV			: register(t0);
+Texture2D	 textureNRM			: register(t1);
 SamplerState basicSampler		: register(s0);
+
+
+float3 calculateNormal(VertexToPixel input)
+{
+	// Get the normal vector from the image map
+	float3 normalFromMap = textureNRM.Sample(basicSampler, input.uv).rgb;
+	normalFromMap = normalize(normalFromMap * 2 - 1);
+
+	float3 N = input.normal;
+	float3 T = normalize(input.tangent - N * dot(input.tangent, N));
+	float3 B = cross(T, N);
+
+	// Create the TBN matrix which we use to convert from tangent to world space
+	float3x3 TBN = float3x3(T, B, N);
+	return normalize(mul(normalFromMap, TBN));
+}
 
 
 // --------------------------------------------------------
@@ -46,10 +64,17 @@ SamplerState basicSampler		: register(s0);
 // --------------------------------------------------------
 float4 main(VertexToPixel input) : SV_TARGET
 {
+	// Normalize vectors
+	input.normal = normalize(input.normal);
+	input.tangent = normalize(input.tangent);
+
+	// Recalculate normal via normal map
+	input.normal = calculateNormal(input);
+
 //	return float4 (input.normal,  1);
 //	return float4(input.uv, 0, 1);
 	float4 surfaceColor = textureSRV.Sample(basicSampler, input.uv);
-	input.normal = normalize(input.normal);
+	//input.normal = normalize(input.normal);
 	float3 negatedDirection = normalize(-light.Direction);
 	//negatedDirection = normalize(negatedDirection);
 

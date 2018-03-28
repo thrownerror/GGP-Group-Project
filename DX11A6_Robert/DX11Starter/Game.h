@@ -64,6 +64,7 @@ private:
 	//Material objects
 	Material* mat1;
 	ID3D11ShaderResourceView* srv;
+	ID3D11ShaderResourceView* nrm;
 	ID3D11SamplerState* sampState;
 
 	//GameEntity objects

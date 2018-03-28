@@ -6,11 +6,12 @@ Material::Material()
 {
 }
 
-Material::Material(SimpleVertexShader * vP, SimplePixelShader * pP, ID3D11ShaderResourceView * srv, ID3D11SamplerState * ssP)
+Material::Material(SimpleVertexShader * vP, SimplePixelShader * pP, ID3D11ShaderResourceView * srv, ID3D11ShaderResourceView * nrm, ID3D11SamplerState * ssP)
 {
 	vertPointer = vP;
 	pixPointer = pP;
 	shadResViewPointer = srv;
+	normResViewPointer = nrm;
 	samplerStatePointer = ssP;
 }
 
@@ -24,6 +25,9 @@ ID3D11SamplerState* ::Material::GetSamplerState() {
 }
 ID3D11ShaderResourceView* ::Material::GetSRV() {
 	return shadResViewPointer;
+}
+ID3D11ShaderResourceView* ::Material::GetNormalRV() {
+	return normResViewPointer;
 }
 SimpleVertexShader * Material::GetVertPointer()
 {
