@@ -128,6 +128,17 @@ void GameEntity::TransformRotation(XMFLOAT3 value)
 	cur = cur + manip;
 	XMStoreFloat3(&rotation, cur);
 	recalculateWorldMatrix = true;
+	//vector math - rotate collision box
+
+	///note
+	/*TO DO
+	Need to reevaluate bounding box
+	Rather than radii, have coordinate edges based on bounds
+	manipulate those based on rotation/scale at start
+	update translation is fine, since it's based off pos.
+	cont.
+	*/
+
 }
 
 void GameEntity::PrepareMaterial(XMFLOAT4X4 camView, XMFLOAT4X4 camProj)
