@@ -11,21 +11,22 @@ CollisionManager::~CollisionManager()
 {
 }
 
-bool CollisionManager::isColliding(GameEntity ge1, GameEntity ge2) {
+bool CollisionManager::isColliding(GameEntity* ge1, GameEntity* ge2) {
 	
-	float x1Width = ge1.GetColliderXWidth();
-	float y1Height = ge1.GetColliderYHeight();
-	float z1Depth = ge1.GetColliderZDepth();
+	float x1Width = ge1->GetColliderXWidth();
+	float y1Height = ge1->GetColliderYHeight();
+	float z1Depth = ge1->GetColliderZDepth();
 
-	XMFLOAT3 ge1Position = ge1.GetPosition();
+	XMFLOAT3 ge1Position = ge1->GetPosition();
 	float x1Position = ge1Position.x;
 	float y1Position = ge1Position.y;
 	float z1Position = ge1Position.z;
 
-	float x2Width = ge2.GetColliderXWidth();
-	float y2Height = ge2.GetColliderYHeight();
-	float z2Depth = ge2.GetColliderZDepth();
-	XMFLOAT3 ge2Position = ge2.GetPosition();
+	float x2Width = ge2->GetColliderXWidth();
+	float y2Height = ge2->GetColliderYHeight();
+	float z2Depth = ge2->GetColliderZDepth();
+	XMFLOAT3 ge2Position = ge2->GetPosition();
+	//printf("GE2 position: %d %d %d\n", ge2->GetPosition().x, ge2->GetPosition().y, ge2->GetPosition().z);
 	float x2Position = ge2Position.x;
 	float y2Position = ge2Position.y;
 	float z2Position = ge2Position.z;

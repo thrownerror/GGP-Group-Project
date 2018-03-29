@@ -4,11 +4,11 @@
 
 Camera::Camera()
 {
-	camPosition = XMFLOAT3 (0.0, 0.0, -2.0);
+	camPosition = XMFLOAT3 (0.0, 0.0, 0.0);
 	camDirection = XMFLOAT3(0.0, 0.0, 1.0);
 	camRotateX = 0;
 	camRotateY = 0;
-	speed = 1;
+	speed = .25;
 	mouseSensitivity = .01f;
 	fieldOfView = 0.25f;
 
@@ -79,6 +79,7 @@ void Camera::Update(float deltaTime)
 	XMMATRIX resultant = XMMatrixLookToLH(curPos, resultantDirection, up);
 
 	XMStoreFloat3(&camPosition, curPos);
+	//printf("Camera position on input: %d %d %d \n", curPos.x, camPosition.y, camPosition.z);
 	XMStoreFloat3(&camDirection, resultantDirection);
 	XMStoreFloat4x4(&camMatrix, XMMatrixTranspose(resultant));
 
@@ -121,4 +122,10 @@ void Camera::UpdateProjectionMatrix(float width, float height)
 XMFLOAT4X4 Camera::GetProjectionMatrix()
 {
 	return projectionMatrix;
+}
+
+XMFLOAT3 Camera::GetPosition() 
+{
+	//printf("in get pos %d\n", camPosition.x);
+	return camPosition;
 }

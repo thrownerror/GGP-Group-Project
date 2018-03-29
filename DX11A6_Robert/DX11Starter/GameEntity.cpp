@@ -76,8 +76,11 @@ XMFLOAT3 GameEntity::GetScale()
 void GameEntity::SetPosition(XMFLOAT3 setPos)
 {
 	position = setPos;
+	//printf("Player position updated%d %d %d\n", position.x, position.y, position.z);
 }
-
+void GameEntity::PrintPosition() {
+	//printf("Pos x: %d	Pos y: %d	Pos z: %d \n", position.x, position.y, position.z);
+}
 void GameEntity::SetRotation(XMFLOAT3 setRot)
 {
 	rotation = setRot;
@@ -111,7 +114,6 @@ void GameEntity::TransformScale(XMFLOAT3 value)
 	cur = cur + manip;
 	XMStoreFloat3(&scale, cur);
 	recalculateWorldMatrix = true;
-
 }
 
 void GameEntity::TransformRotation(XMFLOAT3 value)

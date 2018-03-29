@@ -27,6 +27,7 @@ Game::Game(HINSTANCE hInstance)
 	vertexShader = 0;
 	pixelShader = 0;
 
+
 #if defined(DEBUG) || defined(_DEBUG)
 	// Do we want a console window?  Probably only in debug mode
 	CreateConsoleWindow(500, 120, 32, 120);
@@ -192,6 +193,7 @@ void Game::CreateMatrices()
 // --------------------------------------------------------
 void Game::CreateBasicGeometry()
 {
+	testBox = true;
 	// Create some temporary variables to represent colors
 	// - Not necessary, just makes things more readable
 	XMFLOAT4 red = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -281,16 +283,64 @@ void Game::CreateBasicGeometry()
 
 	ge7 = new GameEntity(meshArray[0], mat1);
 
-	gePlayer = new GameEntity(meshArray[0], mat1);
+	gePlayer = new GameEntity(meshArray[0]);
+	gePlayer->SetCollisionBox(.1f, .1f, .1f);
+	if (testBox) {
+		entityArraySize = 7;
 
-	entityArraySize = 5;
+		entityArray = new GameEntity*[entityArraySize + 1];
+		entityArray[0] = ge1;
+		entityArray[1] = ge2;
+		entityArray[2] = ge3;
+		entityArray[3] = ge4;
+		entityArray[4] = ge5;
+		entityArray[5] = ge6;
+		entityArray[6] = ge7;
 
-	entityArray = new GameEntity*[entityArraySize + 1];
-	entityArray[0] = ge1;
-	entityArray[1] = ge2;
-	entityArray[2] = ge3;
-	entityArray[3] = ge4;
-	entityArray[4] = ge5;
+		for (int i = 0; i < entityArraySize; i++) {
+			entityArray[i]->SetCollisionBox(1.0f, 1.0f, .02);
+		}
+		XMFLOAT3 movementRight = XMFLOAT3(2.0f, 0.0f, 0.0f);
+		XMFLOAT3 movementLeft = XMFLOAT3(-2.0f, 0.0f, 0.0f);
+		XMFLOAT3 movementDown = XMFLOAT3(0.0f, -2.0f, 0.0f);
+		XMFLOAT3 movementUp = XMFLOAT3(0.0f, 2.0f, 0.0f);
+		XMFLOAT3 movementBackward = XMFLOAT3(0.0f, 0.0f, -2.0f);
+		XMFLOAT3 movementForward = XMFLOAT3(0.0f, 0.0f, 2.0f);
+		XMFLOAT3 rotation180AroundY = XMFLOAT3(0.0f, 180.0f, 0.0f);
+		XMFLOAT3 rotate90CWAroundY = XMFLOAT3(0.0f, 90.0f, 0.0f);
+		XMFLOAT3 rotate90CCWAroundY = XMFLOAT3(0.0f, -90.0f, 0.0f);
+		XMFLOAT3 rotate90CWAroundX = XMFLOAT3(90.0f, 0.0f, 0.0f);
+		XMFLOAT3 rotate90CCWAroundX = XMFLOAT3(-90.0f, 0.0f, 0.0f);
+		//XMFLOAT3 scaleValue = XMFLOAT3(10.0f, 10.0f, 10.0f);
+		//Reserved for any random entity
+		ge1->TransformTranslation(movementLeft);
+		
+		ge1->TransformTranslation(movementLeft);
+		ge1->UpdateEntity();
+		//Forward and back walls
+		ge2->UpdateEntity();
+
+
+		ge3->TransformRotation(rotation180AroundY); //back wall
+		ge3->UpdateEntity();
+
+		//Left and right walls
+		ge4->TransformRotation(rotate90CCWAroundY);
+		ge4->UpdateEntity(); //left
+
+		ge5->TransformRotation(rotate90CWAroundY);
+		ge5->UpdateEntity(); //right
+
+		//Top and Bottom walls
+		ge6->TransformRotation(rotate90CCWAroundX);
+		ge6->UpdateEntity();
+		ge7->TransformRotation(rotate90CWAroundX);
+		ge7->UpdateEntity();
+	}
+
+
+
+	
 }
 
 
@@ -324,6 +374,8 @@ void Game::Update(float deltaTime, float totalTime)
 	XMFLOAT3 movementValue = XMFLOAT3(1.0f * deltaTime, 0.0f, 0.0f);
 	XMFLOAT3 rotationValue = XMFLOAT3(0.0f, 20.0f * deltaTime, 0.0f);
 	XMFLOAT3 scaleValue = XMFLOAT3(1.0f * deltaTime, 1.0f * deltaTime, 1.0f* deltaTime);
+//	printf("%d %d %d\n", camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
+	gePlayer->SetPosition(camera->GetPosition());
 	//ge1->TransformRotation(rotationValue);
 	//ge1->UpdateEntity();
 	//ge2->TransformTranslation(movementValue);
@@ -333,8 +385,18 @@ void Game::Update(float deltaTime, float totalTime)
 	//ge4->TransformRotation(rotationValue);
 	//ge5->TransformTranslation(movementValue);
 	//ge4->UpdateEntity();
+	gePlayer->PrintPosition();
 	for (int i = 0; i <= entityArraySize - 1; i++) {
+		//gePla
 		entityArray[i]->UpdateEntity();
+		if (collidingMaster.isColliding(gePlayer, entityArray[i])) {
+		//	printf("collision between player and %d\n",i);
+		}
+		else {
+			//printf("no collision between player and %d\n", i);
+		}
+		
+		//if(i != )
 	}
 
 	camera->Update(deltaTime);
@@ -453,8 +515,8 @@ void Game::OnMouseDown(WPARAM buttonState, int x, int y)
 	// Add any custom code here...
 
 	// Save the previous mouse position, so we have it for the future
-	prevMousePos.x = x;
-	prevMousePos.y = y;
+	//prevMousePos.x = x;
+	//prevMousePos.y = y;
 
 	// Caputure the mouse so we keep getting mouse move
 	// events even if the mouse leaves the window.  we'll be
@@ -482,11 +544,11 @@ void Game::OnMouseUp(WPARAM buttonState, int x, int y)
 void Game::OnMouseMove(WPARAM buttonState, int x, int y)
 {
 	// Add any custom code here...
-	camera->MouseRotateX(x - (float)prevMousePos.x);
-	camera->MouseRotateY(y - (float)prevMousePos.y);
+	//camera->MouseRotateX(x - (float)prevMousePos.x);
+	//camera->MouseRotateY(y - (float)prevMousePos.y);
 	// Save the previous mouse position, so we have it for the future
-	prevMousePos.x = x;
-	prevMousePos.y = y;
+	//prevMousePos.x = x;
+	//prevMousePos.y = y;
 }
 
 // --------------------------------------------------------

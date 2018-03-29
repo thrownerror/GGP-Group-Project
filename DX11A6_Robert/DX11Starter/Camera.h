@@ -17,7 +17,9 @@ public:
 	void MouseRotateY(float mouseDelta);
 	void UpdateProjectionMatrix(float width, float height);
 	XMFLOAT4X4 GetProjectionMatrix();
+	XMFLOAT3 GetPosition();
 private:
+	
 	XMFLOAT3 camPosition;
 	XMFLOAT3 camDirection;
 	XMFLOAT4X4 camMatrix;

@@ -57,7 +57,7 @@ public:
 	//float getColliderYMin();
 	float GetColliderZDepth();
 	//float getColliderZMin();
-
+	void PrintPosition();
 private:
 
 	Material*	entityMaterial;

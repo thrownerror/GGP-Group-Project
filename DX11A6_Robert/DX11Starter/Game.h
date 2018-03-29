@@ -7,6 +7,7 @@
 #include "GameEntity.h"
 #include "Camera.h"
 #include "Lights.h"
+#include "CollisionManager.h"
 class Game 
 	: public DXCore
 {
@@ -30,6 +31,8 @@ public:
 
 private:
 
+	CollisionManager collidingMaster = CollisionManager();
+	bool testBox;
 	// Initialization helper methods - feel free to customize, combine, etc.
 	void LoadShaders(); 
 	void CreateMatrices();
