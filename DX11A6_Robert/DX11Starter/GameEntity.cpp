@@ -196,7 +196,7 @@ void GameEntity::ColliderBoxMatrix(bool safeRotation)
 	XMMATRIX resultant;
 	//Final math
 	if (safeRotation) {
-		resultant = scaTranslate * rotTranslate * posTranslate);
+		resultant = scaTranslate * rotTranslate * posTranslate;
 	}
 	else {
 		resultant = scaTranslate * posTranslate;
