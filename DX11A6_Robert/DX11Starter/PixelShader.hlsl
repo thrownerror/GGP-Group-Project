@@ -15,6 +15,7 @@ struct VertexToPixel
 	float3 normal		: NORMAL;
 	float2 uv			: TEXCOORD;
 	float3 tangent		: TANGENT;
+	float  fogFactor	: FOG;
 	//float4 color		: COLOR;
 
 };
@@ -30,6 +31,8 @@ cbuffer externalData : register(b0)
 {
 	DirectionalLight light;
 	DirectionalLight light2;
+
+	float4 fogColor;
 };
 
 Texture2D	 textureSRV			: register(t0);
@@ -71,27 +74,22 @@ float4 main(VertexToPixel input) : SV_TARGET
 	// Recalculate normal via normal map
 	input.normal = calculateNormal(input);
 
-//	return float4 (input.normal,  1);
-//	return float4(input.uv, 0, 1);
+	// Sample the texture for the surface color
 	float4 surfaceColor = textureSRV.Sample(basicSampler, input.uv);
-	//input.normal = normalize(input.normal);
-	float3 negatedDirection = normalize(-light.Direction);
-	//negatedDirection = normalize(negatedDirection);
 
-	float3 lightAmount = saturate(dot(input.normal, negatedDirection));
-	float4 light1Result = float4((light.DiffuseColor * lightAmount) + light.AmbientColor, 1) * surfaceColor;
-	//return float4((light.DiffuseColor * lightAmount) + light.AmbientColor, 1);
+	// Calculate the surface color after factoring in fog
+	float4 surfaceFog = input.fogFactor * surfaceColor + (1.0 - input.fogFactor) * fogColor;
 
+	// Get the result after applying the first light
+	float3 negatedDirection1 = normalize(-light.Direction);
+	float3 light1Amount = saturate(dot(input.normal, negatedDirection1));
+	float4 light1Result = float4((light.DiffuseColor * light1Amount) + light.AmbientColor, 1) * surfaceFog;
+
+	// Get the result after applying the second light
 	float3 negatedDirection2 = normalize(-light2.Direction);
 	float3 light2Amount = saturate(dot(input.normal, negatedDirection2));
-	float4 light2Result = float4((light2.DiffuseColor * light2Amount) + light2.AmbientColor, 1) * surfaceColor;
+	float4 light2Result = float4((light2.DiffuseColor * light2Amount) + light2.AmbientColor, 1) * surfaceFog;
 
+	// Add the two together
 	return light1Result + light2Result;
-	//return float4(light.DiffuseColor);//input.normal, 1);
-	// Just return the input color
-	// - This color (like most values passing through the rasterizer) is 
-	//   interpolated for each pixel between the corresponding vertices 
-	//   of the triangle we're rendering
-	//return input.color;
-	//return float4(1,0,0,1);
 }

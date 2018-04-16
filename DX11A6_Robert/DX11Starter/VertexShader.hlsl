@@ -10,6 +10,9 @@ cbuffer externalData : register(b0)
 	matrix world;
 	matrix view;
 	matrix projection;
+
+	float fogStart;
+	float fogEnd;
 };
 
 // Struct representing a single vertex worth of data
@@ -47,6 +50,8 @@ struct VertexToPixel
 	float3 normal		: NORMAL;
 	float2 uv			: TEXCOORD;
 	float3 tangent		: TANGENT;		// XYZ Tangent
+
+	float  fogFactor	: FOG;			// Fog Factor
 
 	//float4 color		: COLOR;        // RGBA color
 };
@@ -91,6 +96,10 @@ VertexToPixel main( VertexShaderInput input )
 
 	// Also convert the tangent from LOCAL to WORLD space
 	output.tangent = normalize(mul(input.tangent, (float3x3)world));
+
+	// Thank you to http://www.rastertek.com/dx11tut23.html
+	// Calculate the fog factor here
+	output.fogFactor = saturate((fogEnd - output.position.z) / (fogEnd - fogStart));
 
 	return output;
 }
