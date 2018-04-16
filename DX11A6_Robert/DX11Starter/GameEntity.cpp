@@ -31,21 +31,22 @@ GameEntity::GameEntity(Mesh * mesh, Material * material)
 
 GameEntity::~GameEntity()
 {
+	if (collisionBox != nullptr) { delete collisionBox; }
 }
 
 float GameEntity::GetColliderXWidth()
 {
-	return colliderXWidth;
+	return collisionBox->GetColliderXWidth();
 }
 
 float GameEntity::GetColliderYHeight()
 {
-	return colliderYHeight;
+	return collisionBox->GetColliderYHeight();
 }
 
 float GameEntity::GetColliderZDepth()
 {
-	return colliderZDepth;
+	return collisionBox->GetColliderZDepth();
 }
 
 XMFLOAT4X4 GameEntity::GetWorldMatrix()
@@ -73,6 +74,12 @@ XMFLOAT3 GameEntity::GetScale()
 	return scale;
 }
 
+Collider* GameEntity::GetCollider()
+{
+	if (collisionBox == nullptr) { return nullptr; }
+	else { return collisionBox; }
+}
+
 void GameEntity::SetPosition(XMFLOAT3 setPos)
 {
 	position = setPos;
@@ -93,14 +100,13 @@ void GameEntity::SetScale(XMFLOAT3 setSca)
 
 void GameEntity::SetCollisionBox(float xDim, float yDim, float zDim)
 {
-	colliderXWidth = xDim;
-	colliderYHeight = yDim;
-	colliderZDepth = zDim;
+	collisionBox = new Collider(xDim, yDim, zDim, position);
 }
 
 void GameEntity::TransformTranslation(XMFLOAT3 value)
 {
 	XMVECTOR cur = XMLoadFloat3(&position);
+
 	XMVECTOR manip = XMLoadFloat3(&value);
 	cur = cur + manip;
 	XMStoreFloat3(&position, cur);
@@ -128,6 +134,17 @@ void GameEntity::TransformRotation(XMFLOAT3 value)
 	cur = cur + manip;
 	XMStoreFloat3(&rotation, cur);
 	recalculateWorldMatrix = true;
+	//vector math - rotate collision box
+
+	///note
+	/*TO DO
+	Need to reevaluate bounding box
+	Rather than radii, have coordinate edges based on bounds
+	manipulate those based on rotation/scale at start
+	update translation is fine, since it's based off pos.
+	cont.
+	*/
+
 }
 
 void GameEntity::PrepareMaterial(XMFLOAT4X4 camView, XMFLOAT4X4 camProj)
@@ -163,6 +180,29 @@ void GameEntity::calcWorldMatrix()
 	XMMATRIX resultant = scaTranslate * rotTranslate * posTranslate;
 	//Storage
 	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(resultant));
+}
+void GameEntity::ColliderBoxMatrix(bool safeRotation) 
+{
+	XMFLOAT4X4* manipulationMatrix;
+	//Conversions
+	XMVECTOR pos = XMLoadFloat3(&position);
+	XMVECTOR rot = XMLoadFloat3(&rotation);
+	XMVECTOR sca = XMLoadFloat3(&scale);
+	//Settings
+	XMMATRIX posTranslate = XMMatrixTranslationFromVector(pos);
+	XMMATRIX rotTranslate = XMMatrixRotationRollPitchYawFromVector(rot);
+	XMMATRIX scaTranslate = XMMatrixScalingFromVector(sca);
+
+	XMMATRIX resultant;
+	//Final math
+	if (safeRotation) {
+		resultant = scaTranslate * rotTranslate * posTranslate;
+	}
+	else {
+		resultant = scaTranslate * posTranslate;
+	}
+	XMStoreFloat4x4(manipulationMatrix, XMMatrixTranspose(resultant));
+	collisionBox->ManipulateCollisionBox(manipulationMatrix);
 }
 
 //Deprecated - by Transformation Translation

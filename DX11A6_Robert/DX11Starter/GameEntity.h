@@ -5,6 +5,7 @@
 #include "DirectXMath.h"
 #include "Mesh.h"
 #include "Material.h"
+#include "Collider.h"
 using namespace DirectX;
 
 class GameEntity
@@ -19,12 +20,14 @@ public:
 	XMFLOAT3 GetRotation();
 	XMFLOAT3 GetScale();
 
+	Collider* GetCollider();
 	//these allow things to "jump" to positions
 	void SetPosition(XMFLOAT3 setPos);
 	void SetRotation(XMFLOAT3 setRot);
 	void SetScale(XMFLOAT3 setSca);
 	
 	void SetCollisionBox(float xDim, float yDim, float zDim);
+	void ColliderBoxMatrix(bool safeRotation);
 	//offset methods
 	void Move(XMFLOAT3 value); 
 	void MoveForward(XMFLOAT3 value);
@@ -66,14 +69,15 @@ private:
 	XMFLOAT3	position;
 	XMFLOAT3	rotation;
 	XMFLOAT3	scale;
-
 	//collision stuff - treated as radii
-	float colliderXWidth;
-	float colliderYHeight;
-	float colliderZDepth;
+	Collider*	collisionBox;
+
+/*	//float colliderXWidth;
+	//float colliderYHeight;
+	//float colliderZDepth;*/
 
 	//collision detection notes
-	//Bullet will be on radius, so it'll need a toggle mode
+	//Bullet will be a box. AxisAligned 
 
 	bool recalculateWorldMatrix;
 	void calcWorldMatrix();
