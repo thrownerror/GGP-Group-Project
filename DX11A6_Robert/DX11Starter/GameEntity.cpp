@@ -22,6 +22,7 @@ GameEntity::GameEntity(Mesh * mesh, Material * material)
 	entityMesh = mesh;
 	entityMaterial = material;
 	position = XMFLOAT3(0, 0, 0);
+	collisionPosition = XMFLOAT3(0, 0, 1);
 	rotation = XMFLOAT3(0, 0, 0);
 	scale = XMFLOAT3(1, 1, 1);
 	calcWorldMatrix();
@@ -106,10 +107,12 @@ void GameEntity::SetCollisionBox(float xDim, float yDim, float zDim)
 void GameEntity::TransformTranslation(XMFLOAT3 value)
 {
 	XMVECTOR cur = XMLoadFloat3(&position);
-
+	XMVECTOR curCollide = XMLoadFloat3(&collisionPosition);
 	XMVECTOR manip = XMLoadFloat3(&value);
 	cur = cur + manip;
+	curCollide = curCollide + manip;
 	XMStoreFloat3(&position, cur);
+	XMStoreFloat3(&collisionPosition, curCollide);
 	recalculateWorldMatrix = true;
 }
 
@@ -168,8 +171,12 @@ void GameEntity::PrepareMaterial(XMFLOAT4X4 camView, XMFLOAT4X4 camProj)
 
 void GameEntity::calcWorldMatrix()
 {
+	printf("\nCurrent collision position: %f, %f, %f\n", collisionPosition.x, collisionPosition.y, collisionPosition.z);
 	//Conversions
+	XMVECTOR colPos = XMLoadFloat3(&collisionPosition);
+
 	XMVECTOR pos = XMLoadFloat3(&position);
+	printf("\n%f, %f, %f", position.x, position.y, position.z);
 	XMVECTOR rot = XMLoadFloat3(&rotation);
 	XMVECTOR sca = XMLoadFloat3(&scale);
 	//Settings
@@ -177,9 +184,16 @@ void GameEntity::calcWorldMatrix()
 	XMMATRIX rotTranslate = XMMatrixRotationRollPitchYawFromVector(rot);
 	XMMATRIX scaTranslate = XMMatrixScalingFromVector(sca);
 	//Final math
+	colPos = XMVector3Transform(colPos, rotTranslate);
+
 	XMMATRIX resultant = scaTranslate * rotTranslate * posTranslate;
 	//Storage
 	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(resultant));
+	XMStoreFloat3(&collisionPosition, colPos);
+	printf("\nAfter collision position: %f, %f, %f\n", collisionPosition.x, collisionPosition.y, collisionPosition.z);
+
+
+	
 }
 void GameEntity::ColliderBoxMatrix(bool safeRotation) 
 {
@@ -188,6 +202,7 @@ void GameEntity::ColliderBoxMatrix(bool safeRotation)
 	XMVECTOR pos = XMLoadFloat3(&position);
 	XMVECTOR rot = XMLoadFloat3(&rotation);
 	XMVECTOR sca = XMLoadFloat3(&scale);
+
 	//Settings
 	XMMATRIX posTranslate = XMMatrixTranslationFromVector(pos);
 	XMMATRIX rotTranslate = XMMatrixRotationRollPitchYawFromVector(rot);

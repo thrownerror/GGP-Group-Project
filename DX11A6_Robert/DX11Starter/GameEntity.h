@@ -67,6 +67,7 @@ private:
 	Mesh*		entityMesh;
 	XMFLOAT4X4  worldMatrix;
 	XMFLOAT3	position;
+	XMFLOAT3	collisionPosition;
 	XMFLOAT3	rotation;
 	XMFLOAT3	scale;
 	//collision stuff - treated as radii
