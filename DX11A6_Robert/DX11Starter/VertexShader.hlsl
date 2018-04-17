@@ -13,6 +13,7 @@ cbuffer externalData : register(b0)
 
 	float fogStart;
 	float fogEnd;
+	float fogDensity;
 };
 
 // Struct representing a single vertex worth of data
@@ -99,7 +100,13 @@ VertexToPixel main( VertexShaderInput input )
 
 	// Thank you to http://www.rastertek.com/dx11tut23.html
 	// Calculate the fog factor here
-	output.fogFactor = saturate((fogEnd - output.position.z) / (fogEnd - fogStart));
+	
+	// Linear fog [ (end - depth) / (end - start) ]
+	//output.fogFactor = saturate((fogEnd - output.position.z) / (fogEnd - fogStart));
+
+	// Exponential Fog 2 [ 1 / ( e ^ ((depth * density) ^ 2) ) ]
+	float dense = output.position.z * fogDensity;
+	output.fogFactor = saturate(1.0 / pow(2.71828, dense * dense));
 
 	return output;
 }

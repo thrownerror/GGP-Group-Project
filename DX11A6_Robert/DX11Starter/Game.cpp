@@ -440,9 +440,15 @@ void Game::Draw(float deltaTime, float totalTime)
 		&dLight2,
 		sizeof(DirectionalLight));
 
-	// Set the fog distances and color
-	vertexShader->SetFloat("fogStart", 0.5f);
-	vertexShader->SetFloat("fogEnd", 3.0f);
+
+	// Linear Fog
+	// vertexShader->SetFloat("fogStart", 0.5f);
+	// vertexShader->SetFloat("fogEnd", 3.0f);
+
+	// Exponential Fog
+	vertexShader->SetFloat("fogDensity", 0.66f);
+
+	// Fog Color
 	pixelShader->SetFloat4("fogColor", { 0.5f, 0.5f, 0.5f, 1.0f });
 		
 	// Background color (Cornflower Blue in this case) for clearing
