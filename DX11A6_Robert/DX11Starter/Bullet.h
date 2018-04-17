@@ -7,5 +7,7 @@ public:
 	Bullet();
 	Bullet(Mesh* mesh, Material* material);
 	~Bullet();
+
+	void UpdateEntity(float deltaTime);
 };
 
