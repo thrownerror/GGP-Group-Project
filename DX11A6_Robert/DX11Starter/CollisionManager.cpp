@@ -16,8 +16,8 @@ bool CollisionManager::isColliding(GameEntity* ge1, GameEntity* ge2) {
 //	float x1Width = ge1->GetColliderXWidth();
 //	float y1Height = ge1->GetColliderYHeight();
 //	float z1Depth = ge1->GetColliderZDepth();
-	XMFLOAT3 ge1Position = ge1->GetPosition();
-	XMFLOAT3 ge2Position = ge2->GetPosition();
+	XMFLOAT3 ge1Position = ge1->GetColliderPosition();
+	XMFLOAT3 ge2Position = ge2->GetColliderPosition();
 	Collider* ge1Collider = ge1->GetCollider();
 	Collider* ge2Collider = ge2->GetCollider();
 
@@ -61,9 +61,9 @@ bool CollisionManager::isColliding(GameEntity* ge1, GameEntity* ge2) {
 	float z2Max = ge2Array[1]->z;
 	float z2Min = ge2Array[4]->z;
 
-	return(((x1Min <= x2Max) && (x1Max >= x2Min)) &&
-		   ((y1Min <= y2Max) && (y1Max >= y2Min)) &&
-		   ((z1Min <= z2Max) && (z1Max >= z2Min))
+	return(((x1Min + ge1Position.x <= x2Max + ge2Position.x) && (x1Max + ge1Position.x >= x2Min + ge2Position.x)) &&
+		   ((y1Min + ge1Position.y <= y2Max + ge2Position.y) && (y1Max + ge1Position.y >= y2Min + ge2Position.y)) &&
+		   ((z1Min + ge1Position.z <= z2Max + ge2Position.z) && (z1Max + ge1Position.z >= z2Min + ge2Position.z))
 		  );
 		   
 	

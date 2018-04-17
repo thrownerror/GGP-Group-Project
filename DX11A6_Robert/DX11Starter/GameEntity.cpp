@@ -12,6 +12,7 @@ GameEntity::GameEntity(Mesh * mesh)
 	position = XMFLOAT3(0, 0, 0);
 	rotation = XMFLOAT3(0, 0, 0);
 	scale = XMFLOAT3(1, 1, 1);
+	collisionPosition = XMFLOAT3(0, 0, 0);
 	collisionBox = nullptr;
 	calcWorldMatrix();
 	recalculateWorldMatrix = false;
@@ -86,7 +87,10 @@ Collider* GameEntity::GetCollider()
 void GameEntity::SetPosition(XMFLOAT3 setPos)
 {
 	position = setPos;
-	if (collisionBox != nullptr) { collisionBox->SetColliderPosition(setPos); }
+	if (collisionBox != nullptr) { 
+		collisionPosition = position;
+		collisionBox->SetColliderPosition(setPos); 
+	}
 	//printf("Player position updated%d %d %d\n", position.x, position.y, position.z);
 }
 void GameEntity::PrintPosition() {

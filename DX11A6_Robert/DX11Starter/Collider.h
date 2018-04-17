@@ -2,6 +2,7 @@
 #include "Vertex.h"
 #include "DirectXMath.h"
 #include <d3d11.h>
+#include <malloc.h>
 using namespace DirectX;
 
 class Collider
