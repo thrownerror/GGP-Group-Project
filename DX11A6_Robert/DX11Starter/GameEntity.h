@@ -19,6 +19,7 @@ public:
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetRotation();
 	XMFLOAT3 GetScale();
+	XMFLOAT3 GetColliderPosition();
 
 	Collider* GetCollider();
 	//these allow things to "jump" to positions

@@ -80,6 +80,11 @@ void Collider::SetColliderZDepth(float zDepthRadius)
 	zDepth = zDepthRadius;
 }
 
+void Collider::SetColliderPosition(XMFLOAT3 collPos)
+{
+	position = collPos;
+}
+
 XMFLOAT3** Collider::GetColliderCorners()
 {
 	XMFLOAT3* cornerArray[8];//= [topLeftFront, topRightfront, bottomLeftFront, bottomRightFront, topLeftBack, topRightBack, bottomLeftBack, bottomRightBack];

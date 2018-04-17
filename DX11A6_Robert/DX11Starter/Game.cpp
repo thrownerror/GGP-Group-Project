@@ -313,27 +313,40 @@ void Game::CreateBasicGeometry()
 		XMFLOAT3 rotate90CCWAroundX = XMFLOAT3(-90.0f, 0.0f, 0.0f);
 		//XMFLOAT3 scaleValue = XMFLOAT3(10.0f, 10.0f, 10.0f);
 		//Reserved for any random entity
+
+
+		ge6->SetCollisionBox(1.0f, 1.0f, 1.0f);
+		ge7->SetCollisionBox(1.0f, 1.0f, 1.0f);
+		//ge8->SetCollisionBox(1.0f, 1.0f, 1.0f);
+
+		//Test wall/entity
+
 		ge1->TransformTranslation(movementLeft);
-		
+		ge1->SetCollisionBox(1.0f, 1.0f, .01f);
 		ge1->TransformTranslation(movementLeft);
 		ge1->UpdateEntity();
+
+
 		//Forward and back walls
 		ge2->UpdateEntity();
-
-
 		ge3->TransformRotation(rotation180AroundY); //back wall
+		ge2->SetCollisionBox(1.0f, 1.0f, 0.2f);
+		ge3->SetCollisionBox(1.0f, 1.0f, 0.2f);
 		ge3->UpdateEntity();
 
 		//Left and right walls
 		ge4->TransformRotation(rotate90CCWAroundY);
 		ge4->UpdateEntity(); //left
-
+		ge4->SetCollisionBox(0.2f, 1.0f, 1.0f);
+		ge5->SetCollisionBox(0.2f, 1.0f, 1.0f);
 		ge5->TransformRotation(rotate90CWAroundY);
 		ge5->UpdateEntity(); //right
 
 		//Top and Bottom walls
 		ge6->TransformRotation(rotate90CCWAroundX);
 		ge6->UpdateEntity();
+		ge4->SetCollisionBox(1.0f, 0.2f, 1.0f);
+		ge5->SetCollisionBox(1.0f, 0.2f, 1.0f);
 		ge7->TransformRotation(rotate90CWAroundX);
 		ge7->UpdateEntity();
 	}
@@ -376,6 +389,7 @@ void Game::Update(float deltaTime, float totalTime)
 	XMFLOAT3 scaleValue = XMFLOAT3(1.0f * deltaTime, 1.0f * deltaTime, 1.0f* deltaTime);
 //	printf("%d %d %d\n", camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
 	gePlayer->SetPosition(camera->GetPosition());
+	printf("\nPlayer x: %f, y: %f, z: %f", gePlayer->GetPosition().x, gePlayer->GetPosition().y, gePlayer->GetPosition().z);
 	//ge1->TransformRotation(rotationValue);
 	//ge1->UpdateEntity();
 	//ge2->TransformTranslation(movementValue);
@@ -388,6 +402,7 @@ void Game::Update(float deltaTime, float totalTime)
 	gePlayer->PrintPosition();
 	for (int i = 0; i <= entityArraySize - 1; i++) {
 		//gePla
+		//printf("\nObject: %f\n", i);
 		entityArray[i]->UpdateEntity();
 		if (collidingMaster.isColliding(gePlayer, entityArray[i])) {
 		//	printf("collision between player and %d\n",i);

@@ -12,6 +12,7 @@ GameEntity::GameEntity(Mesh * mesh)
 	position = XMFLOAT3(0, 0, 0);
 	rotation = XMFLOAT3(0, 0, 0);
 	scale = XMFLOAT3(1, 1, 1);
+	collisionBox = nullptr;
 	calcWorldMatrix();
 	recalculateWorldMatrix = false;
 
@@ -25,6 +26,7 @@ GameEntity::GameEntity(Mesh * mesh, Material * material)
 	collisionPosition = XMFLOAT3(0, 0, 1);
 	rotation = XMFLOAT3(0, 0, 0);
 	scale = XMFLOAT3(1, 1, 1);
+	collisionBox = nullptr;
 	calcWorldMatrix();
 	recalculateWorldMatrix = false;
 }
@@ -84,6 +86,7 @@ Collider* GameEntity::GetCollider()
 void GameEntity::SetPosition(XMFLOAT3 setPos)
 {
 	position = setPos;
+	if (collisionBox != nullptr) { collisionBox->SetColliderPosition(setPos); }
 	//printf("Player position updated%d %d %d\n", position.x, position.y, position.z);
 }
 void GameEntity::PrintPosition() {
@@ -101,7 +104,7 @@ void GameEntity::SetScale(XMFLOAT3 setSca)
 
 void GameEntity::SetCollisionBox(float xDim, float yDim, float zDim)
 {
-	collisionBox = new Collider(xDim, yDim, zDim, position);
+	collisionBox = new Collider(xDim, yDim, zDim, collisionPosition);
 }
 
 void GameEntity::TransformTranslation(XMFLOAT3 value)
@@ -191,9 +194,9 @@ void GameEntity::calcWorldMatrix()
 	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(resultant));
 	XMStoreFloat3(&collisionPosition, colPos);
 	printf("\nAfter collision position: %f, %f, %f\n", collisionPosition.x, collisionPosition.y, collisionPosition.z);
-
-
-	
+	if (collisionBox != nullptr) {
+		collisionBox->SetColliderPosition(collisionPosition);
+	}
 }
 void GameEntity::ColliderBoxMatrix(bool safeRotation) 
 {
@@ -234,6 +237,10 @@ void GameEntity::Move(XMFLOAT3 value)
 //Stub for more discrete movement functions in future
 void GameEntity::MoveForward(XMFLOAT3 value)
 {
+}
+
+XMFLOAT3 GameEntity::GetColliderPosition() {
+	return collisionPosition;
 }
 
 ID3D11Buffer * GameEntity::GetVertBuffer()

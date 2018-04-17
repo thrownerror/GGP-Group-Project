@@ -20,6 +20,7 @@ public:
 	void SetColliderYHeight(float yHeightRadius);
 	void SetColliderZDepth(float zDepthRadius);
 
+	void SetColliderPosition(XMFLOAT3 collPos);
 	XMFLOAT3** GetColliderCorners();
 
 	XMFLOAT3 GetColliderPos();
