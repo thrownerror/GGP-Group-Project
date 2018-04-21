@@ -2,22 +2,23 @@
 
 
 
-Enemy::Enemy()
+Enemy::Enemy() : Enemy(nullptr, nullptr, nullptr, nullptr)
 {
-	bullets = std::vector<Bullet>();
-	seesPlayer = false;
-	numBullets = 0;
-	wp0 = XMFLOAT3(0, 0, 0);
-	wp1 = XMFLOAT3(0, 0, 0);
-	goingToOne = true;
-	percentage = 0;
 }
 
 Enemy::Enemy(Mesh * enemyMesh, Material * enemyMaterial, Mesh * bullMesh, Material * bullMaterial) : GameEntity(enemyMesh, enemyMaterial)
 {
 	bulletMesh = bullMesh;
 	bulletMaterial = bullMaterial;
-	Enemy();
+
+	bullets = std::vector<Bullet>();
+	seesPlayer = false;
+	attackInterval = 0;
+	numBullets = 0;
+	wp0 = XMFLOAT3(0, 0, 0);
+	wp1 = XMFLOAT3(0, 0, 0);
+	goingToOne = true;
+	percentage = 0;
 }
 
 
@@ -29,12 +30,15 @@ void Enemy::SetWanderPoints(XMFLOAT3 point0, XMFLOAT3 point1)
 {
 	wp0 = point0;
 	wp1 = point1;
+	SetPosition(wp0);
 }
 
 void Enemy::Attack()
 {
 	bullets.push_back(Bullet(bulletMesh, bulletMaterial));
 	numBullets++;
+
+	bullets[numBullets].TransformRotation(GetRotation());
 }
 
 void Enemy::UpdateEntity(float deltaTime)
@@ -43,24 +47,30 @@ void Enemy::UpdateEntity(float deltaTime)
 	if (!seesPlayer) {
 		//if (wp0.x != wp1.x && wp0.y != wp1.y && wp0.z != wp1.z) {
 		if (goingToOne) {
-			percentage += 0.1f;
+			percentage += 0.01f * deltaTime;
 			if (percentage >= 1.0f) {
 				percentage = 1.0f;
 				goingToOne = false;
 			}
 		}
 		else {
-			percentage -= 0.1f;
+			percentage -= 0.01f * deltaTime;
 			if (percentage <= 0) {
 				percentage = 0;
 				goingToOne = true;
 			}
 		}
+		printf("\nPercentage: %f", percentage);
 		TransformTranslation(Lerp(wp0, wp1, percentage));
 	}
-	// If trageting the player
+	// If targeting the player
 	else {
-
+		//TransformRotation(); <= change rotation based on player
+		attackInterval -= deltaTime;
+		if (attackInterval <= 0) {
+			attackInterval = 3.0f;
+			Attack();
+		}
 	}
 
 	for (int i = 0; i < numBullets; i++)
@@ -68,16 +78,4 @@ void Enemy::UpdateEntity(float deltaTime)
 		bullets[i].UpdateEntity(deltaTime);
 	}
 	GameEntity::UpdateEntity();
-}
-
-// Lerps between two points, returning the position at the percent between the two
-XMFLOAT3 Enemy::Lerp(XMFLOAT3 start, XMFLOAT3 end, float percent)
-{
-	XMVECTOR s = XMLoadFloat3(&start);
-	XMVECTOR e = XMLoadFloat3(&end);
-	XMFLOAT3 result;
-
-	XMStoreFloat3(&result, s + percent * (e - s));
-
-	return result;
 }

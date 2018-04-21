@@ -4,7 +4,7 @@
 #include "SimpleShader.h"
 #include <DirectXMath.h>
 #include "Mesh.h"
-#include "GameEntity.h"
+#include "Enemy.h"
 #include "Camera.h"
 #include "Lights.h"
 #include "CollisionManager.h"
@@ -82,6 +82,8 @@ private:
 	GameEntity* ge5;
 	GameEntity* ge6;
 	GameEntity* ge7;
+
+	Enemy* e0;
 
 	Camera* camera;
 

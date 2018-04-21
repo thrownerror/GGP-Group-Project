@@ -96,6 +96,22 @@ void GameEntity::SetPosition(XMFLOAT3 setPos)
 void GameEntity::PrintPosition() {
 	//printf("Pos x: %d	Pos y: %d	Pos z: %d \n", position.x, position.y, position.z);
 }
+
+XMFLOAT3 GameEntity::Lerp(XMFLOAT3 start, XMFLOAT3 end, float percent)
+{
+	XMVECTOR s = XMLoadFloat3(&start);
+	XMVECTOR e = XMLoadFloat3(&end);
+	XMFLOAT3 result;
+
+	XMStoreFloat3(&result, s + (percent * (e - s)));
+
+
+	printf("\nResult x: %f", result.x);
+	printf("\nResult y: %f", result.y);
+	printf("\nResult z: \n%f", result.z);
+
+	return result;
+}
 void GameEntity::SetRotation(XMFLOAT3 setRot)
 {
 	rotation = setRot;

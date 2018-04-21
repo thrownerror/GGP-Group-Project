@@ -62,6 +62,9 @@ public:
 	float GetColliderZDepth();
 	//float getColliderZMin();
 	void PrintPosition();
+
+	// Lerps between two points, returning the position at the percent between the two
+	XMFLOAT3 Lerp(XMFLOAT3 start, XMFLOAT3 end, float percent);
 private:
 
 	Material*	entityMaterial;

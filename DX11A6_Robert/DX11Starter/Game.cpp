@@ -67,6 +67,8 @@ Game::~Game()
 	delete ge7;
 	delete gePlayer;
 
+	delete e0;
+
 	delete[] entityArray;
 	delete[] meshArray;
 
@@ -284,7 +286,14 @@ void Game::CreateBasicGeometry()
 	ge7 = new GameEntity(meshArray[0], mat1);
 
 	gePlayer = new GameEntity(meshArray[0]);
+
 	gePlayer->SetCollisionBox(.1f, .1f, .1f);
+
+
+	e0 = new Enemy(meshModel1, mat1, meshModel1, mat1);
+	e0->SetWanderPoints(XMFLOAT3(0, 0, 0), XMFLOAT3(5, 5, 5));
+	e0->SetCollisionBox(.1f, .1f, .1f);
+
 	if (testBox) {
 		entityArraySize = 7;
 
@@ -401,6 +410,18 @@ void Game::Update(float deltaTime, float totalTime)
 	//ge5->TransformTranslation(movementValue);
 	//ge4->UpdateEntity();
 	gePlayer->PrintPosition();
+
+	e0->UpdateEntity(deltaTime);
+
+	/*
+	printf("\nPlayer position.x: %f", gePlayer->GetPosition().x);
+	printf("\nPlayer position.y: %f", gePlayer->GetPosition().y);
+	printf("\nPlayer position.z: %f", gePlayer->GetPosition().z);
+	
+	printf("\nEnemy position.x: %f", e0->GetPosition().x);
+	printf("\nEnemy position.y: %f", e0->GetPosition().y);
+	printf("\nEnemy position.z: %f", e0->GetPosition().z);
+	*/
 	for (int i = 0; i <= entityArraySize - 1; i++) {
 		//gePla
 		//printf("\nObject: %f\n", i);
@@ -472,6 +493,13 @@ void Game::Draw(float deltaTime, float totalTime)
 	//vertexShader->SetMatrix4x4("world", worldMatrix);
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
+
+	e0->PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
+	ID3D11Buffer* vert = e0->GetVertBuffer();
+	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
+	context->IASetIndexBuffer(e0->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+	context->DrawIndexed(e0->GetIndCount(), 0, 0);
+
 	for (int i = 0; i <= entityArraySize - 1; i++) {
 		if (entityArray[i] != '\0') {
 			entityArray[i]->PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());

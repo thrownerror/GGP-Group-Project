@@ -15,6 +15,7 @@ private:
 
 	// Whether this enemy "sees" the player to shoot at it
 	bool seesPlayer;
+	float attackInterval;
 
 	// Points the enemy wanders between
 	XMFLOAT3 wp0, wp1;
@@ -28,5 +29,4 @@ public:
 	void SetWanderPoints(XMFLOAT3 point0, XMFLOAT3 point1);
 	void Attack();
 	void UpdateEntity(float deltaTime);
-	XMFLOAT3 Lerp(XMFLOAT3 start, XMFLOAT3 end, float percent);
 };
