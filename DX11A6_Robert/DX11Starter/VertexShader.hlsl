@@ -11,6 +11,9 @@ cbuffer externalData : register(b0)
 	matrix view;
 	matrix projection;
 
+	matrix shadowView;
+	matrix shadowProjection;
+
 	float fogStart;
 	float fogEnd;
 	float fogDensity;
@@ -54,6 +57,8 @@ struct VertexToPixel
 
 	float  fogFactor	: FOG;			// Fog Factor
 
+	float4 posForShadow	: TEXCOORD1;	// Shadow Position
+
 	//float4 color		: COLOR;        // RGBA color
 };
 
@@ -84,6 +89,10 @@ VertexToPixel main( VertexShaderInput input )
 	// The result is essentially the position (XY) of the vertex on our 2D 
 	// screen and the distance (Z) from the camera (the "depth" of the pixel)
 	output.position = mul(float4(input.position, 1.0f), worldViewProj);
+
+	// Calculate where this vertex WOULD BE on the shadow map
+	matrix shadowWVP = mul(mul(world, shadowView), shadowProjection);
+	output.posForShadow = mul(float4(input.position, 1.0f), shadowWVP);
 
 	// Pass the color through 
 	// - The values will be interpolated per-pixel by the rasterizer
