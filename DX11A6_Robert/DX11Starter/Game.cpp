@@ -33,7 +33,7 @@ Game::Game(HINSTANCE hInstance)
 	CreateConsoleWindow(500, 120, 32, 120);
 	printf("Console window created successfully.  Feel free to printf() here.");
 #endif
-	
+
 }
 
 // --------------------------------------------------------
@@ -108,7 +108,7 @@ void Game::Init()
 
 	mat1 = new Material(vertexShader, pixelShader, srv, nrm, sampState);
 
-	prevMousePos.x = 0; 
+	prevMousePos.x = 0;
 	prevMousePos.y = 0;
 	CreateMatrices();
 	CreateBasicGeometry();
@@ -121,12 +121,46 @@ void Game::Init()
 	dLight2.DiffuseColor = XMFLOAT4(.5, .5, 0, 1);
 	dLight2.Direction = XMFLOAT3(-1, .5, .1);
 
+	// Real-Time Shadow Data Descriptions
+
+	D3D11_TEXTURE2D_DESC shadowTexDesc = {};
+	shadowTexDesc.Width = shadowTexDesc.Height = pow(2, 8);
+	shadowTexDesc.MipLevels = 1;
+	shadowTexDesc.ArraySize = 1;
+	shadowTexDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+	shadowTexDesc.Usage = D3D11_USAGE_DEFAULT;
+	shadowTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+	shadowTexDesc.CPUAccessFlags = 0;
+	shadowTexDesc.MiscFlags = 0;
+	shadowTexDesc.SampleDesc.Count = 1;
+	shadowTexDesc.SampleDesc.Quality = 0;
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC shadowDepthDesc = {};
+	shadowDepthDesc.Format = DXGI_FORMAT_R32_FLOAT;
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC shadowSRVDesc = {};
+	shadowSRVDesc.Format = DXGI_FORMAT_R32_FLOAT;
+
+	// Create the shadow texture map
+	device->CreateTexture2D(&shadowTexDesc, NULL, &shadowTexture);
+	device->CreateDepthStencilView(shadowTexture, &shadowDepthDesc, &shadowDepth);
+	device->CreateShaderResourceView(shadowTexture, &shadowSRVDesc, &shadowSRV);
+
+	// Create the shadow viewport
+	shadowViewport = {};
+	shadowViewport.TopLeftX = 0;
+	shadowViewport.TopLeftY = 0;
+	shadowViewport.Width = shadowTexDesc.Width;
+	shadowViewport.Height = shadowTexDesc.Height;
+	shadowViewport.MinDepth = 0.0f;
+	shadowViewport.MaxDepth = 1.0f;
+
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
 	// Essentially: "What kind of shape should the GPU draw with our data?"
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//	srv->Release();
-//	sampState->Release();
+	//	srv->Release();
+	//	sampState->Release();
 }
 
 // --------------------------------------------------------
@@ -143,8 +177,6 @@ void Game::LoadShaders()
 	pixelShader = new SimplePixelShader(device, context);
 	pixelShader->LoadShaderFile(L"PixelShader.cso");
 }
-
-
 
 // --------------------------------------------------------
 // Initializes the matrices necessary to represent our geometry's 
@@ -189,7 +221,6 @@ void Game::CreateMatrices()
 	camera->UpdateProjectionMatrix((float)width, (float)height);
 }
 
-
 // --------------------------------------------------------
 // Creates the geometry we're going to draw - a single triangle for now
 // --------------------------------------------------------
@@ -212,19 +243,19 @@ void Game::CreateBasicGeometry()
 		{ XMFLOAT3(+3.6f, -1.5f, +0.0f), norm, XMFLOAT2(1.0f, 0.0f) },
 		{ XMFLOAT3(+0.6f, -1.5f, +0.0f), norm, XMFLOAT2(0.0f, 0.0f) },
 	};
-	
+
 	// Set up the indices, which tell us which vertices to use and in which order
 	// - This is somewhat redundant for just 3 vertices (it's a simple example)
 	// - Indices are technically not required if the vertices are in the buffer 
 	//    in the correct order and each one will be used exactly once
 	// - But just to see how it's done...
 	unsigned int indices[] = { 0, 1, 2 };
-	
+
 
 	//mesh1 = new Mesh(vertices, 3, indices, 3, device);
 
 
-	Vertex squareVertices[] = 
+	Vertex squareVertices[] =
 	{
 		//{ XMFLOAT3(+1.0f, +1.0f, +0.0f), red },
 		//{ XMFLOAT3(+1.0f, -1.0f, +0.0f), blue },
@@ -236,12 +267,12 @@ void Game::CreateBasicGeometry()
 		{ XMFLOAT3(1.0f, 1.0f, +1.0f), norm, XMFLOAT2(0.0f, 1.0f) },
 		{ XMFLOAT3(1.0f, -1.0f, +1.0f), norm, XMFLOAT2(0.0f, 0.0f) }
 	};
-	unsigned int squareIndices[]{ 0, 1, 2, 
+	unsigned int squareIndices[]{ 0, 1, 2,
 								  2, 3, 0 };
 	//mesh2 = new Mesh(squareVertices, 4, squareIndices, 6, device);
 
 
-	Vertex trapezoidVertices[] = 
+	Vertex trapezoidVertices[] =
 	{
 		{ XMFLOAT3(-1.5f, +0.5f, +1.0f), norm, XMFLOAT2(0.0f,	0.0f) },//0
 		{ XMFLOAT3(-1.0f, +1.5f, +1.0f), norm, XMFLOAT2(0.165f, 1.0f) },//1
@@ -249,7 +280,7 @@ void Game::CreateBasicGeometry()
 		{ XMFLOAT3(+1.5f, +0.5f, +1.0f), norm, XMFLOAT2(1.0f,	0.0f) },//3
 		{ XMFLOAT3(+1.0f, +0.5f, +1.0f), norm, XMFLOAT2(0.825f, 0.0f) },//4
 		{ XMFLOAT3(-1.0f, +0.5f, +1.0f), norm, XMFLOAT2(0.165f, 0.0f) }//5
-		
+
 	};
 	unsigned int trapezoidIndices[]{ 0,1,5,
 									 5,1,2,
@@ -266,7 +297,7 @@ void Game::CreateBasicGeometry()
 
 	meshModel1 = new Mesh(meshModel1File, device);
 	meshArraySize = 4;
-	meshArray = new Mesh*[meshArraySize+1];
+	meshArray = new Mesh*[meshArraySize + 1];
 	meshArray[0] = mesh1;
 	meshArray[1] = mesh2;
 	meshArray[2] = mesh3;
@@ -363,9 +394,8 @@ void Game::CreateBasicGeometry()
 
 
 
-	
-}
 
+}
 
 // --------------------------------------------------------
 // Handle resizing DirectX "stuff" to match the new window size.
@@ -397,18 +427,18 @@ void Game::Update(float deltaTime, float totalTime)
 	XMFLOAT3 movementValue = XMFLOAT3(1.0f * deltaTime, 0.0f, 0.0f);
 	XMFLOAT3 rotationValue = XMFLOAT3(0.0f, 20.0f * deltaTime, 0.0f);
 	XMFLOAT3 scaleValue = XMFLOAT3(1.0f * deltaTime, 1.0f * deltaTime, 1.0f* deltaTime);
-//	printf("%d %d %d\n", camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
+	//	printf("%d %d %d\n", camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
 	gePlayer->SetPosition(camera->GetPosition());
-//	printf("\nPlayer x: %f, y: %f, z: %f", gePlayer->GetPosition().x, gePlayer->GetPosition().y, gePlayer->GetPosition().z);
-	//ge1->TransformRotation(rotationValue);
-	//ge1->UpdateEntity();
-	//ge2->TransformTranslation(movementValue);
-	//ge2->UpdateEntity();
-	//ge3->TransformScale(scaleValue);
-	//ge3->UpdateEntity();
-	//ge4->TransformRotation(rotationValue);
-	//ge5->TransformTranslation(movementValue);
-	//ge4->UpdateEntity();
+	//	printf("\nPlayer x: %f, y: %f, z: %f", gePlayer->GetPosition().x, gePlayer->GetPosition().y, gePlayer->GetPosition().z);
+		//ge1->TransformRotation(rotationValue);
+		//ge1->UpdateEntity();
+		//ge2->TransformTranslation(movementValue);
+		//ge2->UpdateEntity();
+		//ge3->TransformScale(scaleValue);
+		//ge3->UpdateEntity();
+		//ge4->TransformRotation(rotationValue);
+		//ge5->TransformTranslation(movementValue);
+		//ge4->UpdateEntity();
 	gePlayer->PrintPosition();
 
 	e0->UpdateEntity(deltaTime);
@@ -417,7 +447,7 @@ void Game::Update(float deltaTime, float totalTime)
 	printf("\nPlayer position.x: %f", gePlayer->GetPosition().x);
 	printf("\nPlayer position.y: %f", gePlayer->GetPosition().y);
 	printf("\nPlayer position.z: %f", gePlayer->GetPosition().z);
-	
+
 	printf("\nEnemy position.x: %f", e0->GetPosition().x);
 	printf("\nEnemy position.y: %f", e0->GetPosition().y);
 	printf("\nEnemy position.z: %f", e0->GetPosition().z);
@@ -432,12 +462,12 @@ void Game::Update(float deltaTime, float totalTime)
 
 		if (collidingMaster.isColliding(gePlayer, entityArray[i])) {
 			collidingMaster.isColliding(gePlayer, entityArray[i]);
-			printf("collision between player and %d\n",i);
+			printf("collision between player and %d\n", i);
 		}
 		else {
 			//printf("no collision between player and %d\n", i);
 		}
-		
+
 		//if(i != )
 	}
 
@@ -451,6 +481,23 @@ void Game::Update(float deltaTime, float totalTime)
 // --------------------------------------------------------
 void Game::Draw(float deltaTime, float totalTime)
 {
+#pragma region Render Shadow Map
+
+	context->OMSetRenderTargets(0, NULL, shadowDepth);
+	context->ClearDepthStencilView(shadowDepth, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	context->PSSetShader(0, 0, 0);
+	D3D11_VIEWPORT viewport;
+	UINT num = 1;
+	context->RSGetViewports(&num, &viewport);
+	context->RSSetViewports(1, &shadowViewport);
+
+
+	context->OMSetRenderTargets(0, &backBufferRTV, depthStencilView);
+	context->RSSetViewports(1, &viewport);
+	context->RSSetState(NULL);
+#pragma endregion
+
+#pragma region Render Full Scene
 
 	pixelShader->SetData(
 		"light",
@@ -471,7 +518,7 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	// Fog Color
 	pixelShader->SetFloat4("fogColor", { 0.5f, 0.5f, 0.5f, 1.0f });
-		
+
 	// Background color (Cornflower Blue in this case) for clearing
 	const float color[4] = { 0.4f, 0.6f, 0.75f, 0.0f };
 
@@ -494,21 +541,31 @@ void Game::Draw(float deltaTime, float totalTime)
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 
+	// Draw the enemy
 	e0->PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
 	ID3D11Buffer* vert = e0->GetVertBuffer();
 	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
 	context->IASetIndexBuffer(e0->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
 	context->DrawIndexed(e0->GetIndCount(), 0, 0);
 
+	// Draw the entity array
 	for (int i = 0; i <= entityArraySize - 1; i++) {
 		if (entityArray[i] != '\0') {
+			// Prepare all the mateiral data for the shaders
 			entityArray[i]->PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
-			//pixelShader->CopyAllBufferData();
 
+			// Set buffers in the input assembler
+			//  - Do this ONCE PER OBJECT you're drawing, since each object might
+			//    have different geometry.
 			ID3D11Buffer* vertexHolder = entityArray[i]->GetVertBuffer();
 			context->IASetVertexBuffers(0, 1, &vertexHolder, &stride, &offset);
-			
 			context->IASetIndexBuffer(entityArray[i]->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+
+			// Finally do the actual drawing
+			//  - Do this ONCE PER OBJECT you intend to draw
+			//  - This will use all of the currently set DirectX "stuff" (shaders, buffers, etc)
+			//  - DrawIndexed() uses the currently set INDEX BUFFER to look up corresponding
+			//     vertices in the currently set VERTEX BUFFER
 			context->DrawIndexed(
 				entityArray[i]->GetIndCount(),
 				0,
@@ -516,49 +573,11 @@ void Game::Draw(float deltaTime, float totalTime)
 		}
 	}
 
-	// Once you've set all of the data you care to change for
-	// the next draw call, you need to actually send it to the GPU
-	//  - If you skip this, the "SetMatrix" calls above won't make it to the GPU!
-	//vertexShader->CopyAllBufferData();
+#pragma endregion
 
-	// Set the vertex and pixel shaders to use for the next Draw() command
-	//  - These don't technically need to be set every frame...YET
-	//  - Once you start applying different shaders to different objects,
-	//    you'll need to swap the current shaders before each draw
-	//vertexShader->SetShader();
-	//pixelShader->SetShader();
-
-	// Set buffers in the input assembler
-	//  - Do this ONCE PER OBJECT you're drawing, since each object might
-	//    have different geometry.
-	//UINT stride = sizeof(Vertex);
-	//UINT offset = 0;
-	//context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-	//context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	// Finally do the actual drawing
-	//  - Do this ONCE PER OBJECT you intend to draw
-	//  - This will use all of the currently set DirectX "stuff" (shaders, buffers, etc)
-	//  - DrawIndexed() uses the currently set INDEX BUFFER to look up corresponding
-	//     vertices in the currently set VERTEX BUFFER
-	//context->DrawIndexed(
-	//	3,     // The number of indices to use (we could draw a subset if we wanted)
-	//	0,     // Offset to the first index we want to use
-	//	0);    // Offset to add to each index when looking up vertices
-/*
-	ID3D11Buffer* m1VertexHolder = mesh1->GetVertexBuffer();
-	context->IASetVertexBuffers(0, 1, &m1VertexHolder, &stride, &offset);
-	context->IASetIndexBuffer(mesh1->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
-	context->DrawIndexed(
-		3,
-		0,
-		0);
-
-		*/
-		// Present the back buffer to the user
-		//  - Puts the final frame we're drawing into the window so the user can see it
-		//  - Do this exactly ONCE PER FRAME (always at the very end of the frame)
-	
+	// Present the back buffer to the user
+	//  - Puts the final frame we're drawing into the window so the user can see it
+	//  - Do this exactly ONCE PER FRAME (always at the very end of the frame)
 	swapChain->Present(0, 0);
 }
 

@@ -90,5 +90,11 @@ private:
 	//Lighting
 	DirectionalLight dLight;
 	DirectionalLight dLight2;
+
+	// Shadow Map Data
+	ID3D11Texture2D* shadowTexture;
+	ID3D11DepthStencilView* shadowDepth;
+	ID3D11ShaderResourceView* shadowSRV;
+	D3D11_VIEWPORT shadowViewport;
 };
 
