@@ -1,5 +1,6 @@
 #pragma once
 #include "Bullet.h"
+#include <cmath>
 
 class Enemy :
 	public GameEntity

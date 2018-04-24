@@ -47,21 +47,20 @@ void Enemy::UpdateEntity(float deltaTime)
 	if (!seesPlayer) {
 		//if (wp0.x != wp1.x && wp0.y != wp1.y && wp0.z != wp1.z) {
 		if (goingToOne) {
-			percentage += 0.01f * deltaTime;
+			percentage += 0.2f * deltaTime;
 			if (percentage >= 1.0f) {
 				percentage = 1.0f;
 				goingToOne = false;
 			}
 		}
 		else {
-			percentage -= 0.01f * deltaTime;
+			percentage -= 0.2f * deltaTime;
 			if (percentage <= 0) {
 				percentage = 0;
 				goingToOne = true;
 			}
 		}
-		printf("\nPercentage: %f", percentage);
-		TransformTranslation(Lerp(wp0, wp1, percentage));
+		SetPosition(Lerp(wp0, wp1, percentage));
 	}
 	// If targeting the player
 	else {

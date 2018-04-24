@@ -91,6 +91,7 @@ void GameEntity::SetPosition(XMFLOAT3 setPos)
 		collisionPosition = position;
 		collisionBox->SetColliderPosition(setPos); 
 	}
+	recalculateWorldMatrix = true;
 	//printf("Player position updated%d %d %d\n", position.x, position.y, position.z);
 }
 void GameEntity::PrintPosition() {
@@ -103,12 +104,7 @@ XMFLOAT3 GameEntity::Lerp(XMFLOAT3 start, XMFLOAT3 end, float percent)
 	XMVECTOR e = XMLoadFloat3(&end);
 	XMFLOAT3 result;
 
-	XMStoreFloat3(&result, s + (percent * (e - s)));
-
-
-	printf("\nResult x: %f", result.x);
-	printf("\nResult y: %f", result.y);
-	printf("\nResult z: \n%f", result.z);
+	XMStoreFloat3(&result, s + percent * (e - s));
 
 	return result;
 }
