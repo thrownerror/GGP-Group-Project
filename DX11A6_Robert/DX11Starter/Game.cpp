@@ -120,19 +120,19 @@ void Game::Init()
 	CreateMatrices();
 	CreateBasicGeometry();
 
-	dLight.AmbientColor = XMFLOAT4(0.3, 0.3, 0.3, 1.0);
+	dLight.AmbientColor = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 	dLight.DiffuseColor = XMFLOAT4(0, 0, 1, 1);
 	dLight.Direction = XMFLOAT3(1, -1, 0);
 
-	dLight2.AmbientColor = XMFLOAT4(0.3, 0.3, 0.3, 1.0);
-	dLight2.DiffuseColor = XMFLOAT4(.5, .5, 0, 1);
-	dLight2.Direction = XMFLOAT3(-1, .5, .1);
+	dLight2.AmbientColor = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
+	dLight2.DiffuseColor = XMFLOAT4(.5f, .5f, 0, 1);
+	dLight2.Direction = XMFLOAT3(-1, .5f, .1f);
 
 	// Real-Time Shadow Data Descriptions
 
 	// Create the actual texture that will be the shadow map
 	D3D11_TEXTURE2D_DESC shadowTexDesc = {};
-	shadowTexDesc.Width = shadowTexDesc.Height = pow(2, 8);
+	shadowTexDesc.Width = shadowTexDesc.Height = 1024;
 	shadowTexDesc.MipLevels = 1;
 	shadowTexDesc.ArraySize = 1;
 	shadowTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
@@ -189,8 +189,8 @@ void Game::Init()
 	shadowViewport = {};
 	shadowViewport.TopLeftX = 0;
 	shadowViewport.TopLeftY = 0;
-	shadowViewport.Width = shadowTexDesc.Width;
-	shadowViewport.Height = shadowTexDesc.Height;
+	shadowViewport.Width = 1024;
+	shadowViewport.Height = 1024;
 	shadowViewport.MinDepth = 0.0f;
 	shadowViewport.MaxDepth = 1.0f;
 
@@ -390,7 +390,7 @@ void Game::CreateBasicGeometry()
 		entityArray[6] = ge7;
 
 		for (int i = 0; i < entityArraySize; i++) {
-			entityArray[i]->SetCollisionBox(1.0f, 1.0f, .02);
+			entityArray[i]->SetCollisionBox(1.0f, 1.0f, .02f);
 		}
 		XMFLOAT3 movementRight = XMFLOAT3(2.0f, 0.0f, 0.0f);
 		XMFLOAT3 movementLeft = XMFLOAT3(-2.0f, 0.0f, 0.0f);
@@ -539,7 +539,7 @@ void Game::Draw(float deltaTime, float totalTime)
 #pragma region Render Shadow Map
 
 	// Set shadow map render target
-	context->OMSetRenderTargets(0, NULL, shadowDepth);
+	context->OMSetRenderTargets(0, 0, shadowDepth);
 	// Set the shadow map depth view
 	context->ClearDepthStencilView(shadowDepth, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	// Set the shadow rasterizer
@@ -579,7 +579,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	// Reset it to the default render target
 	context->OMSetRenderTargets(1, &backBufferRTV, depthStencilView);
 	// Set it to the standard rasterizer
-	context->RSSetState(NULL);
+	context->RSSetState(0);
 	// Set it back to the default viewport
 	context->RSSetViewports(num, &viewport);
 #pragma endregion
@@ -625,8 +625,12 @@ void Game::Draw(float deltaTime, float totalTime)
 	//    and then copying that entire buffer to the GPU.  
 	//  - The "SimpleShader" class handles all of that for you.
 	//vertexShader->SetMatrix4x4("world", worldMatrix);
+	vertexShader->SetMatrix4x4("shadowView", shadowView);
+	vertexShader->SetMatrix4x4("shadowProjection", shadowProjection);
 
 	// Draw the enemy
+	pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
+	pixelShader->SetSamplerState("shadowSampler", shadowSampler);
 	e0->PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
 	ID3D11Buffer* vert = e0->GetVertBuffer();
 	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
@@ -638,8 +642,6 @@ void Game::Draw(float deltaTime, float totalTime)
 		if (entityArray[i] != '\0') {
 
 			// Pass in the shadow data
-			vertexShader->SetMatrix4x4("shadowView", shadowView);
-			vertexShader->SetMatrix4x4("shadowProjection", shadowProjection);
 			pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
 			pixelShader->SetSamplerState("shadowSampler", shadowSampler);
 
@@ -666,6 +668,14 @@ void Game::Draw(float deltaTime, float totalTime)
 	}
 
 #pragma endregion
+
+	// Reset any states we've changed for the next frame!
+	context->RSSetState(0);
+	context->OMSetDepthStencilState(0, 0);
+
+	// Be sure to unbind any shader resources for the next frame
+	ID3D11ShaderResourceView* nullSRV[16] = {};
+	context->PSSetShaderResources(0, 16, nullSRV);
 
 	// Present the back buffer to the user
 	//  - Puts the final frame we're drawing into the window so the user can see it
