@@ -190,12 +190,12 @@ void GameEntity::PrepareMaterial(XMFLOAT4X4 camView, XMFLOAT4X4 camProj)
 
 void GameEntity::calcWorldMatrix()
 {
-	printf("\nCurrent collision position: %f, %f, %f\n", collisionPosition.x, collisionPosition.y, collisionPosition.z);
+	//printf("\nCurrent collision position: %f, %f, %f\n", collisionPosition.x, collisionPosition.y, collisionPosition.z);
 	//Conversions
 	XMVECTOR colPos = XMLoadFloat3(&collisionPosition);
 
 	XMVECTOR pos = XMLoadFloat3(&position);
-	printf("\n%f, %f, %f", position.x, position.y, position.z);
+	//printf("\n%f, %f, %f", position.x, position.y, position.z);
 	XMVECTOR rot = XMLoadFloat3(&rotation);
 	XMVECTOR sca = XMLoadFloat3(&scale);
 	//Settings
@@ -209,7 +209,7 @@ void GameEntity::calcWorldMatrix()
 	//Storage
 	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(resultant));
 	XMStoreFloat3(&collisionPosition, colPos);
-	printf("\nAfter collision position: %f, %f, %f\n", collisionPosition.x, collisionPosition.y, collisionPosition.z);
+	//printf("\nAfter collision position: %f, %f, %f\n", collisionPosition.x, collisionPosition.y, collisionPosition.z);
 	if (collisionBox != nullptr) {
 		collisionBox->SetColliderPosition(collisionPosition);
 	}
