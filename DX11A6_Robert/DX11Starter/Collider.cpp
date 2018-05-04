@@ -9,6 +9,8 @@ Collider::Collider()
 	yHeight = 1;
 	zDepth = 1;
 	
+	cornerArray = NULL;
+
 	EstablishBoundingVectors();
 }
 
@@ -18,6 +20,8 @@ Collider::Collider(XMFLOAT3 pos)
 	xWidth = 1;
 	yHeight = 1;
 	zDepth = 1;
+
+	cornerArray = NULL;
 
 	EstablishBoundingVectors();
 
@@ -29,6 +33,8 @@ Collider::Collider(float xWidthRadius, float yHeightRadius, float zDepthRadius, 
 	xWidth = xWidthRadius;
 	yHeight = yHeightRadius;
 	zDepth = zDepthRadius;
+
+	cornerArray = NULL;
 
 	EstablishBoundingVectors();
 }
@@ -43,6 +49,11 @@ Collider::~Collider()
 	delete topRightBack;
 	delete bottomLeftBack;
 	delete bottomRightBack;
+
+	if (cornerArray != NULL)
+	{
+		free(cornerArray);
+	}
 }
 
 float Collider::GetColliderXWidth()
@@ -88,7 +99,11 @@ void Collider::SetColliderPosition(XMFLOAT3 collPos)
 
 XMFLOAT3** Collider::GetColliderCorners()
 {
-	XMFLOAT3** cornerArray = (XMFLOAT3**) malloc(sizeof(XMFLOAT3*) * 8); // XMFLOAT3[8];//= [topLeftFront, topRightfront, bottomLeftFront, bottomRightFront, topLeftBack, topRightBack, bottomLeftBack, bottomRightBack];
+	if (cornerArray != NULL) {
+		free(cornerArray);
+		cornerArray = NULL;
+	}
+	cornerArray = (XMFLOAT3**) malloc(sizeof(XMFLOAT3*) * 8); // XMFLOAT3[8];//= [topLeftFront, topRightfront, bottomLeftFront, bottomRightFront, topLeftBack, topRightBack, bottomLeftBack, bottomRightBack];
 	cornerArray[0] = topLeftFront;
 	cornerArray[1] = topRightFront;
 	cornerArray[2] = bottomLeftFront;

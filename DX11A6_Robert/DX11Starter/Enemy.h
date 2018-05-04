@@ -17,6 +17,7 @@ private:
 	// Whether this enemy "sees" the player to shoot at it
 	bool seesPlayer;
 	float attackInterval;
+	GameEntity* player;
 
 	// Points the enemy wanders between
 	XMFLOAT3 wp0, wp1;
@@ -25,7 +26,7 @@ private:
 
 public:
 	Enemy();
-	Enemy(Mesh* enemyMesh, Material* enemyMaterial, Mesh* bullMesh, Material* bullMaterial);
+	Enemy(Mesh * enemyMesh, Material * enemyMaterial, Mesh * bullMesh, Material * bullMaterial, GameEntity * pl);
 	~Enemy();
 	void SetWanderPoints(XMFLOAT3 point0, XMFLOAT3 point1);
 	void Attack();

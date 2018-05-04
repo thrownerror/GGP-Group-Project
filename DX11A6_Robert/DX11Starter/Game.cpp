@@ -373,7 +373,7 @@ void Game::CreateBasicGeometry()
 	gePlayer->SetCollisionBox(.1f, .1f, .1f);
 
 
-	e0 = new Enemy(meshModel1, mat1, meshModel1, mat1);
+	e0 = new Enemy(meshModel1, mat1, meshModel1, mat1, gePlayer);
 	e0->SetWanderPoints(XMFLOAT3(0, 0, 0), XMFLOAT3(5, 5, 5));
 	e0->SetCollisionBox(.1f, .1f, .1f);
 
