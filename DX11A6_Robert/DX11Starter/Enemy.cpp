@@ -13,14 +13,14 @@ Enemy::Enemy(Mesh * enemyMesh, Material * enemyMaterial, Mesh * bullMesh, Materi
 
 	bullets = std::vector<Bullet>();
 	seesPlayer = false;
-	attackInterval = 0;
+	attackInterval = 10;
 	numBullets = 0;
 	wp0 = XMFLOAT3(0, 0, 0);
 	wp1 = XMFLOAT3(0, 0, 0);
 	goingToOne = true;
 	percentage = 0;
 
-	player = player;
+	player = pl;
 }
 
 
@@ -40,7 +40,7 @@ void Enemy::Attack()
 	bullets.push_back(Bullet(bulletMesh, bulletMaterial, player));
 	numBullets++;
 
-	bullets[numBullets].TransformRotation(GetRotation());
+	bullets[numBullets - 1].TransformRotation(GetRotation());
 }
 
 void Enemy::UpdateEntity(float deltaTime)
@@ -73,13 +73,25 @@ void Enemy::UpdateEntity(float deltaTime)
 		//TransformRotation(player->GetPosition()); //<= change rotation based on player
 		attackInterval -= deltaTime;
 		if (attackInterval <= 0) {
-			attackInterval = 3.0f;
+			attackInterval = 5.0f;
 			Attack();
 		}
 	}
 
 	// If the enemy sees the player, change seesPlayer
-	//if()
+
+	XMFLOAT3 pos = GetPosition();
+	XMFLOAT3 ePos = player->GetPosition();
+
+
+	float dist = sqrt(pow(pos.x - ePos.x, 2) +
+					  pow(pos.y - ePos.y, 2) +
+					  pow(pos.z - ePos.z, 2));
+
+	if (dist < 5.0f)
+		seesPlayer = true;
+	else
+		seesPlayer = false;
 
 	for (int i = 0; i < numBullets; i++)
 	{

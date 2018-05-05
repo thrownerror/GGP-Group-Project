@@ -65,6 +65,8 @@ public:
 
 	// Lerps between two points, returning the position at the percent between the two
 	XMFLOAT3 Lerp(XMFLOAT3 start, XMFLOAT3 end, float percent);
+
+	XMFLOAT3 Normalize(XMFLOAT3 vector);
 private:
 
 	Material*	entityMaterial;

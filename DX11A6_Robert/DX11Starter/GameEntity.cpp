@@ -108,6 +108,19 @@ XMFLOAT3 GameEntity::Lerp(XMFLOAT3 start, XMFLOAT3 end, float percent)
 
 	return result;
 }
+XMFLOAT3 GameEntity::Normalize(XMFLOAT3 vector)
+{
+	float length = vector.x * vector.x +
+				   vector.y * vector.y +
+				   vector.z * vector.z;
+	if (length > 0)
+	{
+		length = sqrt(length);
+		return XMFLOAT3(vector.x / length, vector.y / length, vector.z / length);
+	}
+	else
+		return XMFLOAT3();
+}
 void GameEntity::SetRotation(XMFLOAT3 setRot)
 {
 	rotation = setRot;
