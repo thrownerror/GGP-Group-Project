@@ -74,9 +74,10 @@ DXCore::~DXCore()
 
 	if (swapChain) { swapChain->Release();}
 	if (context) { context->Release();}
-	if (device) { device->Release();}
 	debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 	if (debug) { debug->Release(); }
+	if (device) { device->Release(); }
+
 	//debug->ReportLiveObjects(D3D11_RLDO_DETAIL);
 	//HRESULT hr = ReportLiveObjects(DXGI_DEBUG_D3D11, DXGI_DEBUG_RLO_DETAIL);
 }
