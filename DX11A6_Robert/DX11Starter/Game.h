@@ -59,13 +59,8 @@ private:
 	POINT prevMousePos;
 
 	//Mesh objects
-	Mesh** meshArray;
-	Mesh* mesh1;
-	Mesh* mesh2;
-	Mesh* mesh3;
+	Mesh* meshQuad;
 	Mesh* meshModel1;
-	int meshArraySize;
-//	char* meshModel1Path;
 
 	//Material objects
 	Material* mat1;
@@ -132,16 +127,17 @@ private:
 	XMFLOAT4X4 shadowView;
 	XMFLOAT4X4 shadowProjection;
 
-	XMFLOAT3 movementRight = XMFLOAT3(2.0f, 0.0f, 0.0f);
-	XMFLOAT3 movementLeft = XMFLOAT3(-2.0f, 0.0f, 0.0f);
-	XMFLOAT3 movementDown = XMFLOAT3(0.0f, -2.0f, 0.0f);
-	XMFLOAT3 movementUp = XMFLOAT3(0.0f, 2.0f, 0.0f);
-	XMFLOAT3 movementBackward = XMFLOAT3(0.0f, 0.0f, -2.0f);
-	XMFLOAT3 movementForward = XMFLOAT3(0.0f, 0.0f, 2.0f);
+	XMFLOAT3 movementRight		= XMFLOAT3(+1.0f, 0.0f, 0.0f);
+	XMFLOAT3 movementLeft		= XMFLOAT3(-1.0f, 0.0f, 0.0f);
+	XMFLOAT3 movementDown		= XMFLOAT3(0.0f, -1.0f, 0.0f);
+	XMFLOAT3 movementUp			= XMFLOAT3(0.0f, +1.0f, 0.0f);
+	XMFLOAT3 movementBackward	= XMFLOAT3(0.0f, 0.0f, -1.0f);
+	XMFLOAT3 movementForward	= XMFLOAT3(0.0f, 0.0f, +1.0f);
+
 	XMFLOAT3 rotation180AroundY = XMFLOAT3(0.0f, 180.0f, 0.0f);
-	XMFLOAT3 rotate90CWAroundY = XMFLOAT3(0.0f, 90.0f, 0.0f);
+	XMFLOAT3 rotate90CWAroundY	= XMFLOAT3(0.0f, 90.0f, 0.0f);
 	XMFLOAT3 rotate90CCWAroundY = XMFLOAT3(0.0f, -90.0f, 0.0f);
-	XMFLOAT3 rotate90CWAroundX = XMFLOAT3(90.0f, 0.0f, 0.0f);
+	XMFLOAT3 rotate90CWAroundX	= XMFLOAT3(90.0f, 0.0f, 0.0f);
 	XMFLOAT3 rotate90CCWAroundX = XMFLOAT3(-90.0f, 0.0f, 0.0f);
 };
 

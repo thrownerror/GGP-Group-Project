@@ -63,9 +63,7 @@ Game::~Game()
 	delete vertexShader;
 	delete pixelShader;
 
-	delete mesh1;
-	delete mesh2;
-	delete mesh3;
+	delete meshQuad;
 	delete meshModel1;
 
 	delete ge1;
@@ -100,7 +98,6 @@ Game::~Game()
 	delete e0;
 
 	delete[] entityArray;
-	delete[] meshArray;
 
 	delete mat1;
 	delete camera;
@@ -152,7 +149,7 @@ void Game::Init()
 
 	dLight.AmbientColor = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 	dLight.DiffuseColor = XMFLOAT4(1, 1, 1, 0.5);
-	dLight.Direction = XMFLOAT3(1, -1, 0);
+	dLight.Direction = XMFLOAT3(0, -1, 0);
 
 	dLight2.AmbientColor = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 	dLight2.DiffuseColor = XMFLOAT4(.5f, .5f, 0, 1);
@@ -294,7 +291,7 @@ void Game::CreateMatrices()
 
 	// Calculate the shadow map view and projection for the light
 	XMMATRIX shView = XMMatrixLookToLH(
-		XMVectorSet(0, 0, -10, 0),	// Light 'position'
+		XMVectorSet(0, 0, 0, 0),	// Light 'position'
 		XMLoadFloat3(&dLight.Direction),	// Light 'direction'
 		XMVectorSet(0, 1, 0, 0));	// Up is up
 	XMStoreFloat4x4(&shadowView, XMMatrixTranspose(shView));
@@ -303,130 +300,80 @@ void Game::CreateMatrices()
 	XMStoreFloat4x4(&shadowProjection, XMMatrixTranspose(shProj));
 }
 
+XMFLOAT3 CalculateNormal(const XMFLOAT3& vert, const XMFLOAT3& v1, const XMFLOAT3& v2) {
+	XMFLOAT3 normal;
+
+	XMVECTOR vector0 = XMLoadFloat3(&vert);
+	XMVECTOR vector1 = XMLoadFloat3(&v1);
+	XMVECTOR vector2 = XMLoadFloat3(&v2);
+
+	XMVECTOR vectorSub1 = XMVectorSubtract(vector1, vector0);
+	XMVECTOR vectorSub2 = XMVectorSubtract(vector2, vector0);
+
+	XMVECTOR crossProduct = XMVector3Cross(vectorSub1, vectorSub2);
+	XMStoreFloat3(&normal, crossProduct);
+
+	return normal;
+}
+
 // --------------------------------------------------------
 // Creates the geometry we're going to draw - a single triangle for now
 // --------------------------------------------------------
 void Game::CreateBasicGeometry()
 {
 	testBox = true;
-	// Create some temporary variables to represent colors
-	// - Not necessary, just makes things more readable
-	XMFLOAT4 red = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	XMFLOAT4 green = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	XMFLOAT4 blue = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-	XMFLOAT3 norm = XMFLOAT3(0.0f, 0.0f, -1.0f);
-	XMFLOAT2 uv = XMFLOAT2(0.0f, 1.0f);
-	// Set up the vertices of the triangle we would like to draw
-	// - We're going to copy this array, exactly as it exists in memory
-	//    over to a DirectX-controlled data structure (the vertex buffer)
-	Vertex vertices[] =
-	{
-		{ XMFLOAT3(+2.1f, +0.5f, +0.0f), norm, XMFLOAT2(0.5f, 1.0f)},
-		{ XMFLOAT3(+3.6f, -1.5f, +0.0f), norm, XMFLOAT2(1.0f, 0.0f) },
-		{ XMFLOAT3(+0.6f, -1.5f, +0.0f), norm, XMFLOAT2(0.0f, 0.0f) },
-	};
-
-	// Set up the indices, which tell us which vertices to use and in which order
-	// - This is somewhat redundant for just 3 vertices (it's a simple example)
-	// - Indices are technically not required if the vertices are in the buffer 
-	//    in the correct order and each one will be used exactly once
-	// - But just to see how it's done...
-	unsigned int indices[] = { 0, 1, 2 };
-
-
-	//mesh1 = new Mesh(vertices, 3, indices, 3, device);
-
 
 	Vertex squareVertices[] =
 	{
-		//{ XMFLOAT3(+1.0f, +1.0f, +0.0f), red },
-		//{ XMFLOAT3(+1.0f, -1.0f, +0.0f), blue },
-		//{ XMFLOAT3(-1.0f, -1.0f, +0.0f), green },
-		//{ XMFLOAT3(-1.0f, +1.0f, +0.0f), red }
-
-		{ XMFLOAT3(-1.0f, -1.0f, +1.0f), norm, XMFLOAT2(1.0f, 0.0f) },
-		{ XMFLOAT3(-1.0f, 1.0f, +1.0f), norm, XMFLOAT2(1.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, 1.0f, +1.0f), norm, XMFLOAT2(0.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, -1.0f, +1.0f), norm, XMFLOAT2(0.0f, 0.0f) }
+		{ XMFLOAT3(-1.0f, -1.0f, +0.0f), XMFLOAT3(), XMFLOAT2(1.0f, 0.0f) },
+		{ XMFLOAT3(-1.0f, +1.0f, +0.0f), XMFLOAT3(), XMFLOAT2(1.0f, 1.0f) },
+		{ XMFLOAT3(+1.0f, +1.0f, +0.0f), XMFLOAT3(), XMFLOAT2(0.0f, 1.0f) },
+		{ XMFLOAT3(+1.0f, -1.0f, +0.0f), XMFLOAT3(), XMFLOAT2(0.0f, 0.0f) }
 	};
 	unsigned int squareIndices[]{ 0, 1, 2,
 								  2, 3, 0 };
-	//mesh2 = new Mesh(squareVertices, 4, squareIndices, 6, device);
+	// Calculate square normals
+	squareVertices[0].Normal = CalculateNormal(squareVertices[0].Position, squareVertices[1].Position, squareVertices[2].Position);
+	squareVertices[1].Normal = CalculateNormal(squareVertices[1].Position, squareVertices[0].Position, squareVertices[3].Position);
+	squareVertices[2].Normal = CalculateNormal(squareVertices[2].Position, squareVertices[0].Position, squareVertices[3].Position);
+	squareVertices[3].Normal = CalculateNormal(squareVertices[3].Position, squareVertices[1].Position, squareVertices[2].Position);
 
+	//mesh1 = new Mesh("../../Assets/Models/cube.obj", device);
+	meshQuad = new Mesh(squareVertices, 4, squareIndices, 6, device);
+	meshModel1 = new Mesh("../../Assets/Models/cone.obj", device);
 
-	Vertex trapezoidVertices[] =
-	{
-		{ XMFLOAT3(-1.5f, +0.5f, +1.0f), norm, XMFLOAT2(0.0f,	0.0f) },//0
-		{ XMFLOAT3(-1.0f, +1.5f, +1.0f), norm, XMFLOAT2(0.165f, 1.0f) },//1
-		{ XMFLOAT3(+1.0f, +1.5f, +1.0f), norm, XMFLOAT2(0.825f, 1.0f) },//2
-		{ XMFLOAT3(+1.5f, +0.5f, +1.0f), norm, XMFLOAT2(1.0f,	0.0f) },//3
-		{ XMFLOAT3(+1.0f, +0.5f, +1.0f), norm, XMFLOAT2(0.825f, 0.0f) },//4
-		{ XMFLOAT3(-1.0f, +0.5f, +1.0f), norm, XMFLOAT2(0.165f, 0.0f) }//5
+	ge1 = new GameEntity(meshQuad, mat1);
 
-	};
-	unsigned int trapezoidIndices[]{ 0,1,5,
-									 5,1,2,
-									 2,3,4,
-									 4,5,2 };
-	//mesh3 = new Mesh(trapezoidVertices, 6, trapezoidIndices, 12, device);
-
-	mesh1 = new Mesh(squareVertices, 4, squareIndices, 6, device);
-	mesh2 = new Mesh(squareVertices, 4, squareIndices, 6, device);
-	mesh3 = new Mesh(squareVertices, 4, squareIndices, 6, device);
-
-
-	char* meshModel1File = "../../Assets/Models/cone.obj";
-
-	meshModel1 = new Mesh(meshModel1File, device);
-	meshArraySize = 4;
-	meshArray = new Mesh*[meshArraySize + 1];
-	meshArray[0] = mesh1;
-	meshArray[1] = mesh2;
-	meshArray[2] = mesh3;
-
-	ge1 = new GameEntity(meshArray[0], mat1);
-
-	wall1 = new GameEntity(meshArray[0], mat1);
-
-	wall2 = new GameEntity(meshArray[0], mat1);
-
-	wall3 = new GameEntity(meshArray[0], mat1);
-
-	wall4 = new GameEntity(meshArray[0], mat1);
-
-	wall5 = new GameEntity(meshArray[0], mat1);
-
-	wall6 = new GameEntity(meshArray[0], mat1);
-
-
+	wall1 = new GameEntity(meshQuad, mat1);
+	wall2 = new GameEntity(meshQuad, mat1);
+	wall3 = new GameEntity(meshQuad, mat1);
+	wall4 = new GameEntity(meshQuad, mat1);
+	wall5 = new GameEntity(meshQuad, mat1);
+	wall6 = new GameEntity(meshQuad, mat1);
 
 	//hallway
-	wall7	= new GameEntity(meshArray[0], mat1);
-	wall8	= new GameEntity(meshArray[0], mat1);
-	wall9	= new GameEntity(meshArray[0], mat1);
-	wall10	= new GameEntity(meshArray[0], mat1);
+	wall7	= new GameEntity(meshQuad, mat1);
+	wall8	= new GameEntity(meshQuad, mat1);
+	wall9	= new GameEntity(meshQuad, mat1);
+	wall10	= new GameEntity(meshQuad, mat1);
 
-	wall11	= new GameEntity(meshArray[0], mat1);
-	wall12	= new GameEntity(meshArray[0], mat1);
-	wall13	= new GameEntity(meshArray[0], mat1);
-	wall14	= new GameEntity(meshArray[0], mat1);
-	wall15	= new GameEntity(meshArray[0], mat1);
-	wall16	= new GameEntity(meshArray[0], mat1);
-	wall17	= new GameEntity(meshArray[0], mat1);
-	wall18	= new GameEntity(meshArray[0], mat1);
-	wall19	= new GameEntity(meshArray[0], mat1);
-	wall20	= new GameEntity(meshArray[0], mat1);
-	wall21 = new GameEntity(meshArray[0], mat1);
+	wall11	= new GameEntity(meshQuad, mat1);
+	wall12	= new GameEntity(meshQuad, mat1);
+	wall13	= new GameEntity(meshQuad, mat1);
+	wall14	= new GameEntity(meshQuad, mat1);
+	wall15	= new GameEntity(meshQuad, mat1);
+	wall16	= new GameEntity(meshQuad, mat1);
+	wall17	= new GameEntity(meshQuad, mat1);
+	wall18	= new GameEntity(meshQuad, mat1);
+	wall19	= new GameEntity(meshQuad, mat1);
+	wall20	= new GameEntity(meshQuad, mat1);
+	wall21  = new GameEntity(meshQuad, mat1);
 
+	wallEnd = new GameEntity(meshQuad, mat1);
+	//wall7 = new GameEntity(meshQuad, mat1);
 
-	wallEnd = new GameEntity(meshArray[0], mat1);
-
-	//wall7 = new GameEntity(meshArray[0], mat1);
-
-	gePlayer = new GameEntity(meshArray[0]);
-
+	gePlayer = new GameEntity(meshQuad);
 	gePlayer->SetCollisionBox(.1f, .1f, .1f);
-
 
 	e0 = new Enemy(meshModel1, mat1, meshModel1, mat1, gePlayer);
 	e0->SetWanderPoints(XMFLOAT3(0, 0, 0), XMFLOAT3(5, 5, 5));
@@ -461,10 +408,7 @@ void Game::CreateBasicGeometry()
 		entityArray[20] = wall20;
 		entityArray[21] = wall21;
 
-
 		entityArray[22] = wallEnd;
-
-
 
 		for (int i = 0; i < entityArraySize; i++) {
 			entityArray[i]->SetCollisionBox(1.0f, 1.0f, .02f);
@@ -474,174 +418,213 @@ void Game::CreateBasicGeometry()
 		//XMFLOAT3 scaleValue = XMFLOAT3(10.0f, 10.0f, 10.0f);
 		//Reserved for any random entity
 
-
-		wall5->SetCollisionBox(1.0f, 1.0f, 1.0f);
-		wall6->SetCollisionBox(1.0f, 1.0f, 1.0f);
+		//wall5->SetCollisionBox(1.0f, 1.0f, 1.0f);
+		//wall6->SetCollisionBox(1.0f, 1.0f, 1.0f);
 		//ge8->SetCollisionBox(1.0f, 1.0f, 1.0f);
 
 		//Test wall/entity
-
 		ge1->TransformTranslation(movementLeft);
+		ge1->TransformTranslation(movementLeft);
+		ge1->TransformTranslation(movementLeft);
+		ge1->TransformTranslation(movementLeft);
+		ge1->TransformTranslation(movementForward);
 		ge1->SetCollisionBox(1.0f, 1.0f, .01f);
-		ge1->TransformTranslation(movementLeft);
 		ge1->UpdateEntity();
 
 		BuildLevelGeometry();
 	}
-
-
-
-
 }
 
 void Game::BuildLevelGeometry() {
 
-
 	//Forward and back walls
+
 	wall1->TransformTranslation(movementForward);
 	wall1->TransformTranslation(movementForward);
-	wall2->TransformRotation(rotation180AroundY); //back wall
-	wall1->UpdateEntity(); //moving wall1 back of hallway
+	wall1->TransformTranslation(movementForward);
+	wall1->TransformTranslation(movementForward);
+	wall1->TransformTranslation(movementForward);
 	wall1->SetCollisionBox(1.0f, 1.0f, 0.2f);
+	wall1->UpdateEntity(); //moving wall1 back of hallway
+
+	wall2->TransformTranslation(movementBackward);
+	wall2->TransformRotation(rotation180AroundY);
 	wall2->SetCollisionBox(1.0f, 1.0f, 0.2f);
-	wall2->UpdateEntity();
+	wall2->UpdateEntity(); //back wall
 
 	//Left and right walls
+
+	wall3->TransformTranslation(movementLeft);
 	wall3->TransformRotation(rotate90CCWAroundY);
-	wall3->UpdateEntity(); //left
 	wall3->SetCollisionBox(0.2f, 1.0f, 1.0f);
+	wall3->UpdateEntity(); //left
+
+	wall4->TransformTranslation(movementRight);
 	wall4->TransformRotation(rotate90CWAroundY);
 	wall4->SetCollisionBox(0.2f, 1.0f, 1.0f);
 	wall4->UpdateEntity(); //right
 
-						   //Top and Bottom walls
+	//Top and Bottom walls
+
+	wall5->TransformTranslation(movementUp);
 	wall5->TransformRotation(rotate90CCWAroundX);
-	wall5->UpdateEntity();
 	wall5->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	wall5->UpdateEntity(); // Top
+
+	wall6->TransformTranslation(movementDown);
 	wall6->TransformRotation(rotate90CWAroundX);
 	wall6->SetCollisionBox(1.0f, 0.2f, 1.0f);
-	wall6->UpdateEntity();
+	wall6->UpdateEntity(); // Bottom
 
-	//set 2 initiation
+	//Hallway 4
+
 	wall7->TransformTranslation(movementForward);
+	wall7->TransformTranslation(movementForward);
+	wall7->TransformTranslation(movementUp);
 	wall7->TransformRotation(rotate90CCWAroundX);
-	wall7->UpdateEntity();
 	wall7->SetCollisionBox(1.0f, 0.2f, 1.0f);
-	//wall7->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	wall7->UpdateEntity(); // Ceiling
 
 	wall8->TransformTranslation(movementForward);
+	wall8->TransformTranslation(movementForward);
+	wall8->TransformTranslation(movementDown);
 	wall8->TransformRotation(rotate90CWAroundX);
-	wall8->UpdateEntity();
 	wall8->SetCollisionBox(1.0f, 0.2f, 1.0f);
-	//wall8->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	wall8->UpdateEntity(); // Floor
 
 	wall9->TransformTranslation(movementForward);
+	wall9->TransformTranslation(movementForward);
+	wall9->TransformTranslation(movementLeft);
 	wall9->TransformRotation(rotate90CCWAroundY);
-	wall9->UpdateEntity();
 	wall9->SetCollisionBox(0.2f, 1.0f, 1.0f);
-
+	wall9->UpdateEntity(); // Left
 
 	wall10->TransformTranslation(movementForward);
+	wall10->TransformTranslation(movementForward);
+	wall10->TransformTranslation(movementRight);
 	wall10->TransformRotation(rotate90CWAroundY);
-	wall10->UpdateEntity();
 	wall10->SetCollisionBox(0.2f, 1.0f, 1.0f);
+	wall10->UpdateEntity(); // Right
 
+	// Shaft Floor 1
 
-
-	//shaft prep
 	wall11->TransformTranslation(movementForward);
 	wall11->TransformTranslation(movementForward);
+	wall11->TransformTranslation(movementForward);
+	wall11->TransformTranslation(movementForward);
+	wall11->TransformTranslation(movementDown);
 	wall11->TransformRotation(rotate90CWAroundX);
-	wall11->UpdateEntity(); //floor
 	wall11->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	wall11->UpdateEntity(); // floor
 
 	wall12->TransformTranslation(movementForward);
 	wall12->TransformTranslation(movementForward);
+	wall12->TransformTranslation(movementForward);
+	wall12->TransformTranslation(movementForward);
+	wall12->TransformTranslation(movementLeft);
 	wall12->TransformRotation(rotate90CCWAroundY);
-	wall12->UpdateEntity(); //left
 	wall12->SetCollisionBox(0.2f, 1.0f, 0.2f);
+	wall12->UpdateEntity(); // left
 
 	wall13->TransformTranslation(movementForward);
 	wall13->TransformTranslation(movementForward);
+	wall13->TransformTranslation(movementForward);
+	wall13->TransformTranslation(movementForward);
+	wall13->TransformTranslation(movementRight);
 	wall13->TransformRotation(rotate90CWAroundY);
-	wall13->UpdateEntity(); //right
 	wall13->SetCollisionBox(0.2f, 1.0f, 0.2f);
+	wall13->UpdateEntity(); // right
 
+	// Shaft Floor 2
+
+	wall14->TransformTranslation(movementForward);
+	wall14->TransformTranslation(movementForward);
 	wall14->TransformTranslation(movementForward);
 	wall14->TransformTranslation(movementForward);
 	wall14->TransformTranslation(movementUp);
+	wall14->TransformTranslation(movementUp);
+	wall14->TransformTranslation(movementLeft);
 	wall14->TransformRotation(rotate90CCWAroundY);
+	wall14->SetCollisionBox(0.2f, 1.0f, 0.2f);
 	wall14->UpdateEntity(); //left 2
 
-	wall14->SetCollisionBox(0.2f, 1.0f, 0.2f);
-
+	wall15->TransformTranslation(movementForward);
+	wall15->TransformTranslation(movementForward);
 	wall15->TransformTranslation(movementForward);
 	wall15->TransformTranslation(movementForward);
 	wall15->TransformTranslation(movementUp);
+	wall15->TransformTranslation(movementUp);
+	wall15->TransformTranslation(movementRight);
 	wall15->TransformRotation(rotate90CWAroundY);
+	wall15->SetCollisionBox(0.2f, 1.0f, 0.2f);
 	wall15->UpdateEntity(); //right 2
 
-	wall15->SetCollisionBox(0.2f, 1.0f, 0.2f);
-
-	wall16->TransformTranslation(movementForward);
-	wall16->TransformTranslation(movementForward);
-	wall16->TransformTranslation(movementUp);
-	wall16->TransformTranslation(movementUp);
-	wall16->TransformRotation(rotate90CCWAroundY);
-	wall16->UpdateEntity(); //left 3
-
-	wall16->SetCollisionBox(0.2f, 1.0f, 0.2f);
-
-	wall17->TransformTranslation(movementForward);
-	wall17->TransformTranslation(movementForward);
-	wall17->TransformTranslation(movementUp);
-	wall17->TransformTranslation(movementUp);
-	wall17->TransformRotation(rotate90CWAroundY);
-	wall17->UpdateEntity(); //right 3
-
-	wall17->SetCollisionBox(0.2f, 1.0f, 0.2f);
-
 	wall18->TransformTranslation(movementForward);
 	wall18->TransformTranslation(movementForward);
+	wall18->TransformTranslation(movementForward);
+	wall18->TransformTranslation(movementForward);
+	wall18->TransformTranslation(movementUp);
 	wall18->TransformTranslation(movementUp);
 	wall18->TransformTranslation(movementUp);
 	wall18->TransformRotation(rotate90CCWAroundX);
-	wall18->UpdateEntity(); //TOP
-
 	wall18->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	wall18->UpdateEntity(); // Top 2
 
+	wall19->TransformTranslation(movementForward);
+	wall19->TransformTranslation(movementForward);
+	wall19->TransformTranslation(movementForward);
 	wall19->TransformTranslation(movementForward);
 	wall19->TransformTranslation(movementForward);
 	wall19->TransformTranslation(movementUp);
-	wall19->TransformRotation(rotation180AroundY);
-	wall19->UpdateEntity(); //back 1
-
+	wall19->TransformTranslation(movementUp);
 	wall19->SetCollisionBox(1.0f, 1.0f, 0.2f);
+	wall19->UpdateEntity(); // Back 2
 
-	wall20->TransformTranslation(movementForward);
+	// Floor 2 area
+
+	wall16->TransformTranslation(movementForward);
+	wall16->TransformTranslation(movementForward);
+	wall16->TransformTranslation(movementUp);
+	wall16->TransformTranslation(movementUp);
+	wall16->TransformTranslation(movementLeft);
+	wall16->TransformRotation(rotate90CCWAroundY);
+	wall16->SetCollisionBox(0.2f, 1.0f, 0.2f);
+	wall16->UpdateEntity(); // left 2
+
+	wall17->TransformTranslation(movementForward);
+	wall17->TransformTranslation(movementForward);
+	wall17->TransformTranslation(movementUp);
+	wall17->TransformTranslation(movementUp);
+	wall17->TransformTranslation(movementRight);
+	wall17->TransformRotation(rotate90CWAroundY);
+	wall17->SetCollisionBox(0.2f, 1.0f, 0.2f);
+	wall17->UpdateEntity(); // right 2
+
 	wall20->TransformTranslation(movementForward);
 	wall20->TransformTranslation(movementUp);
 	wall20->TransformTranslation(movementUp);
 	wall20->TransformRotation(rotation180AroundY);
-	wall20->UpdateEntity(); // back 2
-
 	wall20->SetCollisionBox(1.0f, 1.0f, 0.2f);
-
+	wall20->UpdateEntity(); // back 2
+	
 	wall21->TransformTranslation(movementForward);
 	wall21->TransformTranslation(movementForward);
 	wall21->TransformTranslation(movementUp);
-	wall21->UpdateEntity(); // front 1
-
-	wall21->SetCollisionBox(1.0f, 1.0f, 0.2f);
+	wall21->TransformTranslation(movementUp);
+	wall21->TransformTranslation(movementUp);
+	wall21->TransformRotation(rotate90CCWAroundX);
+	wall21->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	wall21->UpdateEntity(); // Top
 
 	wallEnd->TransformTranslation(movementForward);
 	wallEnd->TransformTranslation(movementForward);
 	wallEnd->TransformTranslation(movementUp);
-	wallEnd->TransformTranslation(movementUp);
-	wallEnd->UpdateEntity(); // end cap - currently shaft front w
+	wallEnd->TransformRotation(rotate90CWAroundX);
+	wallEnd->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	wallEnd->UpdateEntity(); // Floor
 
-	wallEnd->SetCollisionBox(1.0f, 1.0f, 0.2f);
 }
+
 // --------------------------------------------------------
 // Handle resizing DirectX "stuff" to match the new window size.
 // For instance, updating our projection matrix's aspect ratio.
