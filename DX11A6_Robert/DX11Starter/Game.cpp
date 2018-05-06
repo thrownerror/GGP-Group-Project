@@ -108,8 +108,8 @@ Game::~Game()
 	// Clean up shadow map
 	shadowDepth->Release();
 	shadowSRV->Release();
-	shadowRasterizer->Release();
 	shadowSampler->Release();
+	shadowRasterizer->Release();
 	delete shadowShader;
 
 	srv->Release();
@@ -215,15 +215,6 @@ void Game::Init()
 	shadowRastDesc.SlopeScaledDepthBias = 1.0f;
 	device->CreateRasterizerState(&shadowRastDesc, &shadowRasterizer);
 
-	// Create the shadow viewport
-	shadowViewport = {};
-	shadowViewport.TopLeftX = 0;
-	shadowViewport.TopLeftY = 0;
-	shadowViewport.Width = 1024;
-	shadowViewport.Height = 1024;
-	shadowViewport.MinDepth = 0.0f;
-	shadowViewport.MaxDepth = 1.0f;
-
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
 	// Essentially: "What kind of shape should the GPU draw with our data?"
@@ -294,12 +285,12 @@ void Game::CreateMatrices()
 
 	// Calculate the shadow map view and projection for the light
 	XMMATRIX shView = XMMatrixLookToLH(
-		XMVectorSet(0, 0, 0, 0),	// Light 'position'
+		XMVectorSet(0, 20, -2, 0),			// Light 'position'
 		XMLoadFloat3(&dLight.Direction),	// Light 'direction'
-		XMVectorSet(0, 1, 0, 0));	// Up is up
+		XMVectorSet(0, 1, 0, 0));			// Up is up
 	XMStoreFloat4x4(&shadowView, XMMatrixTranspose(shView));
 
-	XMMATRIX shProj = XMMatrixOrthographicLH(20.0f, 20.0f, 0.1f, 100.0f);
+	XMMATRIX shProj = XMMatrixOrthographicLH(40.0f, 40.0f, 0.01f, 100.0f);
 	XMStoreFloat4x4(&shadowProjection, XMMatrixTranspose(shProj));
 }
 
@@ -723,13 +714,15 @@ void Game::Draw(float deltaTime, float totalTime)
 	context->ClearDepthStencilView(shadowDepth, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	// Set the shadow rasterizer
 	context->RSSetState(shadowRasterizer);
-	
-	// Get the existing viewport
-	D3D11_VIEWPORT viewport;
-	UINT num = 1;
-	context->RSGetViewports(&num, &viewport);
-	// Set the viewport to the shadow map
-	context->RSSetViewports(num, &shadowViewport);
+
+	// We need a viewport that matches the shadow map resolution
+	D3D11_VIEWPORT shadowVP = {};
+	shadowVP.TopLeftX = 0;
+	shadowVP.TopLeftY = 0;
+	shadowVP.Width = shadowVP.Height = 1024.0f;
+	shadowVP.MinDepth = 0.0f;
+	shadowVP.MaxDepth = 1.0f;
+	context->RSSetViewports(1, &shadowVP);
 
 	// Set the shadow vertex shader
 	shadowShader->SetShader();
@@ -739,16 +732,25 @@ void Game::Draw(float deltaTime, float totalTime)
 	// Turn OFF the pixel shader
 	context->PSSetShader(0, 0, 0);
 
-	for (int i = 0; i <= entityArraySize - 1; i++) {
-		if (entityArray[i] != '\0') {
-			// Set the world position data
-			shadowShader->SetMatrix4x4("world", entityArray[i]->GetWorldMatrix());
-			shadowShader->CopyAllBufferData();
+	// Draw the enemy in the shader
+	ID3D11Buffer* vert = e0->GetVertBuffer();
+	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
+	context->IASetIndexBuffer(e0->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+	context->DrawIndexed(e0->GetIndCount(), 0, 0);
+	shadowShader->SetMatrix4x4("world", e0->GetWorldMatrix());
+	shadowShader->CopyAllBufferData();
+
+	for (int i = 0; i < entityArraySize; i++) {
+		if (entityArray[i] != nullptr) {
 
 			// Set buffers in the input assembler
 			ID3D11Buffer* vertexHolder = entityArray[i]->GetVertBuffer();
 			context->IASetVertexBuffers(0, 1, &vertexHolder, &stride, &offset);
 			context->IASetIndexBuffer(entityArray[i]->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+
+			// Set the world position data
+			shadowShader->SetMatrix4x4("world", entityArray[i]->GetWorldMatrix());
+			shadowShader->CopyAllBufferData();
 
 			// Finally do the actual drawing
 			context->DrawIndexed(entityArray[i]->GetIndCount(),	0, 0);
@@ -760,7 +762,9 @@ void Game::Draw(float deltaTime, float totalTime)
 	// Set it to the standard rasterizer
 	context->RSSetState(0);
 	// Set it back to the default viewport
-	context->RSSetViewports(num, &viewport);
+	shadowVP.Width = (float)this->width;
+	shadowVP.Height = (float)this->height;
+	context->RSSetViewports(1, &shadowVP);
 #pragma endregion
 
 #pragma region Render Full Scene
@@ -811,7 +815,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
 	pixelShader->SetSamplerState("shadowSampler", shadowSampler);
 	e0->PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
-	ID3D11Buffer* vert = e0->GetVertBuffer();
+	vert = e0->GetVertBuffer();
 	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
 	context->IASetIndexBuffer(e0->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
 	context->DrawIndexed(e0->GetIndCount(), 0, 0);

@@ -84,9 +84,10 @@ float4 main(VertexToPixel input) : SV_TARGET
 	float4 surfaceFog = input.fogFactor * surfaceColor + (1.0 - input.fogFactor) * fogColor;
 
 	// Calculate shadow map data
+
 	// Calculate the position of this pixel ON THE SHADOW MAP
 	// remembering to flip the Y
-	float2 shadowUV = input.posForShadow.xy / input.posForShadow.w * 0.5f + 0.5f;
+	float2 shadowUV = (input.posForShadow.xy / input.posForShadow.w) * 0.5f + 0.5f;
 	shadowUV.y = 1.0f - shadowUV.y;
 
 	// Calculate the depth of this pixel from the light
@@ -95,14 +96,14 @@ float4 main(VertexToPixel input) : SV_TARGET
 	// Actually sample the shadow map and determine if this pixel is in shadow
 	float shadowAmount = shadowSRV.SampleCmpLevelZero(shadowSampler, shadowUV, depthFromLight);
 
+	//return float4(1 - shadowAmount, 0, 0, 1);
+
 	// Get the result after applying the first light (plus shadow map for the first light)
-	float3 negatedDirection1 = normalize(-light.Direction);
-	float3 light1Amount = saturate(dot(input.normal, negatedDirection1));
-	float4 light1Result = float4((light.DiffuseColor * light1Amount) + light.AmbientColor, 1) * shadowAmount * surfaceFog;
+	float3 light1Amount = saturate(dot(input.normal, -light.Direction));
+	float4 light1Result = float4((light.DiffuseColor * light1Amount * shadowAmount) + light.AmbientColor, 1) * surfaceFog;
 
 	// Get the result after applying the second light
-	float3 negatedDirection2 = normalize(-light2.Direction);
-	float3 light2Amount = saturate(dot(input.normal, negatedDirection2));
+	float3 light2Amount = saturate(dot(input.normal, -light2.Direction));
 	float4 light2Result = float4((light2.DiffuseColor * light2Amount) + light2.AmbientColor, 1) * surfaceFog;
 
 	// Add the two together

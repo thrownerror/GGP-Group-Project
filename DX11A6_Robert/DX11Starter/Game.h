@@ -122,7 +122,6 @@ private:
 	ID3D11ShaderResourceView* shadowSRV;
 	ID3D11SamplerState* shadowSampler;
 	ID3D11RasterizerState* shadowRasterizer;
-	D3D11_VIEWPORT shadowViewport;
 	SimpleVertexShader* shadowShader;
 	XMFLOAT4X4 shadowView;
 	XMFLOAT4X4 shadowProjection;
