@@ -18,6 +18,9 @@ Material::Material(SimpleVertexShader * vP, SimplePixelShader * pP, ID3D11Shader
 
 Material::~Material()
 {
+	if (normResViewPointer != NULL) {
+		normResViewPointer->Release();
+	}
 }
 
 ID3D11SamplerState* ::Material::GetSamplerState() {

@@ -74,7 +74,7 @@ DXCore::~DXCore()
 
 	if (swapChain) { swapChain->Release();}
 	if (context) { context->Release();}
-	debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+//	debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 	if (debug) { debug->Release(); }
 	if (device) { device->Release(); }
 
