@@ -59,12 +59,30 @@ Game::~Game()
 	delete meshModel1;
 
 	delete ge1;
-	delete ge2;
-	delete ge3;
-	delete ge4;
-	delete ge5;
-	delete ge6;
-	delete ge7;
+	delete wall1;
+	delete wall2;
+	delete wall3;
+	delete wall4;
+	delete wall5;
+	delete wall6;
+
+	delete wall7;
+	delete wall8;
+	delete wall9;
+	delete wall10;
+
+	delete wall11;
+	delete wall12;
+	delete wall13;
+	delete wall14;
+	delete wall15;
+	delete wall16;
+	delete wall17;
+	delete wall18;
+	delete wall19;
+	delete wall20;
+	delete wall21;
+
 	delete gePlayer;
 
 	delete e0;
@@ -356,17 +374,42 @@ void Game::CreateBasicGeometry()
 
 	ge1 = new GameEntity(meshArray[0], mat1);
 
-	ge2 = new GameEntity(meshArray[0], mat1);
+	wall1 = new GameEntity(meshArray[0], mat1);
 
-	ge3 = new GameEntity(meshArray[0], mat1);
+	wall2 = new GameEntity(meshArray[0], mat1);
 
-	ge4 = new GameEntity(meshArray[0], mat1);
+	wall3 = new GameEntity(meshArray[0], mat1);
 
-	ge5 = new GameEntity(meshArray[0], mat1);
+	wall4 = new GameEntity(meshArray[0], mat1);
 
-	ge6 = new GameEntity(meshArray[0], mat1);
+	wall5 = new GameEntity(meshArray[0], mat1);
 
-	ge7 = new GameEntity(meshArray[0], mat1);
+	wall6 = new GameEntity(meshArray[0], mat1);
+
+
+
+	//hallway
+	wall7	= new GameEntity(meshArray[0], mat1);
+	wall8	= new GameEntity(meshArray[0], mat1);
+	wall9	= new GameEntity(meshArray[0], mat1);
+	wall10	= new GameEntity(meshArray[0], mat1);
+
+	wall11	= new GameEntity(meshArray[0], mat1);
+	wall12	= new GameEntity(meshArray[0], mat1);
+	wall13	= new GameEntity(meshArray[0], mat1);
+	wall14	= new GameEntity(meshArray[0], mat1);
+	wall15	= new GameEntity(meshArray[0], mat1);
+	wall16	= new GameEntity(meshArray[0], mat1);
+	wall17	= new GameEntity(meshArray[0], mat1);
+	wall18	= new GameEntity(meshArray[0], mat1);
+	wall19	= new GameEntity(meshArray[0], mat1);
+	wall20	= new GameEntity(meshArray[0], mat1);
+	wall21 = new GameEntity(meshArray[0], mat1);
+
+
+	wallEnd = new GameEntity(meshArray[0], mat1);
+
+	//wall7 = new GameEntity(meshArray[0], mat1);
 
 	gePlayer = new GameEntity(meshArray[0]);
 
@@ -378,37 +421,50 @@ void Game::CreateBasicGeometry()
 	e0->SetCollisionBox(.1f, .1f, .1f);
 
 	if (testBox) {
-		entityArraySize = 7;
+		entityArraySize = 23;
 
 		entityArray = new GameEntity*[entityArraySize + 1];
 		entityArray[0] = ge1;
-		entityArray[1] = ge2;
-		entityArray[2] = ge3;
-		entityArray[3] = ge4;
-		entityArray[4] = ge5;
-		entityArray[5] = ge6;
-		entityArray[6] = ge7;
+		entityArray[1] = wall1;
+		entityArray[2] = wall2;
+		entityArray[3] = wall3;
+		entityArray[4] = wall4;
+		entityArray[5] = wall5;
+		entityArray[6] = wall6;
+		//
+		entityArray[7] = wall7;
+		entityArray[8] = wall8;
+		entityArray[9] = wall9;
+		entityArray[10] = wall10;
+
+		entityArray[11] = wall11;
+		entityArray[12] = wall12;
+		entityArray[13] = wall13;
+		entityArray[14] = wall14;
+		entityArray[15] = wall15;
+		entityArray[16] = wall16;
+		entityArray[17] = wall17;
+		entityArray[18] = wall18;
+		entityArray[19] = wall19;
+		entityArray[20] = wall20;
+		entityArray[21] = wall21;
+
+
+		entityArray[22] = wallEnd;
+
+
 
 		for (int i = 0; i < entityArraySize; i++) {
 			entityArray[i]->SetCollisionBox(1.0f, 1.0f, .02f);
 		}
-		XMFLOAT3 movementRight = XMFLOAT3(2.0f, 0.0f, 0.0f);
-		XMFLOAT3 movementLeft = XMFLOAT3(-2.0f, 0.0f, 0.0f);
-		XMFLOAT3 movementDown = XMFLOAT3(0.0f, -2.0f, 0.0f);
-		XMFLOAT3 movementUp = XMFLOAT3(0.0f, 2.0f, 0.0f);
-		XMFLOAT3 movementBackward = XMFLOAT3(0.0f, 0.0f, -2.0f);
-		XMFLOAT3 movementForward = XMFLOAT3(0.0f, 0.0f, 2.0f);
-		XMFLOAT3 rotation180AroundY = XMFLOAT3(0.0f, 180.0f, 0.0f);
-		XMFLOAT3 rotate90CWAroundY = XMFLOAT3(0.0f, 90.0f, 0.0f);
-		XMFLOAT3 rotate90CCWAroundY = XMFLOAT3(0.0f, -90.0f, 0.0f);
-		XMFLOAT3 rotate90CWAroundX = XMFLOAT3(90.0f, 0.0f, 0.0f);
-		XMFLOAT3 rotate90CCWAroundX = XMFLOAT3(-90.0f, 0.0f, 0.0f);
+
+		//XMFLOAT3 rotate
 		//XMFLOAT3 scaleValue = XMFLOAT3(10.0f, 10.0f, 10.0f);
 		//Reserved for any random entity
 
 
-		ge6->SetCollisionBox(1.0f, 1.0f, 1.0f);
-		ge7->SetCollisionBox(1.0f, 1.0f, 1.0f);
+		wall5->SetCollisionBox(1.0f, 1.0f, 1.0f);
+		wall6->SetCollisionBox(1.0f, 1.0f, 1.0f);
 		//ge8->SetCollisionBox(1.0f, 1.0f, 1.0f);
 
 		//Test wall/entity
@@ -418,30 +474,7 @@ void Game::CreateBasicGeometry()
 		ge1->TransformTranslation(movementLeft);
 		ge1->UpdateEntity();
 
-
-		//Forward and back walls
-		ge2->UpdateEntity();
-		ge3->TransformRotation(rotation180AroundY); //back wall
-		ge2->SetCollisionBox(1.0f, 1.0f, 0.2f);
-		ge3->SetCollisionBox(1.0f, 1.0f, 0.2f);
-		ge3->UpdateEntity();
-
-		//Left and right walls
-		ge4->TransformRotation(rotate90CCWAroundY);
-		ge4->UpdateEntity(); //left
-		ge4->SetCollisionBox(0.2f, 1.0f, 1.0f);
-		ge5->TransformRotation(rotate90CWAroundY);
-		ge5->SetCollisionBox(0.2f, 1.0f, 1.0f);
-		ge5->UpdateEntity(); //right
-
-		//Top and Bottom walls
-		ge6->TransformRotation(rotate90CCWAroundX);
-		ge6->UpdateEntity();
-		ge6->SetCollisionBox(1.0f, 0.2f, 1.0f);
-		ge7->TransformRotation(rotate90CWAroundX);
-		ge7->SetCollisionBox(1.0f, 0.2f, 1.0f);
-
-		ge7->UpdateEntity();
+		BuildLevelGeometry();
 	}
 
 
@@ -449,6 +482,154 @@ void Game::CreateBasicGeometry()
 
 }
 
+void Game::BuildLevelGeometry() {
+
+
+	//Forward and back walls
+	wall1->TransformTranslation(movementForward);
+	wall1->TransformTranslation(movementForward);
+	wall2->TransformRotation(rotation180AroundY); //back wall
+	wall1->UpdateEntity(); //moving wall1 back of hallway
+	wall1->SetCollisionBox(1.0f, 1.0f, 0.2f);
+	wall2->SetCollisionBox(1.0f, 1.0f, 0.2f);
+	wall2->UpdateEntity();
+
+	//Left and right walls
+	wall3->TransformRotation(rotate90CCWAroundY);
+	wall3->UpdateEntity(); //left
+	wall3->SetCollisionBox(0.2f, 1.0f, 1.0f);
+	wall4->TransformRotation(rotate90CWAroundY);
+	wall4->SetCollisionBox(0.2f, 1.0f, 1.0f);
+	wall4->UpdateEntity(); //right
+
+						   //Top and Bottom walls
+	wall5->TransformRotation(rotate90CCWAroundX);
+	wall5->UpdateEntity();
+	wall5->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	wall6->TransformRotation(rotate90CWAroundX);
+	wall6->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	wall6->UpdateEntity();
+
+	//set 2 initiation
+	wall7->TransformTranslation(movementForward);
+	wall7->TransformRotation(rotate90CCWAroundX);
+	wall7->UpdateEntity();
+	wall7->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	//wall7->SetCollisionBox(1.0f, 0.2f, 1.0f);
+
+	wall8->TransformTranslation(movementForward);
+	wall8->TransformRotation(rotate90CWAroundX);
+	wall8->UpdateEntity();
+	wall8->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	//wall8->SetCollisionBox(1.0f, 0.2f, 1.0f);
+
+	wall9->TransformTranslation(movementForward);
+	wall9->TransformRotation(rotate90CCWAroundY);
+	wall9->UpdateEntity();
+	wall9->SetCollisionBox(0.2f, 1.0f, 1.0f);
+
+
+	wall10->TransformTranslation(movementForward);
+	wall10->TransformRotation(rotate90CWAroundY);
+	wall10->UpdateEntity();
+	wall10->SetCollisionBox(0.2f, 1.0f, 1.0f);
+
+
+
+	//shaft prep
+	wall11->TransformTranslation(movementForward);
+	wall11->TransformTranslation(movementForward);
+	wall11->TransformRotation(rotate90CWAroundX);
+	wall11->UpdateEntity(); //floor
+	wall11->SetCollisionBox(1.0f, 0.2f, 1.0f);
+
+	wall12->TransformTranslation(movementForward);
+	wall12->TransformTranslation(movementForward);
+	wall12->TransformRotation(rotate90CCWAroundY);
+	wall12->UpdateEntity(); //left
+	wall12->SetCollisionBox(0.2f, 1.0f, 0.2f);
+
+	wall13->TransformTranslation(movementForward);
+	wall13->TransformTranslation(movementForward);
+	wall13->TransformRotation(rotate90CWAroundY);
+	wall13->UpdateEntity(); //right
+	wall13->SetCollisionBox(0.2f, 1.0f, 0.2f);
+
+	wall14->TransformTranslation(movementForward);
+	wall14->TransformTranslation(movementForward);
+	wall14->TransformTranslation(movementUp);
+	wall14->TransformRotation(rotate90CCWAroundY);
+	wall14->UpdateEntity(); //left 2
+
+	wall14->SetCollisionBox(0.2f, 1.0f, 0.2f);
+
+	wall15->TransformTranslation(movementForward);
+	wall15->TransformTranslation(movementForward);
+	wall15->TransformTranslation(movementUp);
+	wall15->TransformRotation(rotate90CWAroundY);
+	wall15->UpdateEntity(); //right 2
+
+	wall15->SetCollisionBox(0.2f, 1.0f, 0.2f);
+
+	wall16->TransformTranslation(movementForward);
+	wall16->TransformTranslation(movementForward);
+	wall16->TransformTranslation(movementUp);
+	wall16->TransformTranslation(movementUp);
+	wall16->TransformRotation(rotate90CCWAroundY);
+	wall16->UpdateEntity(); //left 3
+
+	wall16->SetCollisionBox(0.2f, 1.0f, 0.2f);
+
+	wall17->TransformTranslation(movementForward);
+	wall17->TransformTranslation(movementForward);
+	wall17->TransformTranslation(movementUp);
+	wall17->TransformTranslation(movementUp);
+	wall17->TransformRotation(rotate90CWAroundY);
+	wall17->UpdateEntity(); //right 3
+
+	wall17->SetCollisionBox(0.2f, 1.0f, 0.2f);
+
+	wall18->TransformTranslation(movementForward);
+	wall18->TransformTranslation(movementForward);
+	wall18->TransformTranslation(movementUp);
+	wall18->TransformTranslation(movementUp);
+	wall18->TransformRotation(rotate90CCWAroundX);
+	wall18->UpdateEntity(); //TOP
+
+	wall18->SetCollisionBox(1.0f, 0.2f, 1.0f);
+
+	wall19->TransformTranslation(movementForward);
+	wall19->TransformTranslation(movementForward);
+	wall19->TransformTranslation(movementUp);
+	wall19->TransformRotation(rotation180AroundY);
+	wall19->UpdateEntity(); //back 1
+
+	wall19->SetCollisionBox(1.0f, 1.0f, 0.2f);
+
+	wall20->TransformTranslation(movementForward);
+	wall20->TransformTranslation(movementForward);
+	wall20->TransformTranslation(movementUp);
+	wall20->TransformTranslation(movementUp);
+	wall20->TransformRotation(rotation180AroundY);
+	wall20->UpdateEntity(); // back 2
+
+	wall20->SetCollisionBox(1.0f, 1.0f, 0.2f);
+
+	wall21->TransformTranslation(movementForward);
+	wall21->TransformTranslation(movementForward);
+	wall21->TransformTranslation(movementUp);
+	wall21->UpdateEntity(); // front 1
+
+	wall21->SetCollisionBox(1.0f, 1.0f, 0.2f);
+
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementUp);
+	wallEnd->TransformTranslation(movementUp);
+	wallEnd->UpdateEntity(); // end cap - currently shaft front w
+
+	wallEnd->SetCollisionBox(1.0f, 1.0f, 0.2f);
+}
 // --------------------------------------------------------
 // Handle resizing DirectX "stuff" to match the new window size.
 // For instance, updating our projection matrix's aspect ratio.

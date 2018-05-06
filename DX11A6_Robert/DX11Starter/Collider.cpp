@@ -41,6 +41,12 @@ Collider::Collider(float xWidthRadius, float yHeightRadius, float zDepthRadius, 
 
 Collider::~Collider()
 {
+
+	if (cornerArray != NULL)
+	{
+		free(cornerArray);
+	}
+
 	delete topLeftFront;
 	delete topRightFront;
 	delete bottomLeftFront;
@@ -50,10 +56,7 @@ Collider::~Collider()
 	delete bottomLeftBack;
 	delete bottomRightBack;
 
-	if (cornerArray != NULL)
-	{
-		free(cornerArray);
-	}
+
 }
 
 float Collider::GetColliderXWidth()

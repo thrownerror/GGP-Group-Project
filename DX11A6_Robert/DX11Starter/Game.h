@@ -13,6 +13,8 @@ class Game
 {
 
 public:
+
+
 	Game(HINSTANCE hInstance);
 	~Game();
 
@@ -38,6 +40,7 @@ private:
 	void CreateMatrices();
 	void CreateBasicGeometry();
 
+	void BuildLevelGeometry();
 	// Buffers to hold actual geometry data
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
@@ -76,12 +79,39 @@ private:
 
 	GameEntity* gePlayer;
 	GameEntity* ge1;
-	GameEntity* ge2;
-	GameEntity* ge3;
-	GameEntity* ge4;
-	GameEntity* ge5;
-	GameEntity* ge6;
-	GameEntity* ge7;
+
+	//walls - first room
+	GameEntity* wall1; //front 
+	GameEntity* wall2; //back
+	GameEntity* wall3; //left
+	GameEntity* wall4; //right
+	GameEntity* wall5; //top
+	GameEntity* wall6; //bottom
+
+	//hallway1
+	GameEntity* wall7; //top
+	GameEntity* wall8; //bottom
+	GameEntity* wall9; //left
+	GameEntity* wall10; //right
+
+	//Shaft1
+	GameEntity* wall11; //bottom
+	GameEntity* wall12; //left wall 1
+	GameEntity* wall13; //right wall 1
+	GameEntity* wall14; //left wall 2
+	GameEntity* wall15; //right wall 2
+	GameEntity* wall16; //back wall 1
+	GameEntity* wall17; //back wall 2
+	GameEntity* wall18; //left wall 3
+	GameEntity* wall19; //right wall 3
+	GameEntity* wall20; //top wall
+	GameEntity* wall21; //front wall
+
+	//GameEntity* wall11;
+
+	//End cap 
+	GameEntity* wallEnd;
+
 
 	Enemy* e0;
 
@@ -101,5 +131,17 @@ private:
 	SimpleVertexShader* shadowShader;
 	XMFLOAT4X4 shadowView;
 	XMFLOAT4X4 shadowProjection;
+
+	XMFLOAT3 movementRight = XMFLOAT3(2.0f, 0.0f, 0.0f);
+	XMFLOAT3 movementLeft = XMFLOAT3(-2.0f, 0.0f, 0.0f);
+	XMFLOAT3 movementDown = XMFLOAT3(0.0f, -2.0f, 0.0f);
+	XMFLOAT3 movementUp = XMFLOAT3(0.0f, 2.0f, 0.0f);
+	XMFLOAT3 movementBackward = XMFLOAT3(0.0f, 0.0f, -2.0f);
+	XMFLOAT3 movementForward = XMFLOAT3(0.0f, 0.0f, 2.0f);
+	XMFLOAT3 rotation180AroundY = XMFLOAT3(0.0f, 180.0f, 0.0f);
+	XMFLOAT3 rotate90CWAroundY = XMFLOAT3(0.0f, 90.0f, 0.0f);
+	XMFLOAT3 rotate90CCWAroundY = XMFLOAT3(0.0f, -90.0f, 0.0f);
+	XMFLOAT3 rotate90CWAroundX = XMFLOAT3(90.0f, 0.0f, 0.0f);
+	XMFLOAT3 rotate90CCWAroundX = XMFLOAT3(-90.0f, 0.0f, 0.0f);
 };
 
