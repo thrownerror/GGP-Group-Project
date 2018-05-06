@@ -74,7 +74,12 @@ DXCore::~DXCore()
 
 	if (swapChain) { swapChain->Release();}
 	if (context) { context->Release();}
-	if (device) { device->Release();}
+	debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+	if (debug) { debug->Release(); }
+	if (device) { device->Release(); }
+
+	//debug->ReportLiveObjects(D3D11_RLDO_DETAIL);
+	//HRESULT hr = ReportLiveObjects(DXGI_DEBUG_D3D11, DXGI_DEBUG_RLO_DETAIL);
 }
 
 // --------------------------------------------------------
@@ -218,6 +223,9 @@ HRESULT DXCore::InitDirectX()
 		0,
 		__uuidof(ID3D11Texture2D),
 		(void**)&backBufferTexture);
+
+	device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&debug));
+
 
 	// Now that we have the texture, create a render target view
 	// for the back buffer so we can render into it.  Then release
