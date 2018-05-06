@@ -19,10 +19,11 @@ Bullet::~Bullet()
 
 void Bullet::UpdateEntity(float deltaTime)
 {
+	/*
 	if (distTravelled >= maxDistTravelled) {
 		this->~Bullet();
 	}
-
+	*/
 	// To normalize rotation vector before calculation
 
 	//XMVECTOR pos = XMLoadFloat3(&GetPosition());

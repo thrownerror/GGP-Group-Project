@@ -47,7 +47,7 @@ private:
 	XMFLOAT3* bottomLeftBack;
 	XMFLOAT3* bottomRightBack;
 
-	XMFLOAT3** cornerArray;
+	//XMFLOAT3* cornerArray[8];
 
 	void EstablishBoundingVectors();
 };

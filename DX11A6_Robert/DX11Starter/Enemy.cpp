@@ -71,9 +71,10 @@ void Enemy::UpdateEntity(float deltaTime)
 		angle = angle * (180 / 3.1415926f);
 		//SetRotation(XMStoreFloat3( , XMMatrixLookAtLH(XMLoadFloat3(&GetPosition()), XMLoadFloat3(&player->GetPosition()), XMLoadFloat3(&up))));
 		//TransformRotation(player->GetPosition()); //<= change rotation based on player
+		SetRotation(XMFLOAT3(0, angle, 0));
 		attackInterval -= deltaTime;
 		if (attackInterval <= 0) {
-			attackInterval = 5.0f;
+			attackInterval = 2.0f;
 			Attack();
 		}
 	}

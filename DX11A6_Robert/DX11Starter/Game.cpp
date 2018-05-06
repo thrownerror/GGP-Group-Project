@@ -83,6 +83,8 @@ Game::~Game()
 	delete wall20;
 	delete wall21;
 
+	delete wallEnd;
+
 	delete gePlayer;
 
 	delete e0;

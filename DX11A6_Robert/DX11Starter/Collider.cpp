@@ -2,29 +2,12 @@
 
 
 
-Collider::Collider()
+Collider::Collider() : Collider(1, 1, 1, XMFLOAT3(0, 0, 0))
 {
-	position = XMFLOAT3(0, 0, 0);
-	xWidth = 1;
-	yHeight = 1;
-	zDepth = 1;
-	
-	cornerArray = NULL;
-
-	EstablishBoundingVectors();
 }
 
-Collider::Collider(XMFLOAT3 pos)
+Collider::Collider(XMFLOAT3 pos) : Collider(1, 1, 1, pos)
 {
-	position = pos;
-	xWidth = 1;
-	yHeight = 1;
-	zDepth = 1;
-
-	cornerArray = NULL;
-
-	EstablishBoundingVectors();
-
 }
 
 Collider::Collider(float xWidthRadius, float yHeightRadius, float zDepthRadius, XMFLOAT3 pos)
@@ -34,19 +17,22 @@ Collider::Collider(float xWidthRadius, float yHeightRadius, float zDepthRadius, 
 	yHeight = yHeightRadius;
 	zDepth = zDepthRadius;
 
-	cornerArray = NULL;
+	//cornerArray = nullptr;
+
+	topLeftFront = nullptr;
+	topRightFront = nullptr;
+	bottomLeftFront = nullptr;
+	bottomRightFront = nullptr;
+	topLeftBack = nullptr;
+	topRightBack = nullptr;
+	bottomLeftBack = nullptr;
+	bottomRightBack = nullptr;
 
 	EstablishBoundingVectors();
 }
 
 Collider::~Collider()
 {
-
-	if (cornerArray != NULL)
-	{
-		free(cornerArray);
-	}
-
 	delete topLeftFront;
 	delete topRightFront;
 	delete bottomLeftFront;
@@ -56,6 +42,10 @@ Collider::~Collider()
 	delete bottomLeftBack;
 	delete bottomRightBack;
 
+	/*if (cornerArray != nullptr)
+	{
+		delete[] cornerArray;
+	}*/
 
 }
 
@@ -102,26 +92,38 @@ void Collider::SetColliderPosition(XMFLOAT3 collPos)
 
 XMFLOAT3** Collider::GetColliderCorners()
 {
-	if (cornerArray != NULL) {
-		free(cornerArray);
-		cornerArray = NULL;
-	}
-	cornerArray = (XMFLOAT3**) malloc(sizeof(XMFLOAT3*) * 8); // XMFLOAT3[8];//= [topLeftFront, topRightfront, bottomLeftFront, bottomRightFront, topLeftBack, topRightBack, bottomLeftBack, bottomRightBack];
-	cornerArray[0] = topLeftFront;
-	cornerArray[1] = topRightFront;
-	cornerArray[2] = bottomLeftFront;
-	cornerArray[3] = bottomRightFront;
-	cornerArray[4] = topLeftBack;
-	cornerArray[5] = topRightBack;
-	cornerArray[6] = bottomLeftBack;
-	cornerArray[7] = bottomRightBack;
+	// This is all commented out because cornerArray is no longer a member of Collider but just an instance in this particular scope
+	/*if (cornerArray != nullptr) {
+		delete[] cornerArray;
+		//cornerArray = nullptr;
+	}*/
+	//(XMFLOAT3*) malloc(sizeof(XMFLOAT3*) * 8); // XMFLOAT3[8];//= [topLeftFront, topRightfront, bottomLeftFront, bottomRightFront, topLeftBack, topRightBack, bottomLeftBack, bottomRightBack];
+	XMFLOAT3** cornerArray[8] = {};
+	cornerArray[0] = &topLeftFront;
+	cornerArray[1] = &topRightFront;
+	cornerArray[2] = &bottomLeftFront;
+	cornerArray[3] = &bottomRightFront;
+	cornerArray[4] = &topLeftBack;
+	cornerArray[5] = &topRightBack;
+	cornerArray[6] = &bottomLeftBack;
+	cornerArray[7] = &bottomRightBack;
 	//cornerArray[2]
 
-	return cornerArray;//XMFLOAT3* = [topLeftFront, topRightfront, bottomLeftFront, bottomRightFront, topLeftBack, topRightBack, bottomLeftBack, bottomRightBack];
+	return *cornerArray;//XMFLOAT3* = [topLeftFront, topRightfront, bottomLeftFront, bottomRightFront, topLeftBack, topRightBack, bottomLeftBack, bottomRightBack];
 }
 
 void Collider::EstablishBoundingVectors()
 {
+	if (topLeftFront != nullptr) {
+		delete topLeftFront;
+		delete topRightFront;
+		delete bottomLeftFront;
+		delete bottomRightFront;
+		delete topLeftBack;
+		delete topRightBack;
+		delete bottomLeftBack;
+		delete bottomRightBack;
+	}
 	topLeftFront = new XMFLOAT3(position.x - xWidth, position.y + yHeight, position.z + zDepth);
 	topRightFront = new XMFLOAT3(position.x + xWidth, position.y + yHeight, position.z + zDepth);
 	bottomLeftFront = new XMFLOAT3(position.x - xWidth, position.y - yHeight, position.z + zDepth);
