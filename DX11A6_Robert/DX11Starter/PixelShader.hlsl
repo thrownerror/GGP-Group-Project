@@ -95,10 +95,10 @@ float4 main(VertexToPixel input) : SV_TARGET
 	// Actually sample the shadow map and determine if this pixel is in shadow
 	float shadowAmount = shadowSRV.SampleCmpLevelZero(shadowSampler, shadowUV, depthFromLight);
 
-	// Get the result after applying the first light (plus shadow map for the first light
+	// Get the result after applying the first light (plus shadow map for the first light)
 	float3 negatedDirection1 = normalize(-light.Direction);
 	float3 light1Amount = saturate(dot(input.normal, negatedDirection1));
-	float4 light1Result = float4((light.DiffuseColor * shadowAmount * light1Amount) + light.AmbientColor, 1) * surfaceFog;
+	float4 light1Result = float4((light.DiffuseColor * light1Amount) + light.AmbientColor, 1) * shadowAmount * surfaceFog;
 
 	// Get the result after applying the second light
 	float3 negatedDirection2 = normalize(-light2.Direction);

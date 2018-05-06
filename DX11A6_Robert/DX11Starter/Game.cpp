@@ -32,6 +32,16 @@ Game::Game(HINSTANCE hInstance)
 	// Do we want a console window?  Probably only in debug mode
 	CreateConsoleWindow(500, 120, 32, 120);
 	printf("Console window created successfully.  Feel free to printf() here.");
+
+	// Use this to debug memory leaks. Replace the 518 with a
+	// number in {} that gets dumped in memory leaks.
+	// For example, this block:
+	//		{518} normal block at 0x000001DD233143C0, 12 bytes long.
+	//		Data: < ? ? \ ? > 00 00 80 3F 00 00 80 3F 5C 8F 82 3F
+	// Should be checked using 518, the number in {}.
+	// Visual Studio in DEBUG mode will automatically breakpoint
+	// when that object in memory is allocated.
+	//_CrtSetBreakAlloc(518);
 #endif
 
 }
@@ -141,7 +151,7 @@ void Game::Init()
 	CreateBasicGeometry();
 
 	dLight.AmbientColor = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
-	dLight.DiffuseColor = XMFLOAT4(0, 0, 1, 1);
+	dLight.DiffuseColor = XMFLOAT4(1, 1, 1, 0.5);
 	dLight.Direction = XMFLOAT3(1, -1, 0);
 
 	dLight2.AmbientColor = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
@@ -283,9 +293,9 @@ void Game::CreateMatrices()
 	camera->UpdateProjectionMatrix((float)width, (float)height);
 
 	// Calculate the shadow map view and projection for the light
-	XMMATRIX shView = XMMatrixLookAtLH(
-		XMVectorSet(0, 20, -20, 0),	// Start back and in the air
-		XMVectorSet(0, 0, 0, 0),	// Look at the origin
+	XMMATRIX shView = XMMatrixLookToLH(
+		XMVectorSet(0, 0, -10, 0),	// Light 'position'
+		XMLoadFloat3(&dLight.Direction),	// Light 'direction'
 		XMVectorSet(0, 1, 0, 0));	// Up is up
 	XMStoreFloat4x4(&shadowView, XMMatrixTranspose(shView));
 
@@ -784,7 +794,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	// vertexShader->SetFloat("fogEnd", 3.0f);
 
 	// Exponential Fog
-	vertexShader->SetFloat("fogDensity", 0.66f);
+	vertexShader->SetFloat("fogDensity", 0.26f);
 
 	// Fog Color
 	pixelShader->SetFloat4("fogColor", { 0.5f, 0.5f, 0.5f, 1.0f });
