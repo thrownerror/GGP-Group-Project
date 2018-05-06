@@ -41,7 +41,10 @@ Game::Game(HINSTANCE hInstance)
 	// Should be checked using 518, the number in {}.
 	// Visual Studio in DEBUG mode will automatically breakpoint
 	// when that object in memory is allocated.
-	//_CrtSetBreakAlloc(518);
+	//_CrtSetBreakAlloc(558);
+	//D3D11_CREATE_DEVICE_DEBUG;
+#else
+	0
 #endif
 
 }

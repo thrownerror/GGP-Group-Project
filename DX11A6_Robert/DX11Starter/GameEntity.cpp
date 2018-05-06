@@ -133,6 +133,8 @@ void GameEntity::SetScale(XMFLOAT3 setSca)
 
 void GameEntity::SetCollisionBox(float xDim, float yDim, float zDim)
 {
+	if (collisionBox != nullptr)
+		delete collisionBox;
 	collisionBox = new Collider(xDim, yDim, zDim, collisionPosition);
 }
 
