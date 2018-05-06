@@ -98,18 +98,18 @@ XMFLOAT3** Collider::GetColliderCorners()
 		//cornerArray = nullptr;
 	}*/
 	//(XMFLOAT3*) malloc(sizeof(XMFLOAT3*) * 8); // XMFLOAT3[8];//= [topLeftFront, topRightfront, bottomLeftFront, bottomRightFront, topLeftBack, topRightBack, bottomLeftBack, bottomRightBack];
-	XMFLOAT3** cornerArray[8] = {};
-	cornerArray[0] = &topLeftFront;
-	cornerArray[1] = &topRightFront;
-	cornerArray[2] = &bottomLeftFront;
-	cornerArray[3] = &bottomRightFront;
-	cornerArray[4] = &topLeftBack;
-	cornerArray[5] = &topRightBack;
-	cornerArray[6] = &bottomLeftBack;
-	cornerArray[7] = &bottomRightBack;
+	XMFLOAT3* cornerArray[8] = {};
+	cornerArray[0] = topLeftFront;
+	cornerArray[1] = topRightFront;
+	cornerArray[2] = bottomLeftFront;
+	cornerArray[3] = bottomRightFront;
+	cornerArray[4] = topLeftBack;
+	cornerArray[5] = topRightBack;
+	cornerArray[6] = bottomLeftBack;
+	cornerArray[7] = bottomRightBack;
 	//cornerArray[2]
 
-	return *cornerArray;//XMFLOAT3* = [topLeftFront, topRightfront, bottomLeftFront, bottomRightFront, topLeftBack, topRightBack, bottomLeftBack, bottomRightBack];
+	return cornerArray;//XMFLOAT3* = [topLeftFront, topRightfront, bottomLeftFront, bottomRightFront, topLeftBack, topRightBack, bottomLeftBack, bottomRightBack];
 }
 
 void Collider::EstablishBoundingVectors()
