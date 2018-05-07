@@ -124,6 +124,7 @@ XMFLOAT3 GameEntity::Normalize(XMFLOAT3 vector)
 void GameEntity::SetRotation(XMFLOAT3 setRot)
 {
 	rotation = setRot;
+	recalculateWorldMatrix = true;
 }
 
 void GameEntity::SetScale(XMFLOAT3 setSca)

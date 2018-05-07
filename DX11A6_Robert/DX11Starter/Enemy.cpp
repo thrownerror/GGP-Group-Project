@@ -2,6 +2,16 @@
 
 
 
+float Enemy::dot(XMFLOAT3 a, XMFLOAT3 b)
+{
+	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
+}
+
+float Enemy::mag(XMFLOAT3 a)
+{
+	return sqrt((a.x * a.x) + (a.y * a.y) + (a.z * a.z));
+}
+
 Enemy::Enemy() : Enemy(nullptr, nullptr, nullptr, nullptr, nullptr)
 {
 }
@@ -67,11 +77,18 @@ void Enemy::UpdateEntity(float deltaTime)
 	// If targeting the player
 	else {
 		XMFLOAT3 up = XMFLOAT3(0, 1, 0);
-		float angle = atan2(GetPosition().x - player->GetPosition().x, GetPosition().z - player->GetPosition().z);
-		angle = angle * (180 / 3.1415926f);
+		//float angle; //= atan2(GetPosition().x - player->GetPosition().x, GetPosition().z - player->GetPosition().z);
+		//float angle = acos(dot(GetPosition(), player->GetPosition()) / mag(GetPosition()) * mag(player->GetPosition()));
+		//angle = angle * (180 / 3.1415926f);
+		float angle = atan2(GetPosition().z - player->GetPosition().z, GetPosition().x - player->GetPosition().x);
+		angle *= -180 / (3.1415926 * 5);
 		//SetRotation(XMStoreFloat3( , XMMatrixLookAtLH(XMLoadFloat3(&GetPosition()), XMLoadFloat3(&player->GetPosition()), XMLoadFloat3(&up))));
 		//TransformRotation(player->GetPosition()); //<= change rotation based on player
+		//SetRotation(XMFLOAT3(0, angle, 0));
+		//TransformRotation(XMFLOAT3(0, angle, 0));
 		SetRotation(XMFLOAT3(0, angle, 0));
+		printf("Rotation Angle: %f %f %f \n", GetRotation().x, GetRotation().y, GetRotation().z);
+		printf("Basic angle: %f \n", angle);
 		attackInterval -= deltaTime;
 		if (attackInterval <= 0) {
 			attackInterval = 2.0f;
@@ -84,7 +101,6 @@ void Enemy::UpdateEntity(float deltaTime)
 	XMFLOAT3 pos = GetPosition();
 	XMFLOAT3 ePos = player->GetPosition();
 
-
 	float dist = sqrt(pow(pos.x - ePos.x, 2) +
 					  pow(pos.y - ePos.y, 2) +
 					  pow(pos.z - ePos.z, 2));
@@ -94,6 +110,7 @@ void Enemy::UpdateEntity(float deltaTime)
 	else
 		seesPlayer = false;
 
+	// Update all bullets
 	for (int i = 0; i < numBullets; i++)
 	{
 		bullets[i].UpdateEntity(deltaTime);

@@ -24,6 +24,10 @@ private:
 	bool goingToOne;
 	float percentage;
 
+	// Calculates dot product / magnitude
+	float dot(XMFLOAT3 a, XMFLOAT3 b);
+	float mag(XMFLOAT3 a);
+
 public:
 	Enemy();
 	Enemy(Mesh * enemyMesh, Material * enemyMaterial, Mesh * bullMesh, Material * bullMaterial, GameEntity * pl);
