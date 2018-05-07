@@ -39,6 +39,7 @@ private:
 	void LoadShaders(); 
 	void CreateMatrices();
 	void CreateBasicGeometry();
+	void BuildCollisionGeometry();
 
 	void BuildLevelGeometry();
 	// Buffers to hold actual geometry data
@@ -70,6 +71,8 @@ private:
 
 	//GameEntity objects
 	GameEntity** entityArray;
+	GameEntity** collisionArray;
+	int collisionArraySize;
 	int entityArraySize;
 
 	GameEntity* gePlayer;
@@ -107,6 +110,13 @@ private:
 	//End cap 
 	GameEntity* wallEnd;
 
+
+	//CollisionVolumes
+	GameEntity* ce1; //left
+	GameEntity* ce2; //right
+	GameEntity* ce3; //up
+	GameEntity* ce4; //down
+	GameEntity* ce5; //back
 
 	Enemy* e0;
 

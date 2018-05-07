@@ -96,11 +96,18 @@ Game::~Game()
 
 	delete wallEnd;
 
+	delete ce1;
+	delete ce2;
+	delete ce3;
+	delete ce4;
+	delete ce5;
+
 	delete gePlayer;
 
 	delete e0;
 
 	delete[] entityArray;
+	delete[] collisionArray;
 
 	delete mat1;
 	delete camera;
@@ -366,6 +373,16 @@ void Game::CreateBasicGeometry()
 	wallEnd = new GameEntity(meshQuad, mat1);
 	//wall7 = new GameEntity(meshQuad, mat1);
 
+
+	//collision spaces
+	ce1 = new GameEntity(meshQuad, mat1);
+	ce2 = new GameEntity(meshQuad, mat1);
+	ce3 = new GameEntity(meshQuad, mat1);
+	ce4 = new GameEntity(meshQuad, mat1);
+	ce5 = new GameEntity(meshQuad, mat1);
+
+
+
 	gePlayer = new GameEntity(meshQuad);
 	gePlayer->SetCollisionBox(.1f, .1f, .1f);
 
@@ -374,6 +391,14 @@ void Game::CreateBasicGeometry()
 	e0->SetCollisionBox(.1f, .1f, .1f);
 
 	if (testBox) {
+		collisionArraySize = 5;
+		collisionArray = new GameEntity*[collisionArraySize];
+		collisionArray[0] = ce1;
+		collisionArray[1] = ce2;
+		collisionArray[2] = ce3;
+		collisionArray[3] = ce4;
+		collisionArray[4] = ce5;
+
 		entityArraySize = 23;
 
 		entityArray = new GameEntity*[entityArraySize + 1];
@@ -407,6 +432,9 @@ void Game::CreateBasicGeometry()
 		for (int i = 0; i < entityArraySize; i++) {
 			entityArray[i]->SetCollisionBox(1.0f, 1.0f, .02f);
 		}
+		for (int i = 0; i < collisionArraySize; i++) {
+			collisionArray[i]->SetCollisionBox(1.0f, 1.0f, .02f);
+		}
 
 		//XMFLOAT3 rotate
 		//XMFLOAT3 scaleValue = XMFLOAT3(10.0f, 10.0f, 10.0f);
@@ -426,9 +454,43 @@ void Game::CreateBasicGeometry()
 		ge1->UpdateEntity();
 
 		BuildLevelGeometry();
+		BuildCollisionGeometry();
 	}
 }
+void Game::BuildCollisionGeometry() {
 
+	//first hallway
+	//left bounds
+	ce1->TransformTranslation(movementLeft);
+	ce1->SetCollisionBox(.1f, 1.0f, 2.5f);
+	ce1->UpdateEntity();
+	//right bounds
+	ce2->TransformTranslation(movementRight);
+	ce2->TransformTranslation(movementForward);
+	ce2->SetCollisionBox(.1f, 1.0f, 2.5f);
+	ce2->UpdateEntity();
+	//up bounds
+	ce3->TransformTranslation(movementUp);
+	//ce3->TransformTranslation(movementUp);
+	//ce3->TransformTranslation(movementForward);
+	ce3->SetCollisionBox(1.0f, .1f, 1.0f);
+	ce3->UpdateEntity();
+	
+	//down
+	ce4->TransformTranslation(movementDown);
+	//ce4->TransformTranslation(movementUp);
+	//ce4->TransformTranslation(movementForward);
+	ce4->SetCollisionBox(1.0f, .1f, 2.0f);
+	ce4->UpdateEntity();
+
+	ce5->TransformTranslation(movementBackward);
+	ce5->TransformTranslation(movementBackward);
+	ce5->SetCollisionBox(1.0f, 1.0f, 0.2f);
+	ce5->UpdateEntity();
+
+
+	
+}
 void Game::BuildLevelGeometry() {
 
 	//Forward and back walls
@@ -684,13 +746,23 @@ void Game::Update(float deltaTime, float totalTime)
 
 		if (collidingMaster.isColliding(gePlayer, entityArray[i])) {
 			collidingMaster.isColliding(gePlayer, entityArray[i]);
-			printf("collision between player and %d\n", i);
+			//printf("collision between player and %d\n", i);
 		}
 		else {
 			//printf("no collision between player and %d\n", i);
 		}
 
 		//if(i != )
+	}
+	for (int i = 0; i <= collisionArraySize - 1; i++) {
+		collisionArray[i]->UpdateEntity();
+		if (collidingMaster.isColliding(gePlayer, collisionArray[i])) {
+			collidingMaster.isColliding(gePlayer, entityArray[i]);
+			printf("Collision between player and collider volume %d\n", i);
+		}
+		else {
+			printf("no Collision between player and collider volume %d\n", i);
+		}
 	}
 
 	camera->Update(deltaTime);

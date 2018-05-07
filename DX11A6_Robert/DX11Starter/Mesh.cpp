@@ -12,7 +12,7 @@ Mesh::Mesh(Vertex * vertArray, int vertCount, unsigned int * indexArray, int ind
 
 Mesh::Mesh(char * fileName, ID3D11Device* bufferMaker)
 {
-	printf(fileName);
+	//printf(fileName);
 	//std::ofstream myfile ("../../test.txt");
 	//myfile.open("../example.txt");
 	//myfile << "Writing this to a file.\n";

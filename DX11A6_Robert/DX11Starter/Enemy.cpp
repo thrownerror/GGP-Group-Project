@@ -87,8 +87,8 @@ void Enemy::UpdateEntity(float deltaTime)
 		//SetRotation(XMFLOAT3(0, angle, 0));
 		//TransformRotation(XMFLOAT3(0, angle, 0));
 		SetRotation(XMFLOAT3(0, angle, 0));
-		printf("Rotation Angle: %f %f %f \n", GetRotation().x, GetRotation().y, GetRotation().z);
-		printf("Basic angle: %f \n", angle);
+		//printf("Rotation Angle: %f %f %f \n", GetRotation().x, GetRotation().y, GetRotation().z);
+		//printf("Basic angle: %f \n", angle);
 		attackInterval -= deltaTime;
 		if (attackInterval <= 0) {
 			attackInterval = 2.0f;
