@@ -93,30 +93,35 @@ private:
 	GameEntity* wall10; //right
 
 	//Shaft1
-	GameEntity* wall11; //bottom
-	GameEntity* wall12; //left wall 1
-	GameEntity* wall13; //right wall 1
-	GameEntity* wall14; //left wall 2
-	GameEntity* wall15; //right wall 2
-	GameEntity* wall16; //back wall 1
-	GameEntity* wall17; //back wall 2
-	GameEntity* wall18; //left wall 3
-	GameEntity* wall19; //right wall 3
-	GameEntity* wall20; //top wall
-	GameEntity* wall21; //front wall
+	GameEntity* wall11; //bottom - checked 
+	GameEntity* wall12; //left wall 1 - checked 
+	GameEntity* wall13; //right wall 1 - checked
+	GameEntity* wall14; //left wall 2 - checked
+	GameEntity* wall15; //right wall 2 - cheked
+	GameEntity* wall16; //back wall height 2 - checked
+	GameEntity* wall17; //back wall 2 - checked
+	GameEntity* wall18; //top wall 3 - cheeck
+	GameEntity* wall19; //Front wall 2 - checked
+	GameEntity* wall20; //right 3 wall - checked
+	GameEntity* wall21; //left 3 wall - checked
 
 	//GameEntity* wall11;
 
 	//End cap 
-	GameEntity* wallEnd;
+	GameEntity* wallEnd; // front wall 3 - checked
 
 
 	//CollisionVolumes
+	//initial space
 	GameEntity* ce1; //left
 	GameEntity* ce2; //right
 	GameEntity* ce3; //up
 	GameEntity* ce4; //down
 	GameEntity* ce5; //back
+	
+	//shaft1;
+	GameEntity* shaftFront;
+	GameEntity* shaftBack;
 
 	Enemy* e0;
 

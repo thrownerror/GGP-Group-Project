@@ -101,6 +101,8 @@ Game::~Game()
 	delete ce3;
 	delete ce4;
 	delete ce5;
+	delete shaftFront;
+	delete shaftBack;
 
 	delete gePlayer;
 
@@ -381,7 +383,8 @@ void Game::CreateBasicGeometry()
 	ce4 = new GameEntity(meshQuad, mat1);
 	ce5 = new GameEntity(meshQuad, mat1);
 
-
+	shaftFront	= new GameEntity(meshQuad, mat1);
+	shaftBack	= new GameEntity(meshQuad, mat1);
 
 	gePlayer = new GameEntity(meshQuad);
 	gePlayer->SetCollisionBox(.1f, .1f, .1f);
@@ -391,13 +394,19 @@ void Game::CreateBasicGeometry()
 	e0->SetCollisionBox(.1f, .1f, .1f);
 
 	if (testBox) {
-		collisionArraySize = 5;
+		collisionArraySize = 7;
 		collisionArray = new GameEntity*[collisionArraySize];
 		collisionArray[0] = ce1;
 		collisionArray[1] = ce2;
 		collisionArray[2] = ce3;
 		collisionArray[3] = ce4;
 		collisionArray[4] = ce5;
+
+		collisionArray[5] = shaftFront;
+		collisionArray[6] = shaftBack;
+
+
+
 
 		entityArraySize = 23;
 
@@ -487,6 +496,25 @@ void Game::BuildCollisionGeometry() {
 	ce5->TransformTranslation(movementBackward);
 	ce5->SetCollisionBox(1.0f, 1.0f, 0.2f);
 	ce5->UpdateEntity();
+
+	shaftFront->TransformTranslation(movementForward);
+	shaftFront->TransformTranslation(movementForward);
+	shaftFront->TransformTranslation(movementForward);
+	shaftFront->TransformTranslation(movementForward);
+	shaftFront->TransformTranslation(movementUp);
+	shaftFront->TransformTranslation(movementUp);
+	shaftFront->SetCollisionBox(1.0f, 1.5f, 0.2f);
+	shaftFront->UpdateEntity();
+
+	shaftBack->TransformTranslation(movementForward);
+	shaftBack->TransformTranslation(movementForward);
+	shaftBack->TransformTranslation(movementUp);
+	shaftBack->TransformTranslation(movementUp);
+	shaftBack->TransformTranslation(movementUp);
+	shaftBack->SetCollisionBox(1.0f, 1.0f, 0.2f);
+	shaftBack->UpdateEntity();
+
+
 
 
 	
@@ -615,6 +643,29 @@ void Game::BuildLevelGeometry() {
 	wall15->SetCollisionBox(0.2f, 1.0f, 0.2f);
 	wall15->UpdateEntity(); //right 2
 
+	wall16->TransformTranslation(movementForward);
+	wall16->TransformTranslation(movementForward);
+	wall16->TransformTranslation(movementForward);
+	//wall16->TransformTranslation(movementForward);
+	wall16->TransformTranslation(movementUp);
+	wall16->TransformTranslation(movementUp);
+	wall16->TransformRotation(rotation180AroundY);
+	wall16->SetCollisionBox(0.2f, 1.0f, 0.2f);
+	wall16->UpdateEntity(); // back floor 2
+
+	wall17->TransformTranslation(movementForward);
+	wall17->TransformTranslation(movementForward);
+	wall17->TransformTranslation(movementForward);
+	wall17->TransformTranslation(movementUp);
+	wall17->TransformTranslation(movementUp);
+	wall17->TransformTranslation(movementUp);
+	wall17->TransformTranslation(movementUp);
+	wall17->TransformRotation(rotation180AroundY);
+	wall17->SetCollisionBox(0.2f, 1.0f, 0.2f);
+	wall17->UpdateEntity(); // back floor 3
+
+
+
 	wall18->TransformTranslation(movementForward);
 	wall18->TransformTranslation(movementForward);
 	wall18->TransformTranslation(movementForward);
@@ -622,9 +673,12 @@ void Game::BuildLevelGeometry() {
 	wall18->TransformTranslation(movementUp);
 	wall18->TransformTranslation(movementUp);
 	wall18->TransformTranslation(movementUp);
+	wall18->TransformTranslation(movementUp);
+	wall18->TransformTranslation(movementUp);
+
 	wall18->TransformRotation(rotate90CCWAroundX);
 	wall18->SetCollisionBox(1.0f, 0.2f, 1.0f);
-	wall18->UpdateEntity(); // Top 2
+	wall18->UpdateEntity(); // Top 3
 
 	wall19->TransformTranslation(movementForward);
 	wall19->TransformTranslation(movementForward);
@@ -634,50 +688,57 @@ void Game::BuildLevelGeometry() {
 	wall19->TransformTranslation(movementUp);
 	wall19->TransformTranslation(movementUp);
 	wall19->SetCollisionBox(1.0f, 1.0f, 0.2f);
-	wall19->UpdateEntity(); // Back 2
+	wall19->UpdateEntity(); // Front 2 - checked
 
 	// Floor 2 area
 
-	wall16->TransformTranslation(movementForward);
-	wall16->TransformTranslation(movementForward);
-	wall16->TransformTranslation(movementUp);
-	wall16->TransformTranslation(movementUp);
-	wall16->TransformTranslation(movementLeft);
-	wall16->TransformRotation(rotate90CCWAroundY);
-	wall16->SetCollisionBox(0.2f, 1.0f, 0.2f);
-	wall16->UpdateEntity(); // left 2
 
-	wall17->TransformTranslation(movementForward);
-	wall17->TransformTranslation(movementForward);
-	wall17->TransformTranslation(movementUp);
-	wall17->TransformTranslation(movementUp);
-	wall17->TransformTranslation(movementRight);
-	wall17->TransformRotation(rotate90CWAroundY);
-	wall17->SetCollisionBox(0.2f, 1.0f, 0.2f);
-	wall17->UpdateEntity(); // right 2
 
+
+
+	wall20->TransformTranslation(movementForward);
+	wall20->TransformTranslation(movementForward);
+	wall20->TransformTranslation(movementForward);
 	wall20->TransformTranslation(movementForward);
 	wall20->TransformTranslation(movementUp);
 	wall20->TransformTranslation(movementUp);
-	wall20->TransformRotation(rotation180AroundY);
+	wall20->TransformTranslation(movementUp);
+	wall20->TransformTranslation(movementUp);
+
+	wall20->TransformTranslation(movementRight);
+	wall20->TransformRotation(rotate90CWAroundY);
 	wall20->SetCollisionBox(1.0f, 1.0f, 0.2f);
-	wall20->UpdateEntity(); // back 2
+	wall20->UpdateEntity(); // right 3
 	
 	wall21->TransformTranslation(movementForward);
 	wall21->TransformTranslation(movementForward);
+	wall21->TransformTranslation(movementForward);
+	wall21->TransformTranslation(movementForward);
 	wall21->TransformTranslation(movementUp);
 	wall21->TransformTranslation(movementUp);
 	wall21->TransformTranslation(movementUp);
-	wall21->TransformRotation(rotate90CCWAroundX);
+
+	wall21->TransformTranslation(movementUp);
+	wall21->TransformTranslation(movementLeft);
+	wall21->TransformRotation(rotate90CCWAroundY);
 	wall21->SetCollisionBox(1.0f, 0.2f, 1.0f);
-	wall21->UpdateEntity(); // Top
+	wall21->UpdateEntity(); // left 3
+
+
 
 	wallEnd->TransformTranslation(movementForward);
 	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
 	wallEnd->TransformTranslation(movementUp);
-	wallEnd->TransformRotation(rotate90CWAroundX);
+	wallEnd->TransformTranslation(movementUp);
+	wallEnd->TransformTranslation(movementUp);
+
+	wallEnd->TransformTranslation(movementUp);
+		//wallEnd->TransformRotation(rotate90CWAroundX);
 	wallEnd->SetCollisionBox(1.0f, 0.2f, 1.0f);
-	wallEnd->UpdateEntity(); // Floor
+	wallEnd->UpdateEntity(); // end cap
 
 }
 
