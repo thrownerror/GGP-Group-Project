@@ -68,6 +68,7 @@ Game::~Game()
 
 	delete meshQuad;
 	delete meshModel1;
+	delete meshModel2;
 
 	delete ge1;
 	delete wall1;
@@ -168,6 +169,7 @@ Game::~Game()
 	delete[] collisionArray;
 
 	delete mat1;
+	delete mat2;
 	delete camera;
 
 	// Clean up shadow map
@@ -190,6 +192,8 @@ Game::~Game()
 
 	srv->Release();
 	sampState->Release();
+	srv2->Release();
+	sampState2->Release();
 	//mat1->GetSRV()->Release();
 	//mat1->GetSamplerState()->Release();
 	//commenting one of these will cause a memory leak
@@ -222,6 +226,14 @@ void Game::Init()
 
 	mat1 = new Material(vertexShader, pixelShader, srv, nrm, sampState);
 
+	HRESULT samplerTest2 = device->CreateSamplerState(&samDesc, &sampState2);
+	// Metal1 texture found here -> https://www.sketchuptextureclub.com/textures/materials/metals/basic-metals
+	// Metal1Norm texture found here -> https://www.filterforge.com/filters/3314-normal.html
+	HRESULT h4 = CreateWICTextureFromFile(device, context, L"../../Assets/Textures/Metal1.png", 0, &srv2);
+	HRESULT h5 = CreateWICTextureFromFile(device, context, L"../../Assets/Textures/Metal1Norm.png", 0, &nrm2);
+
+	mat2 = new Material(vertexShader, pixelShader, srv2, nrm2, sampState2);
+
 	prevMousePos.x = 0;
 	prevMousePos.y = 0;
 	CreateMatrices();
@@ -234,6 +246,9 @@ void Game::Init()
 	dLight2.AmbientColor = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 	dLight2.DiffuseColor = XMFLOAT4(.5f, .5f, 0, 1);
 	dLight2.Direction = XMFLOAT3(-1, .5f, .1f);
+
+	pLight.Position = XMFLOAT3(40, 40, 40);
+	pLight.Color = XMFLOAT3(0.2f, 0.2f, 0.2f);
 
 	// Real-Time Shadow Data Descriptions
 
@@ -337,7 +352,7 @@ void Game::Init()
 	for (int i = 0; i < 20; i++)
 	{
 		emitters.push_back(new Emitter(*emitter, device));
-		emitters[i]->SetAcceleration(XMFLOAT3(0, 0, 0));
+		emitters[i]->SetAcceleration(XMFLOAT3(0.5f, 0.5f, 0.5f));
 		emitters[i]->SetVelocity(XMFLOAT3(0, 0, 0));
 	}
 
@@ -467,6 +482,7 @@ void Game::CreateBasicGeometry()
 	//mesh1 = new Mesh("../../Assets/Models/cube.obj", device);
 	meshQuad = new Mesh(squareVertices, 4, squareIndices, 6, device);
 	meshModel1 = new Mesh("../../Assets/Models/cone.obj", device);
+	meshModel2 = new Mesh("../../Assets/Models/sphere.obj", device);
 
 	ge1 = new GameEntity(meshQuad, mat1);
 
@@ -568,11 +584,11 @@ void Game::CreateBasicGeometry()
 	gePlayer = new GameEntity(meshQuad);
 	gePlayer->SetCollisionBox(.1f, .1f, .1f);
 
-	e0 = new Enemy(meshModel1, mat1, meshModel1, mat1, gePlayer);
+	e0 = new Enemy(meshModel1, mat1, meshModel2, mat2, gePlayer);
 	e0->SetWanderPoints(XMFLOAT3(0, 0, 4), XMFLOAT3(0, 4, 4));
 	e0->SetCollisionBox(.1f, .1f, .1f);
 
-	e1 = new Enemy(meshModel1, mat1, meshModel1, mat1, gePlayer);
+	e1 = new Enemy(meshModel1, mat1, meshModel2, mat2, gePlayer);
 	e1->SetWanderPoints(XMFLOAT3(4, 4, 10), XMFLOAT3(-2, 4, 10));
 	e1->SetCollisionBox(.1f, .1f, .1f);
 
@@ -1833,7 +1849,6 @@ void Game::Update(float deltaTime, float totalTime)
 		//ge5->TransformTranslation(movementValue);
 		//ge4->UpdateEntity();
 	gePlayer->PrintPosition();
-	printf("Player's position: %f %f %f \n", gePlayer->GetPosition().x, gePlayer->GetPosition().y, gePlayer->GetPosition().z);
 
 	e0->UpdateEntity(deltaTime);
 	e1->UpdateEntity(deltaTime);
@@ -2003,6 +2018,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	// Fog Color
 	pixelShader->SetFloat4("fogColor", { 0.5f, 0.5f, 0.5f, 1.0f });
 
+	pixelShader->SetFloat3("cameraPosition", { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z });
 	// Background color (Cornflower Blue in this case) for clearing
 	const float color[4] = { 0.4f, 0.6f, 0.75f, 0.0f };
 
@@ -2024,44 +2040,6 @@ void Game::Draw(float deltaTime, float totalTime)
 	//vertexShader->SetMatrix4x4("world", worldMatrix);
 	vertexShader->SetMatrix4x4("shadowView", shadowView);
 	vertexShader->SetMatrix4x4("shadowProjection", shadowProjection);
-
-	// Draw enemy0 and bullets
-	pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
-	pixelShader->SetSamplerState("shadowSampler", shadowSampler);
-	e0->PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
-	vert = e0->GetVertBuffer();
-	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
-	context->IASetIndexBuffer(e0->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
-	context->DrawIndexed(e0->GetIndCount(), 0, 0);
-
-	for (int i = 0; i < e0->NumBullets(); i++) {
-		pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
-		pixelShader->SetSamplerState("shadowSampler", shadowSampler);
-		e0->Bullets()[i].PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
-		vert = e0->Bullets()[i].GetVertBuffer();
-		context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
-		context->IASetIndexBuffer(e0->Bullets()[i].GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
-		context->DrawIndexed(e0->Bullets()[i].GetIndCount(), 0, 0);
-	}
-	
-	// Draw enemy0 and bullets
-	pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
-	pixelShader->SetSamplerState("shadowSampler", shadowSampler);
-	e1->PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
-	vert = e1->GetVertBuffer();
-	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
-	context->IASetIndexBuffer(e1->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
-	context->DrawIndexed(e1->GetIndCount(), 0, 0);
-
-	for (int i = 0; i < e1->NumBullets(); i++) {
-		pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
-		pixelShader->SetSamplerState("shadowSampler", shadowSampler);
-		e1->Bullets()[i].PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
-		vert = e1->Bullets()[i].GetVertBuffer();
-		context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
-		context->IASetIndexBuffer(e1->Bullets()[i].GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
-		context->DrawIndexed(e1->Bullets()[i].GetIndCount(), 0, 0);
-	}
 
 	// Draw the entity array
 	for (int i = 0; i <= entityArraySize - 1; i++) {
@@ -2108,6 +2086,52 @@ void Game::Draw(float deltaTime, float totalTime)
 		emitters[i]->Draw(context, camera);
 	}
 
+
+	pixelShader->SetData(
+		"pointLight",
+		&pLight,
+		sizeof(PointLight));
+
+	pixelShader->CopyAllBufferData();
+	pixelShader->SetShader();
+
+	// Draw enemy0 and bullets
+	pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
+	pixelShader->SetSamplerState("shadowSampler", shadowSampler);
+	e0->PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
+	vert = e0->GetVertBuffer();
+	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
+	context->IASetIndexBuffer(e0->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+	context->DrawIndexed(e0->GetIndCount(), 0, 0);
+
+	for (int i = 0; i < e0->NumBullets(); i++) {
+		pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
+		pixelShader->SetSamplerState("shadowSampler", shadowSampler);
+		e0->Bullets()[i].PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
+		vert = e0->Bullets()[i].GetVertBuffer();
+		context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
+		context->IASetIndexBuffer(e0->Bullets()[i].GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		context->DrawIndexed(e0->Bullets()[i].GetIndCount(), 0, 0);
+	}
+
+	// Draw enemy0 and bullets
+	pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
+	pixelShader->SetSamplerState("shadowSampler", shadowSampler);
+	e1->PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
+	vert = e1->GetVertBuffer();
+	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
+	context->IASetIndexBuffer(e1->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+	context->DrawIndexed(e1->GetIndCount(), 0, 0);
+
+	for (int i = 0; i < e1->NumBullets(); i++) {
+		pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
+		pixelShader->SetSamplerState("shadowSampler", shadowSampler);
+		e1->Bullets()[i].PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
+		vert = e1->Bullets()[i].GetVertBuffer();
+		context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
+		context->IASetIndexBuffer(e1->Bullets()[i].GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		context->DrawIndexed(e1->Bullets()[i].GetIndCount(), 0, 0);
+	}
 #pragma endregion
 
 	// Reset any states we've changed for the next frame!

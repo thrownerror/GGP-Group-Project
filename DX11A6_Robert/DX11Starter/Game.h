@@ -65,12 +65,18 @@ private:
 	//Mesh objects
 	Mesh* meshQuad;
 	Mesh* meshModel1;
+	Mesh* meshModel2;
 
 	//Material objects
 	Material* mat1;
 	ID3D11ShaderResourceView* srv;
 	ID3D11ShaderResourceView* nrm;
 	ID3D11SamplerState* sampState;
+
+	Material* mat2;
+	ID3D11ShaderResourceView* srv2;
+	ID3D11ShaderResourceView* nrm2;
+	ID3D11SamplerState* sampState2;
 
 	//GameEntity objects
 	GameEntity** entityArray;
@@ -196,6 +202,7 @@ private:
 	//Lighting
 	DirectionalLight dLight;
 	DirectionalLight dLight2;
+	PointLight pLight;
 
 	// Shadow Map Data
 	ID3D11Texture2D* shadowTexture;

@@ -28,10 +28,19 @@ struct DirectionalLight
 	float3 Direction;
 };
 
+struct PointLight
+{
+	float3 Position;
+	float3 Color;
+};
+
 cbuffer externalData : register(b0)
 {
 	DirectionalLight light;
 	DirectionalLight light2;
+	PointLight pointLight;
+
+	float3 cameraPosition;
 
 	float4 fogColor;
 };
@@ -106,6 +115,17 @@ float4 main(VertexToPixel input) : SV_TARGET
 	float3 light2Amount = saturate(dot(input.normal, -light2.Direction));
 	float4 light2Result = float4((light2.DiffuseColor * light2Amount) + light2.AmbientColor, 1) * surfaceFog;
 
-	// Add the two together
-	return light1Result +light2Result;
+	// Get the result after applying the third (specular point) light
+	float3 dirToPointLight = normalize(pointLight.Position - input.position);
+	float pointNdotL = dot(input.normal, dirToPointLight);
+	pointNdotL = saturate(pointNdotL);
+	float4 pointLightResult = float4((pointLight.Color * pointNdotL), 1);
+
+	float3 dirToCamera = normalize(cameraPosition - input.position);
+	float3 refl = reflect(-dirToPointLight, input.normal);
+	float specExp = 128;
+	float spec = pow(saturate(dot(dirToCamera, refl)), specExp);
+
+	// Add all together
+	return light1Result + light2Result + pointLightResult + spec.xxxx;
 }
