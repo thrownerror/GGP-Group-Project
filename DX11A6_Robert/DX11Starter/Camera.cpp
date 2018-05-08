@@ -11,6 +11,7 @@ Camera::Camera()
 	speed = .25;
 	mouseSensitivity = .01f;
 	fieldOfView = 0.25f;
+	collisionActive = false;
 
 }
 
@@ -34,39 +35,50 @@ void Camera::Update(float deltaTime)
 
 	float radianRotateX = (camRotateX * XM_PI) / 180;
 	float radianRotateY = (camRotateY * XM_PI) / 180;
-
-	// Strafing up and down
-	if (GetAsyncKeyState('W') & 0x8000) {
-		curPos = XMVectorAdd(up * (deltaTime), curPos);
-		// Old code for moving forward
-		//curPos = XMVectorAdd(curDir * (speed *deltaTime), curPos);
+	if (!collisionActive) {
+		// Strafing up and down
+		if (GetAsyncKeyState('W') & 0x8000) {
+			curPos = XMVectorAdd(up * (deltaTime)* speed, curPos);
+			
+			
+			//curDir = curDir * XMFLOAT3(1.0f, 0.0f, 0.0f);
+			// Old code for moving forward
+			//curPos = XMVectorAdd(curDir * (speed *deltaTime), curPos);
+		}
+		if (GetAsyncKeyState('S') & 0x8000) {
+			curPos = XMVectorAdd(up * -(deltaTime)* speed, curPos);
+			// Old code for moving backwards
+			//curPos = XMVectorAdd(curDir * -(speed *deltaTime), curPos);
+		}
+		// Rotating left and right
+		if (GetAsyncKeyState('Q') & 0x8000) {
+			camRotateY -= deltaTime;
+		}
+		
+		if (GetAsyncKeyState('E') & 0x8000) {
+			camRotateY += deltaTime;
+		}
+		// Strafing left and right
+		if (GetAsyncKeyState('A') & 0x8000) {
+			curPos = XMVectorAdd(XMVector3Cross(curDir, up) * (deltaTime)* speed, curPos);
+		}
+		if (GetAsyncKeyState('D') & 0x8000) {
+			curPos = XMVectorAdd(XMVector3Cross(curDir, up) * -(deltaTime)* speed, curPos);
+		}
+		if (GetAsyncKeyState(VK_LSHIFT) || GetAsyncKeyState(VK_RSHIFT) & 0x8000) {
+			speed += 0.005f;
+			if (speed > 3) speed = 3.0f;
+		}
+		if (GetAsyncKeyState(VK_LCONTROL) || GetAsyncKeyState(VK_RCONTROL) & 0x8000) {
+			speed -= 0.005f;
+			if (speed < 0) speed = 0;
+		}
 	}
-	if (GetAsyncKeyState('S') & 0x8000) {
-		curPos = XMVectorAdd(up * -(deltaTime), curPos);
-		// Old code for moving backwards
-		//curPos = XMVectorAdd(curDir * -(speed *deltaTime), curPos);
-	}
-	// Rotating left and right
-	if (GetAsyncKeyState('Q') & 0x8000) {
-		camRotateY -= deltaTime;
-	}
-	if (GetAsyncKeyState('E') & 0x8000) {
-		camRotateY += deltaTime;
-	}
-	// Strafing left and right
-	if (GetAsyncKeyState('A') & 0x8000) {
-		curPos = XMVectorAdd(XMVector3Cross(curDir, up) * (deltaTime), curPos);
-	}
-	if (GetAsyncKeyState('D') & 0x8000) {
-		curPos = XMVectorAdd(XMVector3Cross(curDir, up) * -(deltaTime), curPos);
-	}
-	if (GetAsyncKeyState(VK_LSHIFT) || GetAsyncKeyState(VK_RSHIFT) & 0x8000) {
-		speed += 0.001f;
-		if (speed > 3) speed = 3.0f;
-	}
-	if (GetAsyncKeyState(VK_LCONTROL) || GetAsyncKeyState(VK_RCONTROL) & 0x8000) {
-		speed -= 0.001f;
-		if (speed < 0) speed = 0;
+	else {
+		speed += deltaTime;
+		if (speed >= 0) {
+			collisionActive = false;
+		}
 	}
 
 	// Move the camera forward -> movement speed values modified in 
@@ -90,10 +102,21 @@ XMFLOAT4X4 Camera::GetCamMatrix()
 {
 	return camMatrix;
 }
+void Camera::SetSpeed(float newSpeed) {
+	speed = newSpeed;
+	
+}
 
+void Camera::CauseCollision() {
+	if (!collisionActive) {
+		collisionActive = true;
+		speed = (speed * -.8f);
+	}
+
+}
 void Camera::MouseRotateX(float mouseDelta)
 {
-	//camRotateY += mouseDelta * mouseSensitivity; //* 2;
+	camRotateY += mouseDelta * mouseSensitivity; //* 2;
 	//printf("Rotate y: %f \n", camRotateY);
 }
 

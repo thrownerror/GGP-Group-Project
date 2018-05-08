@@ -739,15 +739,15 @@ void Game::BuildCollisionGeometry() {
 	shaftBack->UpdateEntity();
 
 	shaftLeft->TransformTranslation(movementForward);
-	shaftLeft->TransformTranslation(movementForward);
+	//shaftLeft->TransformTranslation(movementForward);
 	shaftLeft->TransformTranslation(movementLeft);
-	shaftLeft->SetCollisionBox(.1f, 10.0f, 2.5f);
+	shaftLeft->SetCollisionBox(.1f, 5.0f, 1.2f);
 	shaftLeft->UpdateEntity();
 
 	shaftRight->TransformTranslation(movementForward);
-	shaftRight->TransformTranslation(movementForward);
+	//shaftRight->TransformTranslation(movementForward);
 	shaftRight->TransformTranslation(movementRight);
-	shaftRight->SetCollisionBox(.1f, 10.0f, 2.5f);
+	shaftRight->SetCollisionBox(.1f, 5.0f, 1.2f);
 	shaftRight->UpdateEntity();
 
 	arenaTop->TransformTranslation(movementUp);
@@ -766,6 +766,9 @@ void Game::BuildCollisionGeometry() {
 	arenaBottom->TransformTranslation(movementForward);
 	arenaBottom->TransformTranslation(movementForward);
 	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+
 	arenaBottom->TransformTranslation(movementForward);
 	arenaBottom->TransformTranslation(movementForward);
 
@@ -820,6 +823,9 @@ void Game::BuildCollisionGeometry() {
 	arenaBack->TransformTranslation(movementUp);
 	arenaBack->TransformTranslation(movementLeft);
 	arenaBack->TransformTranslation(movementLeft);
+	arenaBack->TransformTranslation(movementLeft);
+	arenaBack->TransformTranslation(movementLeft);
+
 	arenaBack->SetCollisionBox(1.0f, 10.0f, 0.2f);
 	arenaBack->UpdateEntity();
 
@@ -830,6 +836,8 @@ void Game::BuildCollisionGeometry() {
 	arenaBack2->TransformTranslation(movementUp);
 	arenaBack2->TransformTranslation(movementUp);
 	arenaBack2->TransformTranslation(movementUp);
+	arenaBack2->TransformTranslation(movementRight);
+	arenaBack2->TransformTranslation(movementRight);
 	arenaBack2->TransformTranslation(movementRight);
 	arenaBack2->TransformTranslation(movementRight);
 	arenaBack2->TransformTranslation(movementRight);
@@ -1811,49 +1819,42 @@ void Game::Update(float deltaTime, float totalTime)
 
 	e0->UpdateEntity(deltaTime);
 
-	/*
-	printf("\nPlayer position.x: %f", gePlayer->GetPosition().x);
-	printf("\nPlayer position.y: %f", gePlayer->GetPosition().y);
-	printf("\nPlayer position.z: %f", gePlayer->GetPosition().z);
-
-	printf("\nEnemy position.x: %f", e0->GetPosition().x);
-	printf("\nEnemy position.y: %f", e0->GetPosition().y);
-	printf("\nEnemy position.z: %f", e0->GetPosition().z);
-	*/
 	for (int i = 0; i <= entityArraySize - 1; i++) {
-		//gePla
-		//printf("\nObject: %f\n", i);
-		entityArray[i]->UpdateEntity();
-		//printf("\nPlayer position.x %f", gePlayer->GetColliderPosition().x);
-		//printf("\nPlayer position.y %f", gePlayer->GetColliderPosition().y);
-		//printf("\nPlayer position.z %f", gePlayer->GetColliderPosition().z);
 
-		if (collidingMaster.isColliding(gePlayer, entityArray[i])) {
-			collidingMaster.isColliding(gePlayer, entityArray[i]);
+		entityArray[i]->UpdateEntity();
+		//if (collidingMaster.isColliding(gePlayer, entityArray[i])) {
+		//	collidingMaster.isColliding(gePlayer, entityArray[i]);
 		//	printf("collision between player and %d\n", i);
-		}
-		else {
-			//printf("no collision between player and %d\n", i);
-		}
+		//}
+		//else {
+		//	//printf("no collision between player and %d\n", i);
+		//}
 
 		//if(i != )
 	}
+	camera->Update(deltaTime);
+
 	for (int i = 0; i <= collisionArraySize - 1; i++) {
 		collisionArray[i]->UpdateEntity();
 		if (collidingMaster.isColliding(gePlayer, collisionArray[i])) {
-			collidingMaster.isColliding(gePlayer, entityArray[i]);
+			collidingMaster.isColliding(gePlayer, collisionArray[i]);
 			printf("Collision between player and collider volume %d\n", i);
+			//camera->SetSpeed(0.0f);
+			camera->CauseCollision();
+			camera->Update(deltaTime);
+
 		}
 		else {
 			//printf("no Collision between player and collider volume %d\n", i);
 		}
 	}
+	if (GetAsyncKeyState('Y') & 0x8000) {
+		printf("%d\n",gePlayer->GetPosition());
+	}
 
 	emitter->Update(deltaTime);
 
-	camera->Update(deltaTime);
-	//ge5->Move(movementValue);
-//	ge5->UpdateEntity();
+
 }
 
 // --------------------------------------------------------
@@ -2093,11 +2094,11 @@ void Game::OnMouseUp(WPARAM buttonState, int x, int y)
 void Game::OnMouseMove(WPARAM buttonState, int x, int y)
 {
 	// Add any custom code here...
-	//camera->MouseRotateX(x - (float)prevMousePos.x);
-	//camera->MouseRotateY(y - (float)prevMousePos.y);
+	camera->MouseRotateX(x - (float)prevMousePos.x);
+	camera->MouseRotateY(y - (float)prevMousePos.y);
 	// Save the previous mouse position, so we have it for the future
-	//prevMousePos.x = x;
-	//prevMousePos.y = y;
+	prevMousePos.x = x;
+	prevMousePos.y = y;
 }
 
 // --------------------------------------------------------
