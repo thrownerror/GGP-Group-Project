@@ -739,15 +739,15 @@ void Game::BuildCollisionGeometry() {
 	shaftBack->UpdateEntity();
 
 	shaftLeft->TransformTranslation(movementForward);
-	shaftLeft->TransformTranslation(movementForward);
+	//shaftLeft->TransformTranslation(movementForward);
 	shaftLeft->TransformTranslation(movementLeft);
-	shaftLeft->SetCollisionBox(.1f, 10.0f, 2.5f);
+	shaftLeft->SetCollisionBox(.1f, 5.0f, 1.2f);
 	shaftLeft->UpdateEntity();
 
 	shaftRight->TransformTranslation(movementForward);
-	shaftRight->TransformTranslation(movementForward);
+	//shaftRight->TransformTranslation(movementForward);
 	shaftRight->TransformTranslation(movementRight);
-	shaftRight->SetCollisionBox(.1f, 10.0f, 2.5f);
+	shaftRight->SetCollisionBox(.1f, 5.0f, 1.2f);
 	shaftRight->UpdateEntity();
 
 	arenaTop->TransformTranslation(movementUp);
@@ -766,6 +766,9 @@ void Game::BuildCollisionGeometry() {
 	arenaBottom->TransformTranslation(movementForward);
 	arenaBottom->TransformTranslation(movementForward);
 	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+
 	arenaBottom->TransformTranslation(movementForward);
 	arenaBottom->TransformTranslation(movementForward);
 
@@ -820,6 +823,9 @@ void Game::BuildCollisionGeometry() {
 	arenaBack->TransformTranslation(movementUp);
 	arenaBack->TransformTranslation(movementLeft);
 	arenaBack->TransformTranslation(movementLeft);
+	arenaBack->TransformTranslation(movementLeft);
+	arenaBack->TransformTranslation(movementLeft);
+
 	arenaBack->SetCollisionBox(1.0f, 10.0f, 0.2f);
 	arenaBack->UpdateEntity();
 
@@ -830,6 +836,8 @@ void Game::BuildCollisionGeometry() {
 	arenaBack2->TransformTranslation(movementUp);
 	arenaBack2->TransformTranslation(movementUp);
 	arenaBack2->TransformTranslation(movementUp);
+	arenaBack2->TransformTranslation(movementRight);
+	arenaBack2->TransformTranslation(movementRight);
 	arenaBack2->TransformTranslation(movementRight);
 	arenaBack2->TransformTranslation(movementRight);
 	arenaBack2->TransformTranslation(movementRight);
@@ -1824,11 +1832,16 @@ void Game::Update(float deltaTime, float totalTime)
 
 		//if(i != )
 	}
+	camera->Update(deltaTime);
+
 	for (int i = 0; i <= collisionArraySize - 1; i++) {
 		collisionArray[i]->UpdateEntity();
 		if (collidingMaster.isColliding(gePlayer, collisionArray[i])) {
-			collidingMaster.isColliding(gePlayer, entityArray[i]);
+			collidingMaster.isColliding(gePlayer, collisionArray[i]);
 			printf("Collision between player and collider volume %d\n", i);
+			//camera->SetSpeed(0.0f);
+			camera->CauseCollision();
+			camera->Update(deltaTime);
 
 		}
 		else {
@@ -1838,7 +1851,6 @@ void Game::Update(float deltaTime, float totalTime)
 
 	emitter->Update(deltaTime);
 
-	camera->Update(deltaTime);
 
 }
 
@@ -2079,11 +2091,11 @@ void Game::OnMouseUp(WPARAM buttonState, int x, int y)
 void Game::OnMouseMove(WPARAM buttonState, int x, int y)
 {
 	// Add any custom code here...
-	//camera->MouseRotateX(x - (float)prevMousePos.x);
-	//camera->MouseRotateY(y - (float)prevMousePos.y);
+	camera->MouseRotateX(x - (float)prevMousePos.x);
+	camera->MouseRotateY(y - (float)prevMousePos.y);
 	// Save the previous mouse position, so we have it for the future
-	//prevMousePos.x = x;
-	//prevMousePos.y = y;
+	prevMousePos.x = x;
+	prevMousePos.y = y;
 }
 
 // --------------------------------------------------------

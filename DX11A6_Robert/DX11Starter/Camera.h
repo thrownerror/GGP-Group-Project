@@ -18,8 +18,10 @@ public:
 	void UpdateProjectionMatrix(float width, float height);
 	XMFLOAT4X4 GetProjectionMatrix();
 	XMFLOAT3 GetPosition();
+	void SetSpeed(float newSpeed);
+	void CauseCollision();
 private:
-	
+	bool collisionActive;
 	XMFLOAT3 camPosition;
 	XMFLOAT3 camDirection;
 	XMFLOAT4X4 camMatrix;

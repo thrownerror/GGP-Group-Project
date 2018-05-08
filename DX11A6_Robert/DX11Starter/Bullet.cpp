@@ -30,7 +30,7 @@ Bullet::~Bullet()
 
 void Bullet::UpdateEntity(float deltaTime)
 {
-	printf("Bullet pos: %f %f %f \n", GetPosition().x, GetPosition().y, GetPosition().z);
+	//printf("Bullet pos: %f %f %f \n", GetPosition().x, GetPosition().y, GetPosition().z);
 	/*
 	if (distTravelled >= maxDistTravelled) {
 		this->~Bullet();
