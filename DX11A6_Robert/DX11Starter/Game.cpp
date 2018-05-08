@@ -41,7 +41,7 @@ Game::Game(HINSTANCE hInstance)
 	// Should be checked using 518, the number in {}.
 	// Visual Studio in DEBUG mode will automatically breakpoint
 	// when that object in memory is allocated.
-	//_CrtSetBreakAlloc(558);
+	//_CrtSetBreakAlloc(2372);
 	//D3D11_CREATE_DEVICE_DEBUG;
 #else
 	0
@@ -175,6 +175,14 @@ Game::~Game()
 	shadowSampler->Release();
 	shadowRasterizer->Release();
 	delete shadowShader;
+
+	// Delete particle stuff
+	particleTexture->Release();
+	particleBlender->Release();
+	particleDS->Release();
+	delete particlePixel;
+	delete particleVertex;
+	delete emitter;
 
 	srv->Release();
 	sampState->Release();
