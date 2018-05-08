@@ -1828,13 +1828,13 @@ void Game::Update(float deltaTime, float totalTime)
 		//printf("\nPlayer position.y %f", gePlayer->GetColliderPosition().y);
 		//printf("\nPlayer position.z %f", gePlayer->GetColliderPosition().z);
 
-		if (collidingMaster.isColliding(gePlayer, entityArray[i])) {
-			collidingMaster.isColliding(gePlayer, entityArray[i]);
+		//if (collidingMaster.isColliding(gePlayer, entityArray[i])) {
+		//	collidingMaster.isColliding(gePlayer, entityArray[i]);
 		//	printf("collision between player and %d\n", i);
-		}
-		else {
-			//printf("no collision between player and %d\n", i);
-		}
+		//}
+		//else {
+		//	//printf("no collision between player and %d\n", i);
+		//}
 
 		//if(i != )
 	}
@@ -1843,6 +1843,7 @@ void Game::Update(float deltaTime, float totalTime)
 		if (collidingMaster.isColliding(gePlayer, collisionArray[i])) {
 			collidingMaster.isColliding(gePlayer, entityArray[i]);
 			printf("Collision between player and collider volume %d\n", i);
+
 		}
 		else {
 			//printf("no Collision between player and collider volume %d\n", i);
