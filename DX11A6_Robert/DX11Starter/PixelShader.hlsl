@@ -100,12 +100,12 @@ float4 main(VertexToPixel input) : SV_TARGET
 
 	// Get the result after applying the first light (plus shadow map for the first light)
 	float3 light1Amount = saturate(dot(input.normal, -light.Direction));
-	float4 light1Result = float4((light.DiffuseColor * light1Amount * shadowAmount) + light.AmbientColor, 1) * surfaceFog;
+	float4 light1Result = float4((light.DiffuseColor * light1Amount) + light.AmbientColor, 1) * surfaceFog * shadowAmount;
 
 	// Get the result after applying the second light
 	float3 light2Amount = saturate(dot(input.normal, -light2.Direction));
 	float4 light2Result = float4((light2.DiffuseColor * light2Amount) + light2.AmbientColor, 1) * surfaceFog;
 
 	// Add the two together
-	return light1Result + light2Result;
+	return light1Result +light2Result;
 }

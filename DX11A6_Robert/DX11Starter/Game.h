@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Lights.h"
 #include "CollisionManager.h"
+#include "Emitter.h"
 class Game 
 	: public DXCore
 {
@@ -140,6 +141,14 @@ private:
 	SimpleVertexShader* shadowShader;
 	XMFLOAT4X4 shadowView;
 	XMFLOAT4X4 shadowProjection;
+
+	// Particle Emitter Data
+	ID3D11ShaderResourceView* particleTexture;
+	SimpleVertexShader* particleVertex;
+	SimplePixelShader* particlePixel;
+	ID3D11DepthStencilState* particleDS;
+	ID3D11BlendState* particleBlender;
+	Emitter* emitter;
 
 	XMFLOAT3 movementRight		= XMFLOAT3(+1.0f, 0.0f, 0.0f);
 	XMFLOAT3 movementLeft		= XMFLOAT3(-1.0f, 0.0f, 0.0f);

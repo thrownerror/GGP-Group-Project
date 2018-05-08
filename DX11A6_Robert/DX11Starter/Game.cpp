@@ -151,6 +151,7 @@ void Game::Init()
 	HRESULT samplerTest = device->CreateSamplerState(&samDesc, &sampState);
 	HRESULT h1 = CreateWICTextureFromFile(device, context, L"../../Assets/Textures/Rock1.png", 0, &srv);
 	HRESULT h2 = CreateWICTextureFromFile(device, context, L"../../Assets/Textures/RockNorm.png", 0, &nrm);
+	HRESULT h3 = CreateWICTextureFromFile(device, context, L"../../Assets/Textures/fireParticle.jpg", 0, &particleTexture);
 
 	mat1 = new Material(vertexShader, pixelShader, srv, nrm, sampState);
 
@@ -224,6 +225,46 @@ void Game::Init()
 	shadowRastDesc.SlopeScaledDepthBias = 1.0f;
 	device->CreateRasterizerState(&shadowRastDesc, &shadowRasterizer);
 
+	// Do the particle stuff
+
+	// A depth state for the particles
+	D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+	dsDesc.DepthEnable = true;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO; // Turns off depth writing
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	device->CreateDepthStencilState(&dsDesc, &particleDS);
+
+	// Blend for particles (additive)
+	D3D11_BLEND_DESC blend = {};
+	blend.AlphaToCoverageEnable = false;
+	blend.IndependentBlendEnable = false;
+	blend.RenderTarget[0].BlendEnable = true;
+	blend.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blend.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	blend.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+	blend.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blend.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blend.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+	blend.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	device->CreateBlendState(&blend, &particleBlender);
+
+	// Set up particles
+	emitter = new Emitter(
+		100,							// Max particles
+		10,								// Particles per second
+		5,								// Particle lifetime
+		0.1f,							// Start size
+		5.0f,							// End size
+		XMFLOAT4(1, 0.1f, 0.1f, 0.2f),	// Start color
+		XMFLOAT4(1, 0.6f, 0.1f, 0),		// End color
+		XMFLOAT3(0, 2, 2),				// Start velocity
+		XMFLOAT3(0, 0, 2),				// Start position
+		XMFLOAT3(0, -1, 0),				// Start acceleration
+		device,
+		particleVertex,
+		particlePixel,
+		particleTexture);
+
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
 	// Essentially: "What kind of shape should the GPU draw with our data?"
@@ -248,6 +289,12 @@ void Game::LoadShaders()
 
 	shadowShader = new SimpleVertexShader(device, context);
 	shadowShader->LoadShaderFile(L"ShadowShader.cso");
+
+	particleVertex = new SimpleVertexShader(device, context);
+	particleVertex->LoadShaderFile(L"ParticleVertex.cso");
+
+	particlePixel = new SimplePixelShader(device, context);
+	particlePixel->LoadShaderFile(L"ParticlePixel.cso");
 }
 
 // --------------------------------------------------------
@@ -826,6 +873,8 @@ void Game::Update(float deltaTime, float totalTime)
 		}
 	}
 
+	emitter->Update(deltaTime);
+
 	camera->Update(deltaTime);
 	//ge5->Move(movementValue);
 //	ge5->UpdateEntity();
@@ -983,9 +1032,16 @@ void Game::Draw(float deltaTime, float totalTime)
 		}
 	}
 
+	// Particle states
+	float blend[4] = { 1, 1, 1, 1 }; // RGBA
+	context->OMSetBlendState(particleBlender, blend, 0xffffffff);	// Additive blending
+	context->OMSetDepthStencilState(particleDS, 0);					// No depth WRITING
+	emitter->Draw(context, camera);									// Draw the emitter
+
 #pragma endregion
 
 	// Reset any states we've changed for the next frame!
+	context->OMSetBlendState(0, blend, 0xffffffff);
 	context->RSSetState(0);
 	context->OMSetDepthStencilState(0, 0);
 
