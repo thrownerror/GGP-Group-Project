@@ -94,7 +94,51 @@ Game::~Game()
 	delete wall20;
 	delete wall21;
 
+	delete arenaF11;
+	delete arenaF12;
+	delete arenaF13;
+	delete arenaF21;
+	delete arenaF22;
+	delete arenaF23;
+	delete arenaF31;
+	delete arenaF32;
+	delete arenaF33;
+	delete arenaF34;
+	delete arenaF24;
+	delete arenaF14;
+	
+	delete arenaT11;
+	delete arenaT12;
+	delete arenaT13;
+	delete arenaT21;
+	delete arenaT22;
+	delete arenaT23;
+	delete arenaT31;
+	delete arenaT32;
+	delete arenaT33;
+	delete arenaT34;
+	delete arenaT24;
+	delete arenaT14;
+
+	delete arenaB1;
+	delete arenaB3;
+	delete arenaB4;
+	delete arenaL1;
+	delete arenaL2;
+	delete arenaL3;
+	delete arenaL4;
+	delete arenaR1;
+	delete arenaR2;
+	delete arenaR3;
+//	delete arenaR4;
+
+	delete arenaFW2;
+	delete arenaFW3;
+	delete arenaFW4;
 	delete wallEnd;
+
+
+
 
 	delete ce1;
 	delete ce2;
@@ -103,6 +147,9 @@ Game::~Game()
 	delete ce5;
 	delete shaftFront;
 	delete shaftBack;
+
+
+
 
 	delete gePlayer;
 
@@ -372,6 +419,51 @@ void Game::CreateBasicGeometry()
 	wall20	= new GameEntity(meshQuad, mat1);
 	wall21  = new GameEntity(meshQuad, mat1);
 
+	arenaF11 = new GameEntity(meshQuad, mat1);
+	arenaF12 = new GameEntity(meshQuad, mat1);
+	arenaF13 = new GameEntity(meshQuad, mat1);
+	arenaF14 = new GameEntity(meshQuad, mat1);
+	arenaF21 = new GameEntity(meshQuad, mat1);
+	arenaF22 = new GameEntity(meshQuad, mat1);
+	arenaF23 = new GameEntity(meshQuad, mat1);
+	arenaF24 = new GameEntity(meshQuad, mat1);
+	arenaF31 = new GameEntity(meshQuad, mat1);
+	arenaF32 = new GameEntity(meshQuad, mat1);
+	arenaF33 = new GameEntity(meshQuad, mat1);
+	arenaF34 = new GameEntity(meshQuad, mat1);
+	
+	arenaT11 = new GameEntity(meshQuad, mat1);
+	arenaT12 = new GameEntity(meshQuad, mat1);
+	arenaT13 = new GameEntity(meshQuad, mat1);
+	arenaT14 = new GameEntity(meshQuad, mat1);
+	arenaT21 = new GameEntity(meshQuad, mat1);
+	arenaT22 = new GameEntity(meshQuad, mat1);
+	arenaT23 = new GameEntity(meshQuad, mat1);
+	arenaT24 = new GameEntity(meshQuad, mat1);
+	arenaT31 = new GameEntity(meshQuad, mat1);
+	arenaT32 = new GameEntity(meshQuad, mat1);
+	arenaT33 = new GameEntity(meshQuad, mat1);
+	arenaT34 = new GameEntity(meshQuad, mat1);
+
+	arenaB1 = new GameEntity(meshQuad, mat1);
+	arenaB3 = new GameEntity(meshQuad, mat1);
+	arenaB4 = new GameEntity(meshQuad, mat1);
+
+	arenaL1 = new GameEntity(meshQuad, mat1);
+	arenaL2 = new GameEntity(meshQuad, mat1);
+	arenaL3 = new GameEntity(meshQuad, mat1);
+	arenaL4 = new GameEntity(meshQuad, mat1);
+
+	arenaR1 = new GameEntity(meshQuad, mat1);
+	arenaR2 = new GameEntity(meshQuad, mat1);
+	arenaR3 = new GameEntity(meshQuad, mat1);
+
+	arenaFW2 = new GameEntity(meshQuad, mat1);
+	arenaFW3 = new GameEntity(meshQuad, mat1);
+	arenaFW4 = new GameEntity(meshQuad, mat1);
+
+//	arenaR4 = new GameEntity(meshQuad, mat1);
+
 	wallEnd = new GameEntity(meshQuad, mat1);
 	//wall7 = new GameEntity(meshQuad, mat1);
 
@@ -408,7 +500,7 @@ void Game::CreateBasicGeometry()
 
 
 
-		entityArraySize = 23;
+		entityArraySize = 60;
 
 		entityArray = new GameEntity*[entityArraySize + 1];
 		entityArray[0] = ge1;
@@ -437,6 +529,55 @@ void Game::CreateBasicGeometry()
 		entityArray[21] = wall21;
 
 		entityArray[22] = wallEnd;
+
+		entityArray[23] = arenaF11;
+		entityArray[24] = arenaF12;
+		entityArray[25] = arenaF13;
+		entityArray[26] = arenaF14;
+
+		entityArray[27] = arenaF21;
+		entityArray[28] = arenaF22;
+		entityArray[29] = arenaF23;
+		entityArray[30] = arenaF24;
+
+		entityArray[31] = arenaF31;
+		entityArray[32] = arenaF32;
+		entityArray[33] = arenaF33;
+		entityArray[34] = arenaF34;
+
+		entityArray[35] = arenaB1;
+		entityArray[36] = arenaB3;
+		entityArray[37] = arenaB4;
+
+		entityArray[38] = arenaL1;
+		entityArray[39] = arenaL2;
+		entityArray[40] = arenaL3;
+		entityArray[41] = arenaL4;
+
+		entityArray[42] = arenaR1;
+		entityArray[43] = arenaR2;
+		entityArray[44] = arenaR3;
+
+		entityArray[45] = arenaT11;
+		entityArray[46] = arenaT12;
+		entityArray[47] = arenaT13;
+		entityArray[48] = arenaT14;
+							   
+		entityArray[49] = arenaT21;
+		entityArray[50] = arenaT22;
+		entityArray[51] = arenaT23;
+		entityArray[52] = arenaT24;
+							   
+		entityArray[53] = arenaT31;
+		entityArray[54] = arenaT32;
+		entityArray[55] = arenaT33;
+		entityArray[56] = arenaT34;
+
+		entityArray[57] = arenaFW2;
+		entityArray[58] = arenaFW3;
+		entityArray[59] = arenaFW4;
+	//	entityArray[45] = arenaR4;
+
 
 		for (int i = 0; i < entityArraySize; i++) {
 			entityArray[i]->SetCollisionBox(1.0f, 1.0f, .02f);
@@ -520,7 +661,12 @@ void Game::BuildCollisionGeometry() {
 	
 }
 void Game::BuildLevelGeometry() {
+	CreateStartingSpace();
+	CreateShaftGeometry();
+	CreateAreneaGeometry();
+}
 
+void Game::CreateStartingSpace() {
 	//Forward and back walls
 
 	wall1->TransformTranslation(movementForward);
@@ -536,7 +682,7 @@ void Game::BuildLevelGeometry() {
 	wall2->SetCollisionBox(1.0f, 1.0f, 0.2f);
 	wall2->UpdateEntity(); //back wall
 
-	//Left and right walls
+						   //Left and right walls
 
 	wall3->TransformTranslation(movementLeft);
 	wall3->TransformRotation(rotate90CCWAroundY);
@@ -548,7 +694,7 @@ void Game::BuildLevelGeometry() {
 	wall4->SetCollisionBox(0.2f, 1.0f, 1.0f);
 	wall4->UpdateEntity(); //right
 
-	//Top and Bottom walls
+						   //Top and Bottom walls
 
 	wall5->TransformTranslation(movementUp);
 	wall5->TransformRotation(rotate90CCWAroundX);
@@ -560,7 +706,7 @@ void Game::BuildLevelGeometry() {
 	wall6->SetCollisionBox(1.0f, 0.2f, 1.0f);
 	wall6->UpdateEntity(); // Bottom
 
-	//Hallway 4
+						   //Hallway 4
 
 	wall7->TransformTranslation(movementForward);
 	wall7->TransformTranslation(movementForward);
@@ -589,6 +735,8 @@ void Game::BuildLevelGeometry() {
 	wall10->TransformRotation(rotate90CWAroundY);
 	wall10->SetCollisionBox(0.2f, 1.0f, 1.0f);
 	wall10->UpdateEntity(); // Right
+}
+void Game::CreateShaftGeometry(){
 
 	// Shaft Floor 1
 
@@ -619,7 +767,7 @@ void Game::BuildLevelGeometry() {
 	wall13->SetCollisionBox(0.2f, 1.0f, 0.2f);
 	wall13->UpdateEntity(); // right
 
-	// Shaft Floor 2
+							// Shaft Floor 2
 
 	wall14->TransformTranslation(movementForward);
 	wall14->TransformTranslation(movementForward);
@@ -689,7 +837,8 @@ void Game::BuildLevelGeometry() {
 	wall19->TransformTranslation(movementUp);
 	wall19->SetCollisionBox(1.0f, 1.0f, 0.2f);
 	wall19->UpdateEntity(); // Front 2 - checked
-
+}
+void Game::CreateAreneaGeometry(){
 	// Floor 2 area
 
 
@@ -709,15 +858,14 @@ void Game::BuildLevelGeometry() {
 	wall20->TransformRotation(rotate90CWAroundY);
 	wall20->SetCollisionBox(1.0f, 1.0f, 0.2f);
 	wall20->UpdateEntity(); // right 3
-	
-	wall21->TransformTranslation(movementForward);
-	wall21->TransformTranslation(movementForward);
-	wall21->TransformTranslation(movementForward);
-	wall21->TransformTranslation(movementForward);
-	wall21->TransformTranslation(movementUp);
-	wall21->TransformTranslation(movementUp);
-	wall21->TransformTranslation(movementUp);
 
+	wall21->TransformTranslation(movementForward);
+	wall21->TransformTranslation(movementForward);
+	wall21->TransformTranslation(movementForward);
+	wall21->TransformTranslation(movementForward);
+	wall21->TransformTranslation(movementUp);
+	wall21->TransformTranslation(movementUp);
+	wall21->TransformTranslation(movementUp);
 	wall21->TransformTranslation(movementUp);
 	wall21->TransformTranslation(movementLeft);
 	wall21->TransformRotation(rotate90CCWAroundY);
@@ -726,20 +874,717 @@ void Game::BuildLevelGeometry() {
 
 
 
-	wallEnd->TransformTranslation(movementForward);
-	wallEnd->TransformTranslation(movementForward);
-	wallEnd->TransformTranslation(movementForward);
-	wallEnd->TransformTranslation(movementForward);
-	wallEnd->TransformTranslation(movementForward);
-	wallEnd->TransformTranslation(movementUp);
-	wallEnd->TransformTranslation(movementUp);
-	wallEnd->TransformTranslation(movementUp);
+							//Floor 3 space
+	arenaF11->TransformTranslation(movementForward);
+	arenaF11->TransformTranslation(movementForward);
+	arenaF11->TransformTranslation(movementForward);
+	arenaF11->TransformTranslation(movementForward); //down the hallway
+	arenaF11->TransformTranslation(movementForward); //forward 1
+	arenaF11->TransformTranslation(movementForward); //forward 1
+	arenaF11->TransformTranslation(movementUp);
+	//arenaF11->TransformTranslation(movementUp);
+	arenaF11->TransformTranslation(movementUp);
+	arenaF11->TransformTranslation(movementUp); //up the shaft
+	arenaF11->TransformRotation(rotate90CWAroundX);
+	arenaF11->UpdateEntity();
 
+	arenaF12->TransformTranslation(movementForward);
+	arenaF12->TransformTranslation(movementForward);
+	arenaF12->TransformTranslation(movementForward);
+	arenaF12->TransformTranslation(movementForward); //down the hallway
+	arenaF12->TransformTranslation(movementForward); //forward 1
+	arenaF12->TransformTranslation(movementForward); //forward 1
+	arenaF12->TransformTranslation(movementUp);
+	//arenaF11->TransformTranslation(movementUp);
+	arenaF12->TransformTranslation(movementUp);
+	arenaF12->TransformTranslation(movementUp); //up the shaft
+	arenaF12->TransformTranslation(movementLeft);
+	arenaF12->TransformTranslation(movementLeft);
+	arenaF12->TransformRotation(rotate90CWAroundX);
+	arenaF12->UpdateEntity();
+
+	arenaF13->TransformTranslation(movementForward);
+	arenaF13->TransformTranslation(movementForward);
+	arenaF13->TransformTranslation(movementForward);
+	arenaF13->TransformTranslation(movementForward); //down the hallway
+	arenaF13->TransformTranslation(movementForward); //forward 1
+	arenaF13->TransformTranslation(movementForward); //forward 1
+	arenaF13->TransformTranslation(movementUp);
+	//arena11->TransformTranslation(movementUp);
+	arenaF13->TransformTranslation(movementUp);
+	arenaF13->TransformTranslation(movementUp); //up the shaft
+	arenaF13->TransformTranslation(movementRight);
+	arenaF13->TransformTranslation(movementRight);
+	arenaF13->TransformRotation(rotate90CWAroundX);
+	arenaF13->UpdateEntity();
+
+	arenaF14->TransformTranslation(movementForward);
+	arenaF14->TransformTranslation(movementForward);
+	arenaF14->TransformTranslation(movementForward);
+	arenaF14->TransformTranslation(movementForward); //down the hallway
+	arenaF14->TransformTranslation(movementForward); //forward 1
+	arenaF14->TransformTranslation(movementForward); //forward 1
+	arenaF14->TransformTranslation(movementUp);
+	//arena41->TransformTranslation(movementUp);
+	arenaF14->TransformTranslation(movementUp);
+	arenaF14->TransformTranslation(movementUp); //up the shaft
+	arenaF14->TransformTranslation(movementRight);
+	arenaF14->TransformTranslation(movementRight);
+	arenaF14->TransformTranslation(movementRight);
+	arenaF14->TransformTranslation(movementRight);
+	arenaF14->TransformRotation(rotate90CWAroundX);
+	arenaF14->UpdateEntity();
+
+
+	arenaF21->TransformTranslation(movementForward);
+	arenaF21->TransformTranslation(movementForward);
+	arenaF21->TransformTranslation(movementForward);
+	arenaF21->TransformTranslation(movementForward);
+	arenaF21->TransformTranslation(movementForward);
+	arenaF21->TransformTranslation(movementForward); //down the hallway
+	arenaF21->TransformTranslation(movementForward); //forward 1
+	arenaF21->TransformTranslation(movementForward); //forward 1
+	arenaF21->TransformTranslation(movementUp);
+	//arenaF11->TransformTranslation(movementUp);
+	arenaF21->TransformTranslation(movementUp);
+	arenaF21->TransformTranslation(movementUp); //up the shaft
+	arenaF21->TransformRotation(rotate90CWAroundX);
+	arenaF21->UpdateEntity();
+
+	arenaF22->TransformTranslation(movementForward);
+	arenaF22->TransformTranslation(movementForward);
+	arenaF22->TransformTranslation(movementForward);
+	arenaF22->TransformTranslation(movementForward);
+	arenaF22->TransformTranslation(movementForward);
+	arenaF22->TransformTranslation(movementForward); //down the hallway
+	arenaF22->TransformTranslation(movementForward); //forward 1
+	arenaF22->TransformTranslation(movementForward); //forward 1
+	arenaF22->TransformTranslation(movementUp);
+	//arenaF11->TransformTranslation(movementUp);
+	arenaF22->TransformTranslation(movementUp);
+	arenaF22->TransformTranslation(movementUp); //up the shaft
+	arenaF22->TransformTranslation(movementLeft);
+	arenaF22->TransformTranslation(movementLeft);
+	arenaF22->TransformRotation(rotate90CWAroundX);
+	arenaF22->UpdateEntity();
+
+	arenaF23->TransformTranslation(movementForward);
+	arenaF23->TransformTranslation(movementForward);
+	arenaF23->TransformTranslation(movementForward);
+	arenaF23->TransformTranslation(movementForward);
+	arenaF23->TransformTranslation(movementForward);
+	arenaF23->TransformTranslation(movementForward); //down the hallway
+	arenaF23->TransformTranslation(movementForward); //forward 1
+	arenaF23->TransformTranslation(movementForward); //forward 1
+	arenaF23->TransformTranslation(movementUp);
+	//aren211->TransformTranslation(movementUp);
+	arenaF23->TransformTranslation(movementUp);
+	arenaF23->TransformTranslation(movementUp); //up the shaft
+	arenaF23->TransformTranslation(movementRight);
+	arenaF23->TransformTranslation(movementRight);
+	arenaF23->TransformRotation(rotate90CWAroundX);
+	arenaF23->UpdateEntity();
+
+	arenaF24->TransformTranslation(movementForward);
+	arenaF24->TransformTranslation(movementForward);
+	arenaF24->TransformTranslation(movementForward);
+	arenaF24->TransformTranslation(movementForward);
+	arenaF24->TransformTranslation(movementForward);
+	arenaF24->TransformTranslation(movementForward); //down the hallway
+	arenaF24->TransformTranslation(movementForward); //forward 1
+	arenaF24->TransformTranslation(movementForward); //forward 1
+	arenaF24->TransformTranslation(movementUp);
+	//aren241->TransformTranslation(movementUp);
+	arenaF24->TransformTranslation(movementUp);
+	arenaF24->TransformTranslation(movementUp); //up the shaft
+	arenaF24->TransformTranslation(movementRight);
+	arenaF24->TransformTranslation(movementRight);
+	arenaF24->TransformTranslation(movementRight);
+	arenaF24->TransformTranslation(movementRight);
+	arenaF24->TransformRotation(rotate90CWAroundX);
+	arenaF24->UpdateEntity();
+
+
+	arenaF31->TransformTranslation(movementForward);
+	arenaF31->TransformTranslation(movementForward);
+	arenaF31->TransformTranslation(movementForward);
+	arenaF31->TransformTranslation(movementForward);
+	arenaF31->TransformTranslation(movementForward);
+	arenaF31->TransformTranslation(movementForward);
+	arenaF31->TransformTranslation(movementForward);
+	arenaF31->TransformTranslation(movementForward); //down the hallway
+	arenaF31->TransformTranslation(movementForward); //forward 1
+	arenaF31->TransformTranslation(movementForward); //forward 1
+	arenaF31->TransformTranslation(movementUp);
+	//aren3F11->TransformTranslation(movementUp);
+	arenaF31->TransformTranslation(movementUp);
+	arenaF31->TransformTranslation(movementUp); //up the shaft
+	arenaF31->TransformRotation(rotate90CWAroundX);
+	arenaF31->UpdateEntity();
+
+	arenaF32->TransformTranslation(movementForward);
+	arenaF32->TransformTranslation(movementForward);
+	arenaF32->TransformTranslation(movementForward);
+	arenaF32->TransformTranslation(movementForward);
+	arenaF32->TransformTranslation(movementForward);
+	arenaF32->TransformTranslation(movementForward);
+	arenaF32->TransformTranslation(movementForward);
+	arenaF32->TransformTranslation(movementForward); //down the hallway
+	arenaF32->TransformTranslation(movementForward); //forward 1
+	arenaF32->TransformTranslation(movementForward); //forward 1
+	arenaF32->TransformTranslation(movementUp);
+	//aren3F11->TransformTranslation(movementUp);
+	arenaF32->TransformTranslation(movementUp);
+	arenaF32->TransformTranslation(movementUp); //up the shaft
+	arenaF32->TransformTranslation(movementLeft);
+	arenaF32->TransformTranslation(movementLeft);
+	arenaF32->TransformRotation(rotate90CWAroundX);
+	arenaF32->UpdateEntity();
+
+	arenaF33->TransformTranslation(movementForward);
+	arenaF33->TransformTranslation(movementForward);
+	arenaF33->TransformTranslation(movementForward);
+	arenaF33->TransformTranslation(movementForward);
+	arenaF33->TransformTranslation(movementForward);
+	arenaF33->TransformTranslation(movementForward);
+	arenaF33->TransformTranslation(movementForward);
+	arenaF33->TransformTranslation(movementForward); //down the hallway
+	arenaF33->TransformTranslation(movementForward); //forward 1
+	arenaF33->TransformTranslation(movementForward); //forward 1
+	arenaF33->TransformTranslation(movementUp);
+	//aren311->TransformTranslation(movementUp);
+	arenaF33->TransformTranslation(movementUp);
+	arenaF33->TransformTranslation(movementUp); //up the shaft
+	arenaF33->TransformTranslation(movementRight);
+	arenaF33->TransformTranslation(movementRight);
+	arenaF33->TransformRotation(rotate90CWAroundX);
+	arenaF33->UpdateEntity();
+
+	arenaF34->TransformTranslation(movementForward);
+	arenaF34->TransformTranslation(movementForward);
+	arenaF34->TransformTranslation(movementForward);
+	arenaF34->TransformTranslation(movementForward);
+	arenaF34->TransformTranslation(movementForward);
+	arenaF34->TransformTranslation(movementForward);
+	arenaF34->TransformTranslation(movementForward);
+	arenaF34->TransformTranslation(movementForward); //down the hallway
+	arenaF34->TransformTranslation(movementForward); //forward 1
+	arenaF34->TransformTranslation(movementForward); //forward 1
+	arenaF34->TransformTranslation(movementUp);
+	//aren341->TransformTranslation(movementUp);
+	arenaF34->TransformTranslation(movementUp);
+	arenaF34->TransformTranslation(movementUp); //up the shaft
+	arenaF34->TransformTranslation(movementRight);
+	arenaF34->TransformTranslation(movementRight);
+	arenaF34->TransformTranslation(movementRight);
+	arenaF34->TransformTranslation(movementRight);
+	arenaF34->TransformRotation(rotate90CWAroundX);
+	arenaF34->UpdateEntity();
+
+
+	arenaL1->TransformTranslation(movementForward);
+	arenaL1->TransformTranslation(movementForward);
+	arenaL1->TransformTranslation(movementForward);
+	arenaL1->TransformTranslation(movementForward);
+	arenaL1->TransformTranslation(movementForward);
+	arenaL1->TransformTranslation(movementForward);
+	arenaL1->TransformTranslation(movementUp);
+	arenaL1->TransformTranslation(movementUp);
+	arenaL1->TransformTranslation(movementUp);
+	arenaL1->TransformTranslation(movementUp);
+	arenaL1->TransformTranslation(movementLeft);
+	arenaL1->TransformTranslation(movementLeft);
+	arenaL1->TransformTranslation(movementLeft);
+	arenaL1->TransformRotation(rotate90CCWAroundY);
+	arenaL1->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaL1->UpdateEntity();
+
+	arenaL2->TransformTranslation(movementForward);
+	arenaL2->TransformTranslation(movementForward);
+	arenaL2->TransformTranslation(movementForward);
+	arenaL2->TransformTranslation(movementForward);
+	arenaL2->TransformTranslation(movementForward);
+	arenaL2->TransformTranslation(movementForward);
+	arenaL2->TransformTranslation(movementForward);
+	arenaL2->TransformTranslation(movementForward);
+	arenaL2->TransformTranslation(movementUp);
+	arenaL2->TransformTranslation(movementUp);
+	arenaL2->TransformTranslation(movementUp);
+	arenaL2->TransformTranslation(movementUp);
+	arenaL2->TransformTranslation(movementLeft);
+	arenaL2->TransformTranslation(movementLeft);
+	arenaL2->TransformTranslation(movementLeft);
+	arenaL2->TransformRotation(rotate90CCWAroundY);
+	arenaL2->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaL2->UpdateEntity();
+
+	arenaL3->TransformTranslation(movementForward);
+	arenaL3->TransformTranslation(movementForward);
+	arenaL3->TransformTranslation(movementForward);
+	arenaL3->TransformTranslation(movementForward);
+	arenaL3->TransformTranslation(movementForward);
+	arenaL3->TransformTranslation(movementForward);
+	arenaL3->TransformTranslation(movementForward);
+	arenaL3->TransformTranslation(movementForward);
+	arenaL3->TransformTranslation(movementForward);
+	arenaL3->TransformTranslation(movementForward);
+	arenaL3->TransformTranslation(movementUp);
+	arenaL3->TransformTranslation(movementUp);
+	arenaL3->TransformTranslation(movementUp);
+	arenaL3->TransformTranslation(movementUp);
+	arenaL3->TransformTranslation(movementLeft);
+	arenaL3->TransformTranslation(movementLeft);
+	arenaL3->TransformTranslation(movementLeft);
+	arenaL3->TransformRotation(rotate90CCWAroundY);
+	arenaL3->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaL3->UpdateEntity();
+
+	arenaL4->TransformTranslation(movementForward);
+	arenaL4->TransformTranslation(movementForward);
+	arenaL4->TransformTranslation(movementForward);
+	arenaL4->TransformTranslation(movementForward);
+	arenaL4->TransformTranslation(movementForward);
+	arenaL4->TransformTranslation(movementForward);
+	arenaL4->TransformTranslation(movementForward);
+	arenaL4->TransformTranslation(movementForward);
+	arenaL4->TransformTranslation(movementForward);
+	arenaL4->TransformTranslation(movementForward);
+	arenaL4->TransformTranslation(movementForward);
+	arenaL4->TransformTranslation(movementForward);
+	arenaL4->TransformTranslation(movementUp);
+	arenaL4->TransformTranslation(movementUp);
+	arenaL4->TransformTranslation(movementUp);
+	arenaL4->TransformTranslation(movementUp);
+	arenaL4->TransformTranslation(movementLeft);
+	arenaL4->TransformTranslation(movementLeft);
+	arenaL4->TransformTranslation(movementLeft);
+	arenaL4->TransformRotation(rotate90CCWAroundY);
+	arenaL4->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaL4->UpdateEntity();
+
+
+	arenaR1->TransformTranslation(movementForward);
+	arenaR1->TransformTranslation(movementForward);
+	arenaR1->TransformTranslation(movementForward);
+	arenaR1->TransformTranslation(movementForward);
+	arenaR1->TransformTranslation(movementForward);
+	arenaR1->TransformTranslation(movementForward);
+	arenaR1->TransformTranslation(movementUp);
+	arenaR1->TransformTranslation(movementUp);
+	arenaR1->TransformTranslation(movementUp);
+	arenaR1->TransformTranslation(movementUp);
+	arenaR1->TransformTranslation(movementRight);
+	arenaR1->TransformTranslation(movementRight);
+	arenaR1->TransformTranslation(movementRight);
+	arenaR1->TransformTranslation(movementRight);
+	arenaR1->TransformTranslation(movementRight);
+	arenaR1->TransformRotation(rotate90CWAroundY);
+	arenaR1->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaR1->UpdateEntity();
+
+	arenaR2->TransformTranslation(movementForward);
+	arenaR2->TransformTranslation(movementForward);
+	arenaR2->TransformTranslation(movementForward);
+	arenaR2->TransformTranslation(movementForward);
+	arenaR2->TransformTranslation(movementForward);
+	arenaR2->TransformTranslation(movementForward);
+	arenaR2->TransformTranslation(movementForward);
+	arenaR2->TransformTranslation(movementForward);
+	arenaR2->TransformTranslation(movementUp);
+	arenaR2->TransformTranslation(movementUp);
+	arenaR2->TransformTranslation(movementUp);
+	arenaR2->TransformTranslation(movementUp);
+	arenaR2->TransformTranslation(movementRight);
+	arenaR2->TransformTranslation(movementRight);
+	arenaR2->TransformTranslation(movementRight);
+	arenaR2->TransformTranslation(movementRight);
+	arenaR2->TransformTranslation(movementRight);
+	arenaR2->TransformRotation(rotate90CWAroundY);
+	arenaR2->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaR2->UpdateEntity();
+
+	arenaR3->TransformTranslation(movementForward);
+	arenaR3->TransformTranslation(movementForward);
+	arenaR3->TransformTranslation(movementForward);
+	arenaR3->TransformTranslation(movementForward);
+	arenaR3->TransformTranslation(movementForward);
+	arenaR3->TransformTranslation(movementForward);
+	arenaR3->TransformTranslation(movementForward);
+	arenaR3->TransformTranslation(movementForward);
+	arenaR3->TransformTranslation(movementForward);
+	arenaR3->TransformTranslation(movementForward);
+	arenaR3->TransformTranslation(movementUp);
+	arenaR3->TransformTranslation(movementUp);
+	arenaR3->TransformTranslation(movementUp);
+	arenaR3->TransformTranslation(movementUp);
+	arenaR3->TransformTranslation(movementRight);
+	arenaR3->TransformTranslation(movementRight);
+	arenaR3->TransformTranslation(movementRight);
+	arenaR3->TransformTranslation(movementRight);
+	arenaR3->TransformTranslation(movementRight);
+	arenaR3->TransformRotation(rotate90CWAroundY);
+	arenaR3->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaR3->UpdateEntity();
+
+
+	arenaB1->TransformTranslation(movementForward);
+	arenaB1->TransformTranslation(movementForward);
+	arenaB1->TransformTranslation(movementForward);
+	arenaB1->TransformTranslation(movementForward);
+	arenaB1->TransformTranslation(movementForward);
+	arenaB1->TransformTranslation(movementUp);
+	arenaB1->TransformTranslation(movementUp);
+	arenaB1->TransformTranslation(movementUp);
+	arenaB1->TransformTranslation(movementUp);
+	arenaB1->TransformTranslation(movementLeft);
+	arenaB1->TransformTranslation(movementLeft);
+	arenaB1->TransformRotation(rotation180AroundY);
+	arenaB1->SetCollisionBox(0.2f, 1.0f, 0.2f);
+	arenaB1->UpdateEntity(); // back floor 3
+
+	arenaB3->TransformTranslation(movementForward);
+	arenaB3->TransformTranslation(movementForward);
+	arenaB3->TransformTranslation(movementForward);
+	arenaB3->TransformTranslation(movementForward);
+	arenaB3->TransformTranslation(movementForward);
+	arenaB3->TransformTranslation(movementUp);
+	arenaB3->TransformTranslation(movementUp);
+	arenaB3->TransformTranslation(movementUp);
+	arenaB3->TransformTranslation(movementUp);
+	arenaB3->TransformTranslation(movementRight);
+	arenaB3->TransformTranslation(movementRight);
+	arenaB3->TransformRotation(rotation180AroundY);
+	arenaB3->SetCollisionBox(0.2f, 1.0f, 0.2f);
+	arenaB3->UpdateEntity(); // back floor 3
+
+	arenaB4->TransformTranslation(movementForward);
+	arenaB4->TransformTranslation(movementForward);
+	arenaB4->TransformTranslation(movementForward);
+	arenaB4->TransformTranslation(movementForward);
+	arenaB4->TransformTranslation(movementForward);
+	arenaB4->TransformTranslation(movementUp);
+	arenaB4->TransformTranslation(movementUp);
+	arenaB4->TransformTranslation(movementUp);
+	arenaB4->TransformTranslation(movementUp);
+	arenaB4->TransformTranslation(movementRight);
+	arenaB4->TransformTranslation(movementRight);
+	arenaB4->TransformTranslation(movementRight);
+	arenaB4->TransformTranslation(movementRight);
+	arenaB4->TransformRotation(rotation180AroundY);
+	arenaB4->SetCollisionBox(0.2f, 1.0f, 0.2f);
+	arenaB4->UpdateEntity(); // back floor 3
+
+	arenaT11->TransformTranslation(movementForward);
+	arenaT11->TransformTranslation(movementForward);
+	arenaT11->TransformTranslation(movementForward);
+	arenaT11->TransformTranslation(movementForward);
+	arenaT11->TransformTranslation(movementForward);
+	arenaT11->TransformTranslation(movementForward);
+	arenaT11->TransformTranslation(movementUp);
+	arenaT11->TransformTranslation(movementUp);
+	arenaT11->TransformTranslation(movementUp);
+	arenaT11->TransformTranslation(movementUp);
+	arenaT11->TransformTranslation(movementUp);
+	arenaT11->TransformTranslation(movementLeft);
+	arenaT11->TransformTranslation(movementLeft);
+	arenaT11->TransformRotation(rotate90CCWAroundX);
+	arenaT11->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaT11->UpdateEntity(); // Top 3
+
+	arenaT12->TransformTranslation(movementForward);
+	arenaT12->TransformTranslation(movementForward);
+	arenaT12->TransformTranslation(movementForward);
+	arenaT12->TransformTranslation(movementForward);
+	arenaT12->TransformTranslation(movementForward);
+	arenaT12->TransformTranslation(movementForward);
+	arenaT12->TransformTranslation(movementUp);
+	arenaT12->TransformTranslation(movementUp);
+	arenaT12->TransformTranslation(movementUp);
+	arenaT12->TransformTranslation(movementUp);
+	arenaT12->TransformTranslation(movementUp);
+	arenaT12->TransformRotation(rotate90CCWAroundX);
+	arenaT12->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaT12->UpdateEntity(); // Top 3
+
+	arenaT13->TransformTranslation(movementForward);
+	arenaT13->TransformTranslation(movementForward);
+	arenaT13->TransformTranslation(movementForward);
+	arenaT13->TransformTranslation(movementForward);
+	arenaT13->TransformTranslation(movementForward);
+	arenaT13->TransformTranslation(movementForward);
+	arenaT13->TransformTranslation(movementUp);
+	arenaT13->TransformTranslation(movementUp);
+	arenaT13->TransformTranslation(movementUp);
+	arenaT13->TransformTranslation(movementUp);
+	arenaT13->TransformTranslation(movementUp);
+	arenaT13->TransformTranslation(movementRight);
+	arenaT13->TransformTranslation(movementRight);
+	arenaT13->TransformRotation(rotate90CCWAroundX);
+	arenaT13->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaT13->UpdateEntity(); // Top 3
+
+	arenaT14->TransformTranslation(movementForward);
+	arenaT14->TransformTranslation(movementForward);
+	arenaT14->TransformTranslation(movementForward);
+	arenaT14->TransformTranslation(movementForward);
+	arenaT14->TransformTranslation(movementForward);
+	arenaT14->TransformTranslation(movementForward);
+	arenaT14->TransformTranslation(movementUp);
+	arenaT14->TransformTranslation(movementUp);
+	arenaT14->TransformTranslation(movementUp);
+	arenaT14->TransformTranslation(movementUp);
+	arenaT14->TransformTranslation(movementUp);
+	arenaT14->TransformTranslation(movementRight);
+	arenaT14->TransformTranslation(movementRight);
+	arenaT14->TransformTranslation(movementRight);
+	arenaT14->TransformTranslation(movementRight);
+	arenaT14->TransformRotation(rotate90CCWAroundX);
+	arenaT14->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaT14->UpdateEntity(); // Top 3
+
+	arenaT21->TransformTranslation(movementForward);
+	arenaT21->TransformTranslation(movementForward);
+	arenaT21->TransformTranslation(movementForward);
+	arenaT21->TransformTranslation(movementForward);
+	arenaT21->TransformTranslation(movementForward);
+	arenaT21->TransformTranslation(movementForward);
+	arenaT21->TransformTranslation(movementForward);
+	arenaT21->TransformTranslation(movementForward);
+	arenaT21->TransformTranslation(movementUp);
+	arenaT21->TransformTranslation(movementUp);
+	arenaT21->TransformTranslation(movementUp);
+	arenaT21->TransformTranslation(movementUp);
+	arenaT21->TransformTranslation(movementUp);
+	arenaT21->TransformTranslation(movementLeft);
+	arenaT21->TransformTranslation(movementLeft);
+	arenaT21->TransformRotation(rotate90CCWAroundX);
+	arenaT21->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaT21->UpdateEntity(); // Top 3
+
+	arenaT22->TransformTranslation(movementForward);
+	arenaT22->TransformTranslation(movementForward);
+	arenaT22->TransformTranslation(movementForward);
+	arenaT22->TransformTranslation(movementForward);
+	arenaT22->TransformTranslation(movementForward);
+	arenaT22->TransformTranslation(movementForward);
+	arenaT22->TransformTranslation(movementForward);
+	arenaT22->TransformTranslation(movementForward);
+	arenaT22->TransformTranslation(movementUp);
+	arenaT22->TransformTranslation(movementUp);
+	arenaT22->TransformTranslation(movementUp);
+	arenaT22->TransformTranslation(movementUp);
+	arenaT22->TransformTranslation(movementUp);
+	arenaT22->TransformRotation(rotate90CCWAroundX);
+	arenaT22->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaT22->UpdateEntity(); // Top 3
+
+	arenaT23->TransformTranslation(movementForward);
+	arenaT23->TransformTranslation(movementForward);
+	arenaT23->TransformTranslation(movementForward);
+	arenaT23->TransformTranslation(movementForward);
+	arenaT23->TransformTranslation(movementForward);
+	arenaT23->TransformTranslation(movementForward);
+	arenaT23->TransformTranslation(movementForward);
+	arenaT23->TransformTranslation(movementForward);
+	arenaT23->TransformTranslation(movementUp);
+	arenaT23->TransformTranslation(movementUp);
+	arenaT23->TransformTranslation(movementUp);
+	arenaT23->TransformTranslation(movementUp);
+	arenaT23->TransformTranslation(movementUp);
+	arenaT23->TransformTranslation(movementRight);
+	arenaT23->TransformTranslation(movementRight);
+	arenaT23->TransformRotation(rotate90CCWAroundX);
+	arenaT23->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaT23->UpdateEntity(); // Top 3
+
+	arenaT24->TransformTranslation(movementForward);
+	arenaT24->TransformTranslation(movementForward);
+	arenaT24->TransformTranslation(movementForward);
+	arenaT24->TransformTranslation(movementForward);
+	arenaT24->TransformTranslation(movementForward);
+	arenaT24->TransformTranslation(movementForward);
+	arenaT24->TransformTranslation(movementForward);
+	arenaT24->TransformTranslation(movementForward);
+	arenaT24->TransformTranslation(movementUp);
+	arenaT24->TransformTranslation(movementUp);
+	arenaT24->TransformTranslation(movementUp);
+	arenaT24->TransformTranslation(movementUp);
+	arenaT24->TransformTranslation(movementUp);
+	arenaT24->TransformTranslation(movementRight);
+	arenaT24->TransformTranslation(movementRight);
+	arenaT24->TransformTranslation(movementRight);
+	arenaT24->TransformTranslation(movementRight);
+	arenaT24->TransformRotation(rotate90CCWAroundX);
+	arenaT24->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaT24->UpdateEntity(); // Top 3
+
+	arenaT31->TransformTranslation(movementForward);
+	arenaT31->TransformTranslation(movementForward);
+	arenaT31->TransformTranslation(movementForward);
+	arenaT31->TransformTranslation(movementForward);
+	arenaT31->TransformTranslation(movementForward);
+	arenaT31->TransformTranslation(movementForward);
+	arenaT31->TransformTranslation(movementForward);
+	arenaT31->TransformTranslation(movementForward);
+	arenaT31->TransformTranslation(movementForward);
+	arenaT31->TransformTranslation(movementForward);
+	arenaT31->TransformTranslation(movementUp);
+	arenaT31->TransformTranslation(movementUp);
+	arenaT31->TransformTranslation(movementUp);
+	arenaT31->TransformTranslation(movementUp);
+	arenaT31->TransformTranslation(movementUp);
+	arenaT31->TransformTranslation(movementLeft);
+	arenaT31->TransformTranslation(movementLeft);
+	arenaT31->TransformRotation(rotate90CCWAroundX);
+	arenaT31->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaT31->UpdateEntity(); // Top 3
+
+	arenaT32->TransformTranslation(movementForward);
+	arenaT32->TransformTranslation(movementForward);
+	arenaT32->TransformTranslation(movementForward);
+	arenaT32->TransformTranslation(movementForward);
+	arenaT32->TransformTranslation(movementForward);
+	arenaT32->TransformTranslation(movementForward);
+	arenaT32->TransformTranslation(movementForward);
+	arenaT32->TransformTranslation(movementForward);
+	arenaT32->TransformTranslation(movementForward);
+	arenaT32->TransformTranslation(movementForward);
+	arenaT32->TransformTranslation(movementUp);
+	arenaT32->TransformTranslation(movementUp);
+	arenaT32->TransformTranslation(movementUp);
+	arenaT32->TransformTranslation(movementUp);
+	arenaT32->TransformTranslation(movementUp);
+	arenaT32->TransformRotation(rotate90CCWAroundX);
+	arenaT32->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaT32->UpdateEntity(); // Top 3
+
+	arenaT33->TransformTranslation(movementForward);
+	arenaT33->TransformTranslation(movementForward);
+	arenaT33->TransformTranslation(movementForward);
+	arenaT33->TransformTranslation(movementForward);
+	arenaT33->TransformTranslation(movementForward);
+	arenaT33->TransformTranslation(movementForward);
+	arenaT33->TransformTranslation(movementForward);
+	arenaT33->TransformTranslation(movementForward);
+	arenaT33->TransformTranslation(movementForward);
+	arenaT33->TransformTranslation(movementForward);
+	arenaT33->TransformTranslation(movementUp);
+	arenaT33->TransformTranslation(movementUp);
+	arenaT33->TransformTranslation(movementUp);
+	arenaT33->TransformTranslation(movementUp);
+	arenaT33->TransformTranslation(movementUp);
+	arenaT33->TransformTranslation(movementRight);
+	arenaT33->TransformTranslation(movementRight);
+	arenaT33->TransformRotation(rotate90CCWAroundX);
+	arenaT33->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaT33->UpdateEntity(); // Top 3
+
+	arenaT34->TransformTranslation(movementForward);
+	arenaT34->TransformTranslation(movementForward);
+	arenaT34->TransformTranslation(movementForward);
+	arenaT34->TransformTranslation(movementForward);
+	arenaT34->TransformTranslation(movementForward);
+	arenaT34->TransformTranslation(movementForward);
+	arenaT34->TransformTranslation(movementForward);
+	arenaT34->TransformTranslation(movementForward);
+	arenaT34->TransformTranslation(movementForward);
+	arenaT34->TransformTranslation(movementForward);
+	arenaT34->TransformTranslation(movementUp);
+	arenaT34->TransformTranslation(movementUp);
+	arenaT34->TransformTranslation(movementUp);
+	arenaT34->TransformTranslation(movementUp);
+	arenaT34->TransformTranslation(movementUp);
+	arenaT34->TransformTranslation(movementRight);
+	arenaT34->TransformTranslation(movementRight);
+	arenaT34->TransformTranslation(movementRight);
+	arenaT34->TransformTranslation(movementRight);
+	arenaT34->TransformRotation(rotate90CCWAroundX);
+	arenaT34->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaT34->UpdateEntity(); // Top 3
+
+
+
+	arenaFW2->TransformTranslation(movementForward);
+	arenaFW2->TransformTranslation(movementForward);
+	arenaFW2->TransformTranslation(movementForward);
+	arenaFW2->TransformTranslation(movementForward);
+	arenaFW2->TransformTranslation(movementForward);
+	arenaFW2->TransformTranslation(movementUp);
+	arenaFW2->TransformTranslation(movementUp);
+	arenaFW2->TransformTranslation(movementUp);
+	arenaFW2->TransformTranslation(movementUp);
+	arenaFW2->TransformTranslation(movementForward);
+	arenaFW2->TransformTranslation(movementForward);
+	arenaFW2->TransformTranslation(movementForward);
+	arenaFW2->TransformTranslation(movementForward);
+	arenaFW2->TransformTranslation(movementForward);
+	arenaFW2->TransformTranslation(movementForward);
+	arenaFW2->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaFW2->UpdateEntity(); // end cap
+
+	arenaFW3->TransformTranslation(movementForward);
+	arenaFW3->TransformTranslation(movementForward);
+	arenaFW3->TransformTranslation(movementForward);
+	arenaFW3->TransformTranslation(movementForward);
+	arenaFW3->TransformTranslation(movementForward);
+	arenaFW3->TransformTranslation(movementUp);
+	arenaFW3->TransformTranslation(movementUp);
+	arenaFW3->TransformTranslation(movementUp);
+	arenaFW3->TransformTranslation(movementUp);
+	arenaFW3->TransformTranslation(movementForward);
+	arenaFW3->TransformTranslation(movementForward);
+	arenaFW3->TransformTranslation(movementForward);
+	arenaFW3->TransformTranslation(movementForward);
+	arenaFW3->TransformTranslation(movementForward);
+	arenaFW3->TransformTranslation(movementForward);
+	arenaFW3->TransformTranslation(movementRight);
+	arenaFW3->TransformTranslation(movementRight);
+	arenaFW3->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaFW3->UpdateEntity(); // end cap
+
+	arenaFW4->TransformTranslation(movementForward);
+	arenaFW4->TransformTranslation(movementForward);
+	arenaFW4->TransformTranslation(movementForward);
+	arenaFW4->TransformTranslation(movementForward);
+	arenaFW4->TransformTranslation(movementForward);
+	arenaFW4->TransformTranslation(movementUp);
+	arenaFW4->TransformTranslation(movementUp);
+	arenaFW4->TransformTranslation(movementUp);
+	arenaFW4->TransformTranslation(movementUp);
+	arenaFW4->TransformTranslation(movementForward);
+	arenaFW4->TransformTranslation(movementForward);
+	arenaFW4->TransformTranslation(movementForward);
+	arenaFW4->TransformTranslation(movementForward);
+	arenaFW4->TransformTranslation(movementForward);
+	arenaFW4->TransformTranslation(movementForward);
+	arenaFW4->TransformTranslation(movementRight);
+	arenaFW4->TransformTranslation(movementRight);
+	arenaFW4->TransformTranslation(movementRight);
+	arenaFW4->TransformTranslation(movementRight);
+	arenaFW4->SetCollisionBox(1.0f, 0.2f, 1.0f);
+	arenaFW4->UpdateEntity(); // end cap
+
+
+
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
 	wallEnd->TransformTranslation(movementUp);
-		//wallEnd->TransformRotation(rotate90CWAroundX);
+	wallEnd->TransformTranslation(movementUp);
+	wallEnd->TransformTranslation(movementUp);
+	wallEnd->TransformTranslation(movementUp);
+	wallEnd->TransformTranslation(movementLeft);
+	wallEnd->TransformTranslation(movementLeft);
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
+	wallEnd->TransformTranslation(movementForward);
 	wallEnd->SetCollisionBox(1.0f, 0.2f, 1.0f);
 	wallEnd->UpdateEntity(); // end cap
-
 }
 
 // --------------------------------------------------------
