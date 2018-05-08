@@ -59,6 +59,7 @@ public:
 		SimplePixelShader* ps,
 		ID3D11ShaderResourceView* texture);
 	Emitter();
+	Emitter(Emitter &e, ID3D11Device * device);
 	~Emitter();
 
 	void Update(float deltaTime);
@@ -66,6 +67,8 @@ public:
 	void Spawn();
 
 	void SetPosition(XMFLOAT3 p);
+	void SetVelocity(XMFLOAT3 v);
+	void SetAcceleration(XMFLOAT3 a);
 
 	void Dump(ID3D11DeviceContext* context);
 	void DumpOne(int index);

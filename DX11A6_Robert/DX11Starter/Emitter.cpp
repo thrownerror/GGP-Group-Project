@@ -2,77 +2,70 @@
 
 Emitter::Emitter(int max, int pps, float lifetime, float start, float end, DirectX::XMFLOAT4 startCol, DirectX::XMFLOAT4 endCol, DirectX::XMFLOAT3 vel, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 accel, ID3D11Device * device, SimpleVertexShader * vs, SimplePixelShader * ps, ID3D11ShaderResourceView * texture)
 {
-	if (device != nullptr) {
-		this->maxParticles = max;
-		this->particlesPerSecond = pps;
-		this->secondsPerParticle = 1.0f / particlesPerSecond;
-		this->lifetime = lifetime;
-		this->startSize = start;
-		this->endSize = end;
-		this->startColor = startCol;
-		this->endColor = endCol;
-		this->velocity = vel;
-		this->position = pos;
-		this->accel = accel;
-		this->vertexShader = vs;
-		this->pixelShader = ps;
-		this->texture = texture;
+	this->maxParticles = max;
+	this->particlesPerSecond = pps;
+	this->secondsPerParticle = 1.0f / particlesPerSecond;
+	this->lifetime = lifetime;
+	this->startSize = start;
+	this->endSize = end;
+	this->startColor = startCol;
+	this->endColor = endCol;
+	this->velocity = vel;
+	this->position = pos;
+	this->accel = accel;
+	this->vertexShader = vs;
+	this->pixelShader = ps;
+	this->texture = texture;
 
-		timeSinceEmit = 0;
-		particleCount = 0;
-		firstAliveIndex = 0;
-		firstDeadIndex = 0;
+	timeSinceEmit = 0;
+	particleCount = 0;
+	firstAliveIndex = 0;
+	firstDeadIndex = 0;
 
-		particles = new Particle[maxParticles];
-		localParticleVertices = new ParticleVertex[4 * maxParticles];
-		for (int i = 0; i < maxParticles * 4; i += 4)
-		{
-			localParticleVertices[i + 0].UV = XMFLOAT2(0, 0);
-			localParticleVertices[i + 1].UV = XMFLOAT2(1, 0);
-			localParticleVertices[i + 2].UV = XMFLOAT2(1, 1);
-			localParticleVertices[i + 3].UV = XMFLOAT2(0, 1);
-		}
-
-		// Create buffers for drawing particles
-
-		// DYNAMIC vertex buffer (no initial data necessary)
-		D3D11_BUFFER_DESC vbDesc = {};
-		vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		vbDesc.Usage = D3D11_USAGE_DYNAMIC;
-		vbDesc.ByteWidth = sizeof(ParticleVertex) * 4 * maxParticles;
-		device->CreateBuffer(&vbDesc, 0, &vertexBuffer);
-
-		// Index buffer data
-		unsigned int* indices = new unsigned int[maxParticles * 6];
-		int indexCount = 0;
-		for (int i = 0; i < maxParticles * 4; i += 4)
-		{
-			indices[indexCount++] = i;
-			indices[indexCount++] = i + 1;
-			indices[indexCount++] = i + 2;
-			indices[indexCount++] = i;
-			indices[indexCount++] = i + 2;
-			indices[indexCount++] = i + 3;
-		}
-		D3D11_SUBRESOURCE_DATA indexData = {};
-		indexData.pSysMem = indices;
-
-		// Regular index buffer
-		D3D11_BUFFER_DESC ibDesc = {};
-		ibDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		ibDesc.CPUAccessFlags = 0;
-		ibDesc.Usage = D3D11_USAGE_DEFAULT;
-		ibDesc.ByteWidth = sizeof(unsigned int) * maxParticles * 6;
-		device->CreateBuffer(&ibDesc, &indexData, &indexBuffer);
-
-		delete[] indices;
+	particles = new Particle[maxParticles];
+	localParticleVertices = new ParticleVertex[4 * maxParticles];
+	for (int i = 0; i < maxParticles * 4; i += 4)
+	{
+		localParticleVertices[i + 0].UV = XMFLOAT2(0, 0);
+		localParticleVertices[i + 1].UV = XMFLOAT2(1, 0);
+		localParticleVertices[i + 2].UV = XMFLOAT2(1, 1);
+		localParticleVertices[i + 3].UV = XMFLOAT2(0, 1);
 	}
-	else {
-		particles = new Particle[1];
-		localParticleVertices = new ParticleVertex[1];
-		vertexShader = nullptr;
+
+	// Create buffers for drawing particles
+
+	// DYNAMIC vertex buffer (no initial data necessary)
+	D3D11_BUFFER_DESC vbDesc = {};
+	vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	vbDesc.Usage = D3D11_USAGE_DYNAMIC;
+	vbDesc.ByteWidth = sizeof(ParticleVertex) * 4 * maxParticles;
+	device->CreateBuffer(&vbDesc, 0, &vertexBuffer);
+
+	// Index buffer data
+	unsigned int* indices = new unsigned int[maxParticles * 6];
+	int indexCount = 0;
+	for (int i = 0; i < maxParticles * 4; i += 4)
+	{
+		indices[indexCount++] = i;
+		indices[indexCount++] = i + 1;
+		indices[indexCount++] = i + 2;
+		indices[indexCount++] = i;
+		indices[indexCount++] = i + 2;
+		indices[indexCount++] = i + 3;
 	}
+	D3D11_SUBRESOURCE_DATA indexData = {};
+	indexData.pSysMem = indices;
+
+	// Regular index buffer
+	D3D11_BUFFER_DESC ibDesc = {};
+	ibDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibDesc.CPUAccessFlags = 0;
+	ibDesc.Usage = D3D11_USAGE_DEFAULT;
+	ibDesc.ByteWidth = sizeof(unsigned int) * maxParticles * 6;
+	device->CreateBuffer(&ibDesc, &indexData, &indexBuffer);
+
+	delete[] indices;
 }
 
 Emitter::Emitter() : Emitter(0, 0, 0, 0, 0, XMFLOAT4(), XMFLOAT4(), XMFLOAT3(), XMFLOAT3(), XMFLOAT3(), nullptr, nullptr, nullptr, nullptr)
@@ -80,15 +73,16 @@ Emitter::Emitter() : Emitter(0, 0, 0, 0, 0, XMFLOAT4(), XMFLOAT4(), XMFLOAT3(), 
 
 }
 
+Emitter::Emitter(Emitter & e, ID3D11Device * device) : Emitter(e.maxParticles, e.particlesPerSecond, e.lifetime, e.startSize, e.endSize, e.startColor, e.endColor, e.velocity, e.position, e.accel, device, e.vertexShader, e.pixelShader, e.texture)
+{
+}
+
 Emitter::~Emitter()
 {
 	delete[] particles;
 	delete[] localParticleVertices;
-	if (vertexShader != nullptr)
-	{
-		vertexBuffer->Release();
-		indexBuffer->Release();
-	}
+	vertexBuffer->Release();
+	indexBuffer->Release();
 }
 
 void Emitter::Update(float deltaTime)
@@ -176,6 +170,16 @@ void Emitter::Spawn()
 void Emitter::SetPosition(XMFLOAT3 p)
 {
 	position = p;
+}
+
+void Emitter::SetVelocity(XMFLOAT3 v)
+{
+	velocity = v;
+}
+
+void Emitter::SetAcceleration(XMFLOAT3 a)
+{
+	accel = a;
 }
 
 void Emitter::Dump(ID3D11DeviceContext * context)

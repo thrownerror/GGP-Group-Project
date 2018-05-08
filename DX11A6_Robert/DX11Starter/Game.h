@@ -189,6 +189,7 @@ private:
 
 
 	Enemy* e0;
+	Enemy* e1;
 
 	Camera* camera;
 
@@ -213,6 +214,7 @@ private:
 	ID3D11DepthStencilState* particleDS;
 	ID3D11BlendState* particleBlender;
 	Emitter* emitter;
+	std::vector<Emitter*> emitters;
 
 	XMFLOAT3 movementRight		= XMFLOAT3(+1.0f, 0.0f, 0.0f);
 	XMFLOAT3 movementLeft		= XMFLOAT3(-1.0f, 0.0f, 0.0f);

@@ -162,6 +162,7 @@ Game::~Game()
 	delete gePlayer;
 
 	delete e0;
+	delete e1;
 
 	delete[] entityArray;
 	delete[] collisionArray;
@@ -183,6 +184,9 @@ Game::~Game()
 	delete particlePixel;
 	delete particleVertex;
 	delete emitter;
+	for (int i = 0; i < 20; i++) {
+		delete emitters[i];
+	}
 
 	srv->Release();
 	sampState->Release();
@@ -319,7 +323,7 @@ void Game::Init()
 		0.1f,							// Start size
 		5.0f,							// End size
 		XMFLOAT4(1, 0.1f, 0.1f, 0.2f),	// Start color
-		XMFLOAT4(1, 0.6f, 0.1f, 0),		// End color
+		XMFLOAT4(1, 0.9f, 0.3f, 0),		// End color
 		XMFLOAT3(0, 2, 2),				// Start velocity
 		XMFLOAT3(0, 0, 2),				// Start position
 		XMFLOAT3(0, -1, 0),				// Start acceleration
@@ -327,6 +331,15 @@ void Game::Init()
 		particleVertex,
 		particlePixel,
 		particleTexture);
+	
+	emitters = std::vector<Emitter*>();
+	// Bullet emitters - at max there will be 20 on screen
+	for (int i = 0; i < 20; i++)
+	{
+		emitters.push_back(new Emitter(*emitter, device));
+		emitters[i]->SetAcceleration(XMFLOAT3(0, 0, 0));
+		emitters[i]->SetVelocity(XMFLOAT3(0, 0, 0));
+	}
 
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
@@ -555,9 +568,13 @@ void Game::CreateBasicGeometry()
 	gePlayer = new GameEntity(meshQuad);
 	gePlayer->SetCollisionBox(.1f, .1f, .1f);
 
-	e0 = new Enemy(meshModel1, mat1, meshModel1, mat1, gePlayer, device, particleVertex, particlePixel, particleTexture);
-	e0->SetWanderPoints(XMFLOAT3(0, 0, 0), XMFLOAT3(5, 5, 5));
+	e0 = new Enemy(meshModel1, mat1, meshModel1, mat1, gePlayer);
+	e0->SetWanderPoints(XMFLOAT3(0, 0, 4), XMFLOAT3(0, 4, 4));
 	e0->SetCollisionBox(.1f, .1f, .1f);
+
+	e1 = new Enemy(meshModel1, mat1, meshModel1, mat1, gePlayer);
+	e1->SetWanderPoints(XMFLOAT3(4, 4, 10), XMFLOAT3(-2, 4, 10));
+	e1->SetCollisionBox(.1f, .1f, .1f);
 
 	if (testBox) {
 		collisionArraySize = 16;
@@ -1816,8 +1833,10 @@ void Game::Update(float deltaTime, float totalTime)
 		//ge5->TransformTranslation(movementValue);
 		//ge4->UpdateEntity();
 	gePlayer->PrintPosition();
+	printf("Player's position: %f %f %f \n", gePlayer->GetPosition().x, gePlayer->GetPosition().y, gePlayer->GetPosition().z);
 
 	e0->UpdateEntity(deltaTime);
+	e1->UpdateEntity(deltaTime);
 
 	for (int i = 0; i <= entityArraySize - 1; i++) {
 
@@ -1853,7 +1872,17 @@ void Game::Update(float deltaTime, float totalTime)
 	}
 
 	emitter->Update(deltaTime);
-
+	int emitCount = 0;
+	// For every bullet, attach an emitter to it's position and update the particle effects
+	for (int i = 0; i < static_cast<int>(e0->Bullets().size()); i++) {
+		emitters[i]->SetPosition(e0->Bullets()[i].GetPosition());
+		emitters[i]->Update(deltaTime);
+		emitCount++;
+	}
+	for (int i = emitCount; i < static_cast<int>(e1->Bullets().size()) + emitCount; i++) {
+		emitters[i]->SetPosition(e1->Bullets()[i - emitCount].GetPosition());
+		emitters[i]->Update(deltaTime);
+	}
 
 }
 
@@ -1891,7 +1920,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	// Turn OFF the pixel shader
 	context->PSSetShader(0, 0, 0);
 
-	// Draw the enemy in the shader
+	// Draw enemy0 in the shader and bullets
 	ID3D11Buffer* vert = e0->GetVertBuffer();
 	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
 	context->IASetIndexBuffer(e0->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
@@ -1905,6 +1934,23 @@ void Game::Draw(float deltaTime, float totalTime)
 		context->IASetIndexBuffer(e0->Bullets()[i].GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
 		context->DrawIndexed(e0->Bullets()[i].GetIndCount(), 0, 0);
 		shadowShader->SetMatrix4x4("world", e0->Bullets()[i].GetWorldMatrix());
+		shadowShader->CopyAllBufferData();
+	}
+
+	// Draw enemy1 in the shader and bullets
+	vert = e1->GetVertBuffer();
+	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
+	context->IASetIndexBuffer(e1->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+	context->DrawIndexed(e1->GetIndCount(), 0, 0);
+	shadowShader->SetMatrix4x4("world", e1->GetWorldMatrix());
+	shadowShader->CopyAllBufferData();
+
+	for (int i = 0; i < e1->NumBullets(); i++) {
+		vert = e1->Bullets()[i].GetVertBuffer();
+		context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
+		context->IASetIndexBuffer(e1->Bullets()[i].GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		context->DrawIndexed(e1->Bullets()[i].GetIndCount(), 0, 0);
+		shadowShader->SetMatrix4x4("world", e1->Bullets()[i].GetWorldMatrix());
 		shadowShader->CopyAllBufferData();
 	}
 
@@ -1979,7 +2025,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	vertexShader->SetMatrix4x4("shadowView", shadowView);
 	vertexShader->SetMatrix4x4("shadowProjection", shadowProjection);
 
-	// Draw the enemy
+	// Draw enemy0 and bullets
 	pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
 	pixelShader->SetSamplerState("shadowSampler", shadowSampler);
 	e0->PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
@@ -1988,7 +2034,6 @@ void Game::Draw(float deltaTime, float totalTime)
 	context->IASetIndexBuffer(e0->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
 	context->DrawIndexed(e0->GetIndCount(), 0, 0);
 
-	// Draw enemy bullets
 	for (int i = 0; i < e0->NumBullets(); i++) {
 		pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
 		pixelShader->SetSamplerState("shadowSampler", shadowSampler);
@@ -1997,6 +2042,25 @@ void Game::Draw(float deltaTime, float totalTime)
 		context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
 		context->IASetIndexBuffer(e0->Bullets()[i].GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
 		context->DrawIndexed(e0->Bullets()[i].GetIndCount(), 0, 0);
+	}
+	
+	// Draw enemy0 and bullets
+	pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
+	pixelShader->SetSamplerState("shadowSampler", shadowSampler);
+	e1->PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
+	vert = e1->GetVertBuffer();
+	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
+	context->IASetIndexBuffer(e1->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+	context->DrawIndexed(e1->GetIndCount(), 0, 0);
+
+	for (int i = 0; i < e1->NumBullets(); i++) {
+		pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
+		pixelShader->SetSamplerState("shadowSampler", shadowSampler);
+		e1->Bullets()[i].PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
+		vert = e1->Bullets()[i].GetVertBuffer();
+		context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
+		context->IASetIndexBuffer(e1->Bullets()[i].GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		context->DrawIndexed(e1->Bullets()[i].GetIndCount(), 0, 0);
 	}
 
 	// Draw the entity array
@@ -2034,9 +2098,14 @@ void Game::Draw(float deltaTime, float totalTime)
 	context->OMSetBlendState(particleBlender, blend, 0xffffffff);	// Additive blending
 	context->OMSetDepthStencilState(particleDS, 0);					// No depth WRITING
 	emitter->Draw(context, camera);									// Draw the emitter
-	// Draw every bullet's emitter
-	for (int i = 0; i < e0->NumBullets(); i++) {
-		e0->Bullets()[i].GetEmitter().Draw(context, camera);
+
+	int emitCount = 0;
+	for (int i = 0; i < static_cast<int>(e0->Bullets().size()); i++) {
+		emitters[i]->Draw(context, camera);
+		emitCount++;
+	}
+	for (int i = emitCount; i < static_cast<int>(e1->Bullets().size()) + emitCount; i++) {
+		emitters[i]->Draw(context, camera);
 	}
 
 #pragma endregion

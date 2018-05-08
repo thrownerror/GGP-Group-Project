@@ -12,11 +12,11 @@ float Enemy::mag(XMFLOAT3 a)
 	return sqrt((a.x * a.x) + (a.y * a.y) + (a.z * a.z));
 }
 
-Enemy::Enemy() : Enemy(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr)
+Enemy::Enemy() : Enemy(nullptr, nullptr, nullptr, nullptr, nullptr)
 {
 }
 
-Enemy::Enemy(Mesh * enemyMesh, Material * enemyMaterial, Mesh * bullMesh, Material * bullMaterial, GameEntity* pl, ID3D11Device * d, SimpleVertexShader* pVert, SimplePixelShader* pPixel, ID3D11ShaderResourceView* pText) : GameEntity(enemyMesh, enemyMaterial)
+Enemy::Enemy(Mesh * enemyMesh, Material * enemyMaterial, Mesh * bullMesh, Material * bullMaterial, GameEntity* pl) : GameEntity(enemyMesh, enemyMaterial)
 {
 	bulletMesh = bullMesh;
 	bulletMaterial = bullMaterial;
@@ -31,11 +31,6 @@ Enemy::Enemy(Mesh * enemyMesh, Material * enemyMaterial, Mesh * bullMesh, Materi
 	percentage = 0;
 
 	player = pl;
-
-	device = d;
-	eVertShader = pVert;
-	ePixelShader = pPixel;
-	eSRV = pText;
 }
 
 
@@ -52,7 +47,7 @@ void Enemy::SetWanderPoints(XMFLOAT3 point0, XMFLOAT3 point1)
 
 void Enemy::Attack()
 {
-	bullets.push_back(Bullet(bulletMesh, bulletMaterial, player, device, eVertShader, ePixelShader, eSRV));
+	bullets.push_back(Bullet(bulletMesh, bulletMaterial, player));
 	numBullets++;
 
 	XMVECTOR pos = XMLoadFloat3(&GetPosition());
@@ -63,8 +58,6 @@ void Enemy::Attack()
 	bullets[numBullets - 1].SetScale(XMFLOAT3(.5f, .5f, .5f));
 	bullets[numBullets - 1].SetPosition(GetPosition());
 	bullets[numBullets - 1].SetDirection(result);
-
-	printf("Firing bullet \n");
 }
 
 void Enemy::UpdateEntity(float deltaTime)
