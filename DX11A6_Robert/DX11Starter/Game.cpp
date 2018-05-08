@@ -560,7 +560,7 @@ void Game::CreateBasicGeometry()
 	e0->SetCollisionBox(.1f, .1f, .1f);
 
 	if (testBox) {
-		collisionArraySize = 15;
+		collisionArraySize = 16;
 		collisionArray = new GameEntity*[collisionArraySize];
 		collisionArray[0] = ce1;
 		collisionArray[1] = ce2;
@@ -580,6 +580,7 @@ void Game::CreateBasicGeometry()
 		collisionArray[12] = arenaFront;
 		collisionArray[13] = arenaBack;
 		collisionArray[14] = arenaBottom;
+		collisionArray[15] = arenaBack2;
 
 
 
@@ -795,6 +796,47 @@ void Game::BuildCollisionGeometry() {
 	arenaRight->TransformTranslation(movementRight);
 	arenaRight->SetCollisionBox(.1f, 10.0f, 10.0f);
 	arenaRight->UpdateEntity();
+
+	arenaFront->TransformTranslation(movementForward);
+	arenaFront->TransformTranslation(movementForward);
+	arenaFront->TransformTranslation(movementForward);
+	arenaFront->TransformTranslation(movementForward);
+	arenaFront->TransformTranslation(movementForward);
+	arenaFront->TransformTranslation(movementForward);
+	arenaFront->TransformTranslation(movementForward);
+	arenaFront->TransformTranslation(movementForward);
+	arenaFront->TransformTranslation(movementForward);
+	arenaFront->TransformTranslation(movementForward);
+	arenaFront->TransformTranslation(movementUp);
+	arenaFront->SetCollisionBox(10.0f, 10.0f, 0.2f);
+	arenaFront->UpdateEntity();
+
+	arenaBack->TransformTranslation(movementForward);
+	arenaBack->TransformTranslation(movementForward);
+	arenaBack->TransformTranslation(movementForward);
+	arenaBack->TransformTranslation(movementForward);
+	arenaBack->TransformTranslation(movementUp);
+	arenaBack->TransformTranslation(movementUp);
+	arenaBack->TransformTranslation(movementUp);
+	arenaBack->TransformTranslation(movementLeft);
+	arenaBack->TransformTranslation(movementLeft);
+	arenaBack->SetCollisionBox(1.0f, 10.0f, 0.2f);
+	arenaBack->UpdateEntity();
+
+	arenaBack2->TransformTranslation(movementForward);
+	arenaBack2->TransformTranslation(movementForward);
+	arenaBack2->TransformTranslation(movementForward);
+	arenaBack2->TransformTranslation(movementForward);
+	arenaBack2->TransformTranslation(movementUp);
+	arenaBack2->TransformTranslation(movementUp);
+	arenaBack2->TransformTranslation(movementUp);
+	arenaBack2->TransformTranslation(movementRight);
+	arenaBack2->TransformTranslation(movementRight);
+	arenaBack2->TransformTranslation(movementRight);
+	arenaBack2->TransformTranslation(movementRight);
+	arenaBack2->SetCollisionBox(2.0f, 10.0f, 0.2f);
+	arenaBack2->UpdateEntity();
+
 }
 void Game::BuildLevelGeometry() {
 	CreateStartingSpace();
