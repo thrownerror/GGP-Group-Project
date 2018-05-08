@@ -59,7 +59,7 @@ void Bullet::UpdateEntity(float deltaTime)
 	XMFLOAT3 storeDir;
 	XMStoreFloat3(&storeDir, loadDir);
 
-	TransformTranslation(XMFLOAT3(storeDir.x, 0, storeDir.y));
+	TransformTranslation(XMFLOAT3(storeDir.x, 0, storeDir.z));
 
 	GameEntity::UpdateEntity();
 }

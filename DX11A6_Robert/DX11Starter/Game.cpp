@@ -1718,6 +1718,15 @@ void Game::Draw(float deltaTime, float totalTime)
 	shadowShader->SetMatrix4x4("world", e0->GetWorldMatrix());
 	shadowShader->CopyAllBufferData();
 
+	for (int i = 0; i < e0->NumBullets(); i++) {
+		vert = e0->Bullets()[i].GetVertBuffer();
+		context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
+		context->IASetIndexBuffer(e0->Bullets()[i].GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		context->DrawIndexed(e0->Bullets()[i].GetIndCount(), 0, 0);
+		shadowShader->SetMatrix4x4("world", e0->Bullets()[i].GetWorldMatrix());
+		shadowShader->CopyAllBufferData();
+	}
+
 	for (int i = 0; i < entityArraySize; i++) {
 		if (entityArray[i] != nullptr) {
 
@@ -1797,6 +1806,17 @@ void Game::Draw(float deltaTime, float totalTime)
 	context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
 	context->IASetIndexBuffer(e0->GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
 	context->DrawIndexed(e0->GetIndCount(), 0, 0);
+
+	// Draw enemy bullets
+	for (int i = 0; i < e0->NumBullets(); i++) {
+		pixelShader->SetShaderResourceView("shadowSRV", shadowSRV);
+		pixelShader->SetSamplerState("shadowSampler", shadowSampler);
+		e0->Bullets()[i].PrepareMaterial(camera->GetCamMatrix(), camera->GetProjectionMatrix());
+		vert = e0->Bullets()[i].GetVertBuffer();
+		context->IASetVertexBuffers(0, 1, &vert, &stride, &offset);
+		context->IASetIndexBuffer(e0->Bullets()[i].GetIndBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		context->DrawIndexed(e0->Bullets()[i].GetIndCount(), 0, 0);
+	}
 
 	// Draw the entity array
 	for (int i = 0; i <= entityArraySize - 1; i++) {

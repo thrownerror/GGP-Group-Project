@@ -55,6 +55,7 @@ void Enemy::Attack()
 	XMFLOAT3 result;
 	XMStoreFloat3(&result, playerPos - pos);
 	
+	bullets[numBullets - 1].SetScale(XMFLOAT3(5, 5, 5));
 	bullets[numBullets - 1].SetPosition(GetPosition());
 	bullets[numBullets - 1].SetDirection(result);
 
