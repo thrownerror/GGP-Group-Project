@@ -186,6 +186,8 @@ private:
 	GameEntity* arenaBack2;
 	GameEntity* arenaBottom;
 
+
+
 	Enemy* e0;
 
 	Camera* camera;

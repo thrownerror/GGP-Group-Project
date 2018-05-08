@@ -726,8 +726,7 @@ void Game::BuildCollisionGeometry() {
 	shaftFront->TransformTranslation(movementForward);
 	shaftFront->TransformTranslation(movementForward);
 	shaftFront->TransformTranslation(movementUp);
-	shaftFront->TransformTranslation(movementUp);
-	shaftFront->SetCollisionBox(1.0f, 1.5f, 0.2f);
+	shaftFront->SetCollisionBox(1.0f, 1.25f, 0.2f);
 	shaftFront->UpdateEntity();
 
 	shaftBack->TransformTranslation(movementForward);
@@ -744,8 +743,58 @@ void Game::BuildCollisionGeometry() {
 	shaftLeft->SetCollisionBox(.1f, 10.0f, 2.5f);
 	shaftLeft->UpdateEntity();
 
+	shaftRight->TransformTranslation(movementForward);
+	shaftRight->TransformTranslation(movementForward);
+	shaftRight->TransformTranslation(movementRight);
+	shaftRight->SetCollisionBox(.1f, 10.0f, 2.5f);
+	shaftRight->UpdateEntity();
 
+	arenaTop->TransformTranslation(movementUp);
+	arenaTop->TransformTranslation(movementUp);
+	arenaTop->TransformTranslation(movementUp);
+	arenaTop->TransformTranslation(movementUp);
+	arenaTop->TransformTranslation(movementUp);
+	arenaTop->SetCollisionBox(20.0f, .1f, 20.0f);
+
+	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+	arenaBottom->TransformTranslation(movementForward);
+
+	arenaBottom->TransformTranslation(movementUp);
+	arenaBottom->TransformTranslation(movementUp);
+	arenaBottom->TransformTranslation(movementUp);
+	//arenaBottom->TransformTranslation(movementUp);
+	arenaBottom->SetCollisionBox(20.0f, .1f, 4.0f);
+
+	arenaLeft->TransformTranslation(movementForward);
+	arenaLeft->TransformTranslation(movementForward);
+	arenaLeft->TransformTranslation(movementForward);
+	arenaLeft->TransformTranslation(movementForward);
+	arenaLeft->TransformTranslation(movementLeft);
+	arenaLeft->TransformTranslation(movementLeft);
+	arenaLeft->TransformTranslation(movementLeft);
+	arenaLeft->SetCollisionBox(.1f, 10.0f, 10.0f);
+	arenaLeft->UpdateEntity();
 	
+	arenaRight->TransformTranslation(movementForward);
+	arenaRight->TransformTranslation(movementForward);
+	arenaRight->TransformTranslation(movementForward);
+	arenaRight->TransformTranslation(movementForward);
+	arenaRight->TransformTranslation(movementRight);
+	arenaRight->TransformTranslation(movementRight);
+	arenaRight->TransformTranslation(movementRight);
+	arenaRight->TransformTranslation(movementRight);
+	arenaRight->TransformTranslation(movementRight);
+	arenaRight->SetCollisionBox(.1f, 10.0f, 10.0f);
+	arenaRight->UpdateEntity();
 }
 void Game::BuildLevelGeometry() {
 	CreateStartingSpace();
@@ -1739,7 +1788,7 @@ void Game::Update(float deltaTime, float totalTime)
 
 		if (collidingMaster.isColliding(gePlayer, entityArray[i])) {
 			collidingMaster.isColliding(gePlayer, entityArray[i]);
-			printf("collision between player and %d\n", i);
+		//	printf("collision between player and %d\n", i);
 		}
 		else {
 			//printf("no collision between player and %d\n", i);
