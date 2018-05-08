@@ -1811,23 +1811,9 @@ void Game::Update(float deltaTime, float totalTime)
 
 	e0->UpdateEntity(deltaTime);
 
-	/*
-	printf("\nPlayer position.x: %f", gePlayer->GetPosition().x);
-	printf("\nPlayer position.y: %f", gePlayer->GetPosition().y);
-	printf("\nPlayer position.z: %f", gePlayer->GetPosition().z);
-
-	printf("\nEnemy position.x: %f", e0->GetPosition().x);
-	printf("\nEnemy position.y: %f", e0->GetPosition().y);
-	printf("\nEnemy position.z: %f", e0->GetPosition().z);
-	*/
 	for (int i = 0; i <= entityArraySize - 1; i++) {
-		//gePla
-		//printf("\nObject: %f\n", i);
-		entityArray[i]->UpdateEntity();
-		//printf("\nPlayer position.x %f", gePlayer->GetColliderPosition().x);
-		//printf("\nPlayer position.y %f", gePlayer->GetColliderPosition().y);
-		//printf("\nPlayer position.z %f", gePlayer->GetColliderPosition().z);
 
+		entityArray[i]->UpdateEntity();
 		//if (collidingMaster.isColliding(gePlayer, entityArray[i])) {
 		//	collidingMaster.isColliding(gePlayer, entityArray[i]);
 		//	printf("collision between player and %d\n", i);
@@ -1853,8 +1839,7 @@ void Game::Update(float deltaTime, float totalTime)
 	emitter->Update(deltaTime);
 
 	camera->Update(deltaTime);
-	//ge5->Move(movementValue);
-//	ge5->UpdateEntity();
+
 }
 
 // --------------------------------------------------------
