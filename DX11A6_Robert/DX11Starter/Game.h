@@ -171,6 +171,19 @@ private:
 	//shaft1;
 	GameEntity* shaftFront;
 	GameEntity* shaftBack;
+	GameEntity* shaftLeft;
+	GameEntity* shaftRight;
+
+
+
+	//Arena 
+	GameEntity* arenaTop;
+	GameEntity* arenaLeft;
+	GameEntity* arenaRight;
+	GameEntity* arenaFront;
+	GameEntity* arenaBack;
+	GameEntity* arenaBack2;
+	GameEntity* arenaBottom;
 
 	Enemy* e0;
 

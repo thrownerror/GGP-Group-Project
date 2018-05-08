@@ -147,7 +147,15 @@ Game::~Game()
 	delete ce5;
 	delete shaftFront;
 	delete shaftBack;
-
+	delete shaftLeft;
+	delete shaftRight;
+	delete arenaTop;
+	delete arenaRight;
+	delete arenaLeft;
+	delete arenaFront;
+	delete arenaBack;
+	delete arenaBottom;
+	delete arenaBack2;
 
 
 
@@ -477,6 +485,17 @@ void Game::CreateBasicGeometry()
 
 	shaftFront	= new GameEntity(meshQuad, mat1);
 	shaftBack	= new GameEntity(meshQuad, mat1);
+	shaftLeft = new GameEntity(meshQuad, mat1);
+	shaftRight = new GameEntity(meshQuad, mat1);
+
+
+	arenaTop = new GameEntity(meshQuad, mat1);
+	arenaLeft = new GameEntity(meshQuad, mat1);
+	arenaRight = new GameEntity(meshQuad, mat1);
+	arenaFront = new GameEntity(meshQuad, mat1);
+	arenaBack = new GameEntity(meshQuad, mat1);
+	arenaBottom = new GameEntity(meshQuad, mat1);
+	arenaBack2 = new GameEntity(meshQuad, mat1);
 
 	gePlayer = new GameEntity(meshQuad);
 	gePlayer->SetCollisionBox(.1f, .1f, .1f);
@@ -486,7 +505,7 @@ void Game::CreateBasicGeometry()
 	e0->SetCollisionBox(.1f, .1f, .1f);
 
 	if (testBox) {
-		collisionArraySize = 7;
+		collisionArraySize = 15;
 		collisionArray = new GameEntity*[collisionArraySize];
 		collisionArray[0] = ce1;
 		collisionArray[1] = ce2;
@@ -496,7 +515,16 @@ void Game::CreateBasicGeometry()
 
 		collisionArray[5] = shaftFront;
 		collisionArray[6] = shaftBack;
+		collisionArray[7] = shaftLeft;
+		collisionArray[8] = shaftRight;
 
+
+		collisionArray[9] = arenaTop;
+		collisionArray[10] = arenaLeft;
+		collisionArray[11] = arenaRight;
+		collisionArray[12] = arenaFront;
+		collisionArray[13] = arenaBack;
+		collisionArray[14] = arenaBottom;
 
 
 
@@ -655,7 +683,11 @@ void Game::BuildCollisionGeometry() {
 	shaftBack->SetCollisionBox(1.0f, 1.0f, 0.2f);
 	shaftBack->UpdateEntity();
 
-
+	shaftLeft->TransformTranslation(movementForward);
+	shaftLeft->TransformTranslation(movementForward);
+	shaftLeft->TransformTranslation(movementLeft);
+	shaftLeft->SetCollisionBox(.1f, 10.0f, 2.5f);
+	shaftLeft->UpdateEntity();
 
 
 	
@@ -1652,7 +1684,7 @@ void Game::Update(float deltaTime, float totalTime)
 
 		if (collidingMaster.isColliding(gePlayer, entityArray[i])) {
 			collidingMaster.isColliding(gePlayer, entityArray[i]);
-			//printf("collision between player and %d\n", i);
+			printf("collision between player and %d\n", i);
 		}
 		else {
 			//printf("no collision between player and %d\n", i);
@@ -1667,7 +1699,7 @@ void Game::Update(float deltaTime, float totalTime)
 			printf("Collision between player and collider volume %d\n", i);
 		}
 		else {
-			printf("no Collision between player and collider volume %d\n", i);
+			//printf("no Collision between player and collider volume %d\n", i);
 		}
 	}
 
