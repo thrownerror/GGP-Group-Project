@@ -55,7 +55,7 @@ void Enemy::Attack()
 	XMFLOAT3 result;
 	XMStoreFloat3(&result, playerPos - pos);
 	
-	bullets[numBullets - 1].SetScale(XMFLOAT3(5, 5, 5));
+	bullets[numBullets - 1].SetScale(XMFLOAT3(.5f, .5f, .5f));
 	bullets[numBullets - 1].SetPosition(GetPosition());
 	bullets[numBullets - 1].SetDirection(result);
 
@@ -118,10 +118,19 @@ void Enemy::UpdateEntity(float deltaTime)
 	else
 		seesPlayer = false;
 
+	std::vector<int> removeBullet = std::vector<int>();
 	// Update all bullets
 	for (int i = 0; i < numBullets; i++)
 	{
 		bullets[i].UpdateEntity(deltaTime);
+		if (bullets[i].DistTravelled() > bullets[i].MaxDistTravelled()) {
+			removeBullet.push_back(i);
+		}
+	}
+	for (int i = static_cast<int>(removeBullet.size()) - 1; i > -1; i--) {
+		bullets[removeBullet[i]].~Bullet();
+		bullets.erase(bullets.end() - (static_cast<int>(bullets.size()) - removeBullet[i]));
+		numBullets--;
 	}
 	GameEntity::UpdateEntity();
 }

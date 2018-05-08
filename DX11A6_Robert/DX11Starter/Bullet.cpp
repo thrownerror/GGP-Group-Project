@@ -24,18 +24,33 @@ void Bullet::SetDirection(XMFLOAT3 dir)
 	direction = dir;
 }
 
+float Bullet::DistTravelled()
+{
+	return distTravelled;
+}
+
+float Bullet::MaxDistTravelled()
+{
+	return maxDistTravelled;
+}
+
 Bullet::~Bullet()
 {
 }
 
 void Bullet::UpdateEntity(float deltaTime)
 {
+<<<<<<< HEAD
 	//printf("Bullet pos: %f %f %f \n", GetPosition().x, GetPosition().y, GetPosition().z);
 	/*
+=======
+	printf("Bullet pos: %f %f %f \n", GetPosition().x, GetPosition().y, GetPosition().z);
+	
+>>>>>>> master
 	if (distTravelled >= maxDistTravelled) {
 		this->~Bullet();
 	}
-	*/
+	
 	// To normalize rotation vector before calculation
 
 	//XMVECTOR pos = XMLoadFloat3(&GetPosition());
@@ -60,6 +75,7 @@ void Bullet::UpdateEntity(float deltaTime)
 	XMStoreFloat3(&storeDir, loadDir);
 
 	TransformTranslation(XMFLOAT3(storeDir.x, 0, storeDir.z));
+	distTravelled += deltaTime;
 
 	GameEntity::UpdateEntity();
 }

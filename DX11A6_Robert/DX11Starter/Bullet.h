@@ -10,9 +10,12 @@ private:
 public:
 	Bullet();
 	Bullet(Mesh * mesh, Material * material, GameEntity * pl);
+	~Bullet();
+
 	XMFLOAT3 GetDirection();
 	void SetDirection(XMFLOAT3 dir);
-	~Bullet();
+	float DistTravelled();
+	float MaxDistTravelled();
 
 	void UpdateEntity(float deltaTime);
 };
