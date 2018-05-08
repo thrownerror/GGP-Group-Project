@@ -1848,6 +1848,9 @@ void Game::Update(float deltaTime, float totalTime)
 			//printf("no Collision between player and collider volume %d\n", i);
 		}
 	}
+	if (GetAsyncKeyState('Y') & 0x8000) {
+		printf("%d\n",gePlayer->GetPosition());
+	}
 
 	emitter->Update(deltaTime);
 

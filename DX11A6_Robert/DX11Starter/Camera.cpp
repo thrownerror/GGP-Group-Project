@@ -54,6 +54,7 @@ void Camera::Update(float deltaTime)
 		if (GetAsyncKeyState('Q') & 0x8000) {
 			camRotateY -= deltaTime;
 		}
+		
 		if (GetAsyncKeyState('E') & 0x8000) {
 			camRotateY += deltaTime;
 		}
