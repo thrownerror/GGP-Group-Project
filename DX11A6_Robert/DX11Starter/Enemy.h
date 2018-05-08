@@ -1,5 +1,6 @@
 #pragma once
 #include "Bullet.h"
+#include "SimpleShader.h"
 #include <cmath>
 
 class Enemy :
@@ -28,9 +29,14 @@ private:
 	float dot(XMFLOAT3 a, XMFLOAT3 b);
 	float mag(XMFLOAT3 a);
 
+	ID3D11Device * device;
+	SimpleVertexShader* eVertShader;
+	SimplePixelShader* ePixelShader;
+	ID3D11ShaderResourceView* eSRV;
+
 public:
 	Enemy();
-	Enemy(Mesh * enemyMesh, Material * enemyMaterial, Mesh * bullMesh, Material * bullMaterial, GameEntity * pl);
+	Enemy(Mesh * enemyMesh, Material * enemyMaterial, Mesh * bullMesh, Material * bullMaterial, GameEntity * pl, ID3D11Device * d, SimpleVertexShader* pVert, SimplePixelShader* pPixel, ID3D11ShaderResourceView* pText);
 	~Enemy();
 	void SetWanderPoints(XMFLOAT3 point0, XMFLOAT3 point1);
 	void Attack();

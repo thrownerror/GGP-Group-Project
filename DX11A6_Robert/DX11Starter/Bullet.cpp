@@ -2,15 +2,33 @@
 
 
 
-Bullet::Bullet() : Bullet(nullptr, nullptr, nullptr)
+Bullet::Bullet() : Bullet(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr)
 {
 }
 
-Bullet::Bullet(Mesh * mesh, Material * material, GameEntity * pl) : GameEntity(mesh, material)
+Bullet::Bullet(Mesh * mesh, Material * material, GameEntity * pl, ID3D11Device * d, SimpleVertexShader* pVert, SimplePixelShader* pPixel, ID3D11ShaderResourceView* pText) : GameEntity(mesh, material)
 {
 	distTravelled = 0;
 	maxDistTravelled = 5.0f;
 	direction = XMFLOAT3();
+	device = d;
+
+	emitter = new Emitter(
+		100,
+		10,
+		5,
+		0.1f,
+		5.0f,
+		XMFLOAT4(1, 0.1f, 0.1f, 0.2f),
+		XMFLOAT4(1, 0.6f, 0.1f, 0),
+		XMFLOAT3(0, 2, 2),
+		GetPosition(),
+		XMFLOAT3(0, -1, 0),
+		device,
+		pVert,
+		pPixel,
+		pText
+	);
 }
 
 XMFLOAT3 Bullet::GetDirection()
@@ -34,8 +52,15 @@ float Bullet::MaxDistTravelled()
 	return maxDistTravelled;
 }
 
+Emitter Bullet::GetEmitter()
+{
+	return *emitter;
+}
+
 Bullet::~Bullet()
 {
+	if(emitter != nullptr)
+		delete emitter;
 }
 
 void Bullet::UpdateEntity(float deltaTime)
