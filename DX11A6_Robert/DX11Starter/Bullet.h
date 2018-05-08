@@ -8,7 +8,7 @@ private:
 	float distTravelled;
 	float maxDistTravelled;
 	XMFLOAT3 direction;
-	Emitter* emitter;
+	Emitter * emitter;
 	ID3D11Device * device;
 public:
 	Bullet();

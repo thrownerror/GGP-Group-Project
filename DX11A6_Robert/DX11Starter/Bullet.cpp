@@ -42,6 +42,13 @@ void Bullet::SetDirection(XMFLOAT3 dir)
 	direction = dir;
 }
 
+// Sets position of Bullet AND attached Emitter
+void Bullet::SetPosition(XMFLOAT3 pos)
+{
+	emitter->SetPosition(pos);
+	GameEntity::SetPosition(pos);
+}
+
 float Bullet::DistTravelled()
 {
 	return distTravelled;
@@ -59,19 +66,13 @@ Emitter Bullet::GetEmitter()
 
 Bullet::~Bullet()
 {
-	if(emitter != nullptr)
-		delete emitter;
+	delete emitter;
 }
 
 void Bullet::UpdateEntity(float deltaTime)
 {
-<<<<<<< HEAD
 	//printf("Bullet pos: %f %f %f \n", GetPosition().x, GetPosition().y, GetPosition().z);
 	/*
-=======
-	printf("Bullet pos: %f %f %f \n", GetPosition().x, GetPosition().y, GetPosition().z);
-	
->>>>>>> master
 	if (distTravelled >= maxDistTravelled) {
 		this->~Bullet();
 	}
@@ -101,6 +102,8 @@ void Bullet::UpdateEntity(float deltaTime)
 
 	TransformTranslation(XMFLOAT3(storeDir.x, 0, storeDir.z));
 	distTravelled += deltaTime;
+
+	emitter->Update(deltaTime);
 
 	GameEntity::UpdateEntity();
 }

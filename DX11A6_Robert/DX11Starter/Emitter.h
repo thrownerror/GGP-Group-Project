@@ -58,11 +58,14 @@ public:
 		SimpleVertexShader* vs,
 		SimplePixelShader* ps,
 		ID3D11ShaderResourceView* texture);
+	Emitter();
 	~Emitter();
 
 	void Update(float deltaTime);
 	void UpdateParticle(float deltaTime, int i);
 	void Spawn();
+
+	void SetPosition(XMFLOAT3 p);
 
 	void Dump(ID3D11DeviceContext* context);
 	void DumpOne(int index);

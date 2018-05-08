@@ -555,7 +555,7 @@ void Game::CreateBasicGeometry()
 	gePlayer = new GameEntity(meshQuad);
 	gePlayer->SetCollisionBox(.1f, .1f, .1f);
 
-	e0 = new Enemy(meshModel1, mat1, meshModel1, mat1, gePlayer);
+	e0 = new Enemy(meshModel1, mat1, meshModel1, mat1, gePlayer, device, particleVertex, particlePixel, particleTexture);
 	e0->SetWanderPoints(XMFLOAT3(0, 0, 0), XMFLOAT3(5, 5, 5));
 	e0->SetCollisionBox(.1f, .1f, .1f);
 
@@ -2034,6 +2034,10 @@ void Game::Draw(float deltaTime, float totalTime)
 	context->OMSetBlendState(particleBlender, blend, 0xffffffff);	// Additive blending
 	context->OMSetDepthStencilState(particleDS, 0);					// No depth WRITING
 	emitter->Draw(context, camera);									// Draw the emitter
+	// Draw every bullet's emitter
+	for (int i = 0; i < e0->NumBullets(); i++) {
+		e0->Bullets()[i].GetEmitter().Draw(context, camera);
+	}
 
 #pragma endregion
 
