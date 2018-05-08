@@ -41,7 +41,9 @@ private:
 	void CreateMatrices();
 	void CreateBasicGeometry();
 	void BuildCollisionGeometry();
-
+	void CreateStartingSpace();
+	void CreateShaftGeometry();
+	void CreateAreneaGeometry();
 	void BuildLevelGeometry();
 	// Buffers to hold actual geometry data
 	ID3D11Buffer* vertexBuffer;
@@ -107,7 +109,54 @@ private:
 	GameEntity* wall21; //left 3 wall - checked
 
 	//GameEntity* wall11;
+	//arena spaces
+	GameEntity* arenaF11;
+	GameEntity* arenaF12;
+	GameEntity* arenaF13;
+	GameEntity* arenaF14;
 
+	GameEntity* arenaF21;
+	GameEntity* arenaF22;
+	GameEntity* arenaF23;
+	GameEntity* arenaF24;
+
+	GameEntity* arenaF31;
+	GameEntity* arenaF32;
+	GameEntity* arenaF33;
+	GameEntity* arenaF34;
+
+	GameEntity* arenaT11;
+	GameEntity* arenaT12;
+	GameEntity* arenaT13;
+	GameEntity* arenaT14;
+					 
+	GameEntity* arenaT21;
+	GameEntity* arenaT22;
+	GameEntity* arenaT23;
+	GameEntity* arenaT24;
+					 
+	GameEntity* arenaT31;
+	GameEntity* arenaT32;
+	GameEntity* arenaT33;
+	GameEntity* arenaT34;
+
+	GameEntity* arenaB1;
+	GameEntity* arenaB3;
+	GameEntity* arenaB4;
+
+	GameEntity* arenaL1;
+	GameEntity* arenaL2;
+	GameEntity* arenaL3;
+	GameEntity* arenaL4;
+
+	GameEntity* arenaR1;
+	GameEntity* arenaR2;
+	GameEntity* arenaR3;
+
+	GameEntity* arenaFW2;
+	GameEntity* arenaFW3;
+	GameEntity* arenaFW4;
+	
 	//End cap 
 	GameEntity* wallEnd; // front wall 3 - checked
 
@@ -123,6 +172,19 @@ private:
 	//shaft1;
 	GameEntity* shaftFront;
 	GameEntity* shaftBack;
+	GameEntity* shaftLeft;
+	GameEntity* shaftRight;
+
+
+
+	//Arena 
+	GameEntity* arenaTop;
+	GameEntity* arenaLeft;
+	GameEntity* arenaRight;
+	GameEntity* arenaFront;
+	GameEntity* arenaBack;
+	GameEntity* arenaBack2;
+	GameEntity* arenaBottom;
 
 	Enemy* e0;
 

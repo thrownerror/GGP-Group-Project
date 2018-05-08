@@ -35,4 +35,7 @@ public:
 	void SetWanderPoints(XMFLOAT3 point0, XMFLOAT3 point1);
 	void Attack();
 	void UpdateEntity(float deltaTime);
+
+	int NumBullets();
+	std::vector<Bullet> Bullets();
 };
