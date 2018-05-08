@@ -50,7 +50,15 @@ void Enemy::Attack()
 	bullets.push_back(Bullet(bulletMesh, bulletMaterial, player));
 	numBullets++;
 
-	bullets[numBullets - 1].TransformRotation(GetRotation());
+	XMVECTOR pos = XMLoadFloat3(&GetPosition());
+	XMVECTOR playerPos = XMLoadFloat3(&player->GetPosition());
+	XMFLOAT3 result;
+	XMStoreFloat3(&result, playerPos - pos);
+	
+	bullets[numBullets - 1].SetPosition(GetPosition());
+	bullets[numBullets - 1].SetDirection(result);
+
+	printf("Firing bullet \n");
 }
 
 void Enemy::UpdateEntity(float deltaTime)
@@ -76,19 +84,18 @@ void Enemy::UpdateEntity(float deltaTime)
 	}
 	// If targeting the player
 	else {
-		XMFLOAT3 up = XMFLOAT3(0, 1, 0);
-		//float angle; //= atan2(GetPosition().x - player->GetPosition().x, GetPosition().z - player->GetPosition().z);
-		//float angle = acos(dot(GetPosition(), player->GetPosition()) / mag(GetPosition()) * mag(player->GetPosition()));
-		//angle = angle * (180 / 3.1415926f);
-		float angle = atan2(GetPosition().z - player->GetPosition().z, GetPosition().x - player->GetPosition().x);
-		angle *= -180 / (3.1415926 * 5);
-		//SetRotation(XMStoreFloat3( , XMMatrixLookAtLH(XMLoadFloat3(&GetPosition()), XMLoadFloat3(&player->GetPosition()), XMLoadFloat3(&up))));
-		//TransformRotation(player->GetPosition()); //<= change rotation based on player
-		//SetRotation(XMFLOAT3(0, angle, 0));
-		//TransformRotation(XMFLOAT3(0, angle, 0));
-		SetRotation(XMFLOAT3(0, angle, 0));
-		//printf("Rotation Angle: %f %f %f \n", GetRotation().x, GetRotation().y, GetRotation().z);
-		//printf("Basic angle: %f \n", angle);
+		XMVECTOR pos = XMLoadFloat3(&GetPosition());
+		XMVECTOR playerPos = XMLoadFloat3(&player->GetPosition());
+		XMFLOAT3 result;
+		XMStoreFloat3(&result, playerPos - pos);
+		
+		if (result.x < 0 && result.z < 0) {
+			result.x *= -1;
+		}
+		//result.x = sin(result.x);
+
+		SetRotation(XMFLOAT3(0, result.x, 0));
+
 		attackInterval -= deltaTime;
 		if (attackInterval <= 0) {
 			attackInterval = 2.0f;
@@ -116,4 +123,14 @@ void Enemy::UpdateEntity(float deltaTime)
 		bullets[i].UpdateEntity(deltaTime);
 	}
 	GameEntity::UpdateEntity();
+}
+
+int Enemy::NumBullets()
+{
+	return numBullets;
+}
+
+std::vector<Bullet> Enemy::Bullets()
+{
+	return bullets;
 }
